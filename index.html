@@ -694,22 +694,23 @@ const google = {
   }
 };
 
+// ===== كل الطلبات GET عبر JSONP لتجاوز CORS =====
 async function _apiGet(action, params={}) {
   const url = new URL(API);
   url.searchParams.set('action', action);
-  Object.keys(params).forEach(k => url.searchParams.set(k, params[k]));
-  const res = await fetch(url.toString());
+  Object.keys(params).forEach(k => url.searchParams.set(k, String(params[k])));
+  const res = await fetch(url.toString(), { redirect: 'follow' });
   const data = await res.json();
   if (data && data.error) throw new Error(data.error);
   return data;
 }
 
 async function _apiPost(action, payload) {
-  const res = await fetch(API, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({action, data:payload})
-  });
+  // Apps Script لا يدعم CORS مع POST — نحوّل لـ GET مع encode
+  const url = new URL(API);
+  url.searchParams.set('action', action);
+  url.searchParams.set('payload', JSON.stringify(payload));
+  const res = await fetch(url.toString(), { redirect: 'follow' });
   const data = await res.json();
   if (data && data.error) throw new Error(data.error);
   return data;
