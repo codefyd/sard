@@ -5,13 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>برنامج السرد</title>
 
-  <!-- Bootstrap 5 RTL -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css"/>
-  <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <!-- Tajawal Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap"/>
-  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
   <style>
@@ -35,10 +31,10 @@
       --radius:     14px;
       --radius-sm:  8px;
     }
+
     * { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
 
-    /* ===== Navbar ===== */
     .navbar-sard {
       background:var(--primary);
       padding:0 16px;
@@ -51,38 +47,79 @@
       z-index:1000;
       box-shadow:0 2px 12px rgba(0,0,0,0.18);
     }
-    .navbar-brand { color:#fff; font-size:1.2rem; font-weight:800; display:flex; align-items:center; gap:8px; }
+
+    .navbar-brand {
+      color:#fff;
+      font-size:1.2rem;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
     .navbar-brand i { color:var(--gold); font-size:1.3rem; }
     .nav-links { display:flex; gap:4px; }
+
     .nav-link-btn {
-      padding:6px 14px; border-radius:20px; border:none;
-      background:transparent; color:rgba(255,255,255,0.75);
-      font-family:'Tajawal',sans-serif; font-size:0.85rem; font-weight:500;
-      cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:6px;
+      padding:6px 14px;
+      border-radius:20px;
+      border:none;
+      background:transparent;
+      color:rgba(255,255,255,0.75);
+      font-family:'Tajawal',sans-serif;
+      font-size:0.85rem;
+      font-weight:500;
+      cursor:pointer;
+      transition:all .2s;
+      display:flex;
+      align-items:center;
+      gap:6px;
     }
-    .nav-link-btn:hover, .nav-link-btn.active {
-      background:rgba(255,255,255,0.15); color:#fff;
+
+    .nav-link-btn:hover,
+    .nav-link-btn.active {
+      background:rgba(255,255,255,0.15);
+      color:#fff;
     }
+
     .nav-link-btn.active { background:rgba(255,255,255,0.2); }
+
     .mobile-nav {
-      position:fixed; bottom:0; left:0; right:0; background:#fff;
-      border-top:1px solid var(--border); display:none;
-      z-index:999; padding:6px 0;
+      position:fixed;
+      bottom:0;
+      left:0;
+      right:0;
+      background:#fff;
+      border-top:1px solid var(--border);
+      display:none;
+      z-index:999;
+      padding:6px 0;
     }
+
     @media(max-width:640px) {
       .nav-links { display:none; }
       .mobile-nav { display:flex; justify-content:space-around; }
     }
+
     .mob-btn {
-      flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
-      border:none; background:none; color:var(--text-muted);
-      font-family:'Tajawal',sans-serif; font-size:0.7rem; cursor:pointer;
-      padding:4px 0; transition:color .2s;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:2px;
+      border:none;
+      background:none;
+      color:var(--text-muted);
+      font-family:'Tajawal',sans-serif;
+      font-size:0.7rem;
+      cursor:pointer;
+      padding:4px 0;
+      transition:color .2s;
     }
+
     .mob-btn i { font-size:1.2rem; }
     .mob-btn.active { color:var(--primary); }
 
-    /* ===== KPI Cards ===== */
     .kpi-card {
       background:var(--card-bg);
       border-radius:var(--radius);
@@ -94,24 +131,45 @@
       transition:transform .25s, box-shadow .25s;
       cursor:default;
     }
+
     .kpi-card:hover {
       transform:translateY(-4px);
       box-shadow:var(--shadow-lg);
     }
+
     .bg-icon-float {
-      position:absolute; left:-10px; bottom:-10px;
-      font-size:5rem; opacity:.07;
+      position:absolute;
+      left:-10px;
+      bottom:-10px;
+      font-size:5rem;
+      opacity:.07;
       transition:transform .3s, opacity .3s;
       pointer-events:none;
     }
-    .kpi-card:hover .bg-icon-float { transform:scale(1.15) rotate(-5deg); opacity:.12; }
-    .kpi-label { font-size:.8rem; color:var(--text-muted); font-weight:500; margin-bottom:4px; }
-    .kpi-value { font-size:2rem; font-weight:800; color:var(--primary); line-height:1; }
+
+    .kpi-card:hover .bg-icon-float {
+      transform:scale(1.15) rotate(-5deg);
+      opacity:.12;
+    }
+
+    .kpi-label {
+      font-size:.8rem;
+      color:var(--text-muted);
+      font-weight:500;
+      margin-bottom:4px;
+    }
+
+    .kpi-value {
+      font-size:2rem;
+      font-weight:800;
+      color:var(--primary);
+      line-height:1;
+    }
+
     .kpi-value.gold  { color:var(--gold); }
     .kpi-value.green { color:var(--success); }
     .kpi-value.red   { color:var(--danger); }
 
-    /* ===== Cards ===== */
     .card-sard {
       background:var(--card-bg);
       border-radius:var(--radius);
@@ -120,216 +178,426 @@
       padding:20px;
       margin-bottom:16px;
     }
+
     .card-title {
-      font-size:1rem; font-weight:700; color:var(--primary);
-      display:flex; align-items:center; gap:8px; margin-bottom:16px;
+      font-size:1rem;
+      font-weight:700;
+      color:var(--primary);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:16px;
     }
 
-    /* ===== Spinner ===== */
     .spinner-overlay {
-      position:fixed; inset:0; background:rgba(1,73,121,0.12);
-      display:flex; align-items:center; justify-content:center;
+      position:fixed;
+      inset:0;
+      background:rgba(1,73,121,0.12);
+      display:flex;
+      align-items:center;
+      justify-content:center;
       z-index:9999;
     }
+
     .spinner-box {
-      background:#fff; border-radius:var(--radius);
-      padding:32px 48px; text-align:center;
+      background:#fff;
+      border-radius:var(--radius);
+      padding:32px 48px;
+      text-align:center;
       box-shadow:var(--shadow-lg);
     }
-    .spinner-box p { margin-top:12px; color:var(--primary); font-weight:600; }
 
-    /* ===== Login ===== */
+    .spinner-box p {
+      margin-top:12px;
+      color:var(--primary);
+      font-weight:600;
+    }
+
     .login-wrap {
-      min-height:100vh; display:flex;
-      align-items:center; justify-content:center; padding:20px;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
     }
+
     .login-card {
-      background:#fff; border-radius:var(--radius);
-      box-shadow:var(--shadow-lg); overflow:hidden;
-      width:100%; max-width:420px;
+      background:#fff;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow-lg);
+      overflow:hidden;
+      width:100%;
+      max-width:420px;
     }
+
     .login-header {
-      background:var(--primary); padding:36px;
-      text-align:center; color:#fff;
+      background:var(--primary);
+      padding:36px;
+      text-align:center;
+      color:#fff;
     }
+
     .login-header i { font-size:2.5rem; color:var(--gold); }
     .login-header h1 { font-size:1.6rem; font-weight:800; margin-top:10px; }
     .login-body { padding:28px; }
 
-    /* ===== Form Controls ===== */
-    .form-control, .form-select {
+    .form-control,
+    .form-select {
       font-family:'Tajawal',sans-serif !important;
       border-radius:var(--radius-sm) !important;
       border-color:var(--border) !important;
       font-size:0.95rem !important;
       padding:10px 14px !important;
     }
-    .form-control:focus, .form-select:focus {
+
+    .form-control:focus,
+    .form-select:focus {
       border-color:var(--primary) !important;
       box-shadow:0 0 0 3px rgba(1,73,121,0.10) !important;
     }
 
-    /* ===== Buttons ===== */
     .btn-primary-sard {
-      background:var(--primary); color:#fff; border:none;
-      border-radius:var(--radius-sm); padding:10px 22px;
-      font-family:'Tajawal',sans-serif; font-size:0.95rem; font-weight:700;
-      cursor:pointer; transition:background .2s, transform .15s;
-      display:inline-flex; align-items:center; gap:7px;
-    }
-    .btn-primary-sard:hover { background:var(--primary-dk); transform:translateY(-1px); }
-    .btn-gold {
-      background:var(--gold); color:#fff; border:none;
-      border-radius:var(--radius-sm); padding:10px 22px;
-      font-family:'Tajawal',sans-serif; font-size:0.95rem; font-weight:700;
-      cursor:pointer; transition:all .2s;
-    }
-    .btn-gold:hover { background:#9a822f; }
-    .btn-outline-sard {
-      background:transparent; color:var(--primary);
-      border:1.5px solid var(--primary);
-      border-radius:var(--radius-sm); padding:9px 20px;
-      font-family:'Tajawal',sans-serif; font-size:0.9rem; font-weight:600;
-      cursor:pointer; transition:all .2s;
-    }
-    .btn-outline-sard:hover { background:var(--primary); color:#fff; }
-    .btn-danger-sard {
-      background:var(--danger); color:#fff; border:none;
-      border-radius:var(--radius-sm); padding:8px 18px;
-      font-family:'Tajawal',sans-serif; font-size:0.88rem; font-weight:600;
-      cursor:pointer; transition:all .2s;
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:var(--radius-sm);
+      padding:10px 22px;
+      font-family:'Tajawal',sans-serif;
+      font-size:0.95rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:background .2s, transform .15s;
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
     }
 
-    /* ===== Selection Buttons ===== */
+    .btn-primary-sard:hover {
+      background:var(--primary-dk);
+      transform:translateY(-1px);
+    }
+
+    .btn-gold {
+      background:var(--gold);
+      color:#fff;
+      border:none;
+      border-radius:var(--radius-sm);
+      padding:10px 22px;
+      font-family:'Tajawal',sans-serif;
+      font-size:0.95rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:all .2s;
+    }
+
+    .btn-gold:hover { background:#9a822f; }
+
+    .btn-outline-sard {
+      background:transparent;
+      color:var(--primary);
+      border:1.5px solid var(--primary);
+      border-radius:var(--radius-sm);
+      padding:9px 20px;
+      font-family:'Tajawal',sans-serif;
+      font-size:0.9rem;
+      font-weight:600;
+      cursor:pointer;
+      transition:all .2s;
+    }
+
+    .btn-outline-sard:hover {
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .btn-danger-sard {
+      background:var(--danger);
+      color:#fff;
+      border:none;
+      border-radius:var(--radius-sm);
+      padding:8px 18px;
+      font-family:'Tajawal',sans-serif;
+      font-size:0.88rem;
+      font-weight:600;
+      cursor:pointer;
+      transition:all .2s;
+    }
+
     .sel-btn {
-      padding:12px 16px; border-radius:var(--radius-sm);
-      border:1.5px solid var(--border); background:#fff;
-      text-align:right; cursor:pointer; transition:all .2s;
+      padding:12px 16px;
+      border-radius:var(--radius-sm);
+      border:1.5px solid var(--border);
+      background:#fff;
+      text-align:right;
+      cursor:pointer;
+      transition:all .2s;
       font-family:'Tajawal',sans-serif;
     }
-    .sel-btn:hover { border-color:var(--primary); background:var(--primary-lt); }
-    .sel-btn.active { background:var(--primary); color:#fff; border-color:var(--primary); box-shadow:var(--shadow-sm); }
-    .sel-btn.active-gold { background:var(--gold); color:#fff; border-color:var(--gold); }
 
-    /* ===== Section Card (مقطع) ===== */
+    .sel-btn:hover {
+      border-color:var(--primary);
+      background:var(--primary-lt);
+    }
+
+    .sel-btn.active {
+      background:var(--primary);
+      color:#fff;
+      border-color:var(--primary);
+      box-shadow:var(--shadow-sm);
+    }
+
+    .sel-btn.active-gold {
+      background:var(--gold);
+      color:#fff;
+      border-color:var(--gold);
+    }
+
     .section-card {
-      border:1.5px solid var(--border); border-radius:var(--radius-sm);
-      padding:16px; background:#fff; margin-bottom:12px;
+      border:1.5px solid var(--border);
+      border-radius:var(--radius-sm);
+      padding:16px;
+      background:#fff;
+      margin-bottom:12px;
       transition:border-color .2s, box-shadow .2s;
     }
+
     .section-card.passed  { border-color:#1a7a4a; background:#f0faf5; }
     .section-card.failed  { border-color:var(--danger); background:#fef2f2; }
     .section-card.editing { border-color:var(--primary); box-shadow:var(--shadow-sm); }
 
-    /* ===== Badge ===== */
     .badge-sard {
-      display:inline-flex; align-items:center; gap:4px;
-      padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:3px 10px;
+      border-radius:20px;
+      font-size:0.78rem;
+      font-weight:600;
     }
+
     .badge-pass { background:#d1fae5; color:#065f46; }
     .badge-fail { background:#fee2e2; color:#991b1b; }
     .badge-prim { background:var(--primary-lt); color:var(--primary); }
     .badge-gold { background:var(--gold-lt); color:#7c6620; }
 
-    /* ===== Score Display ===== */
     .score-circle {
-      width:72px; height:72px; border-radius:50%;
-      display:flex; align-items:center; justify-content:center;
-      font-size:1.4rem; font-weight:800;
+      width:72px;
+      height:72px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.4rem;
+      font-weight:800;
       border:3px solid;
     }
+
     .score-pass { border-color:#1a7a4a; color:#1a7a4a; background:#f0faf5; }
     .score-fail { border-color:var(--danger); color:var(--danger); background:#fef2f2; }
 
-    /* ===== Counter Buttons ===== */
     .counter-wrap { display:flex; align-items:center; gap:8px; }
+
     .counter-btn {
-      width:36px; height:36px; border-radius:8px; border:1.5px solid var(--border);
-      background:#fff; font-size:1.1rem; cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      transition:all .15s; font-weight:700;
-    }
-    .counter-btn:hover { background:var(--primary); color:#fff; border-color:var(--primary); }
-    .counter-val {
-      min-width:40px; text-align:center; font-size:1.1rem;
-      font-weight:700; color:var(--text);
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      border:1.5px solid var(--border);
+      background:#fff;
+      font-size:1.1rem;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:all .15s;
+      font-weight:700;
     }
 
-    /* ===== Attendance ===== */
+    .counter-btn:hover {
+      background:var(--primary);
+      color:#fff;
+      border-color:var(--primary);
+    }
+
+    .counter-val {
+      min-width:40px;
+      text-align:center;
+      font-size:1.1rem;
+      font-weight:700;
+      color:var(--text);
+    }
+
     .att-row {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 14px; border-radius:var(--radius-sm);
-      border:1px solid var(--border); background:#fff; gap:8px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:10px 14px;
+      border-radius:var(--radius-sm);
+      border:1px solid var(--border);
+      background:#fff;
+      gap:8px;
     }
+
     .att-status-btn {
-      padding:5px 12px; border-radius:20px; border:1.5px solid var(--border);
-      background:#fff; cursor:pointer; font-family:'Tajawal',sans-serif;
-      font-size:0.82rem; font-weight:600; transition:all .15s;
+      padding:5px 12px;
+      border-radius:20px;
+      border:1.5px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      font-family:'Tajawal',sans-serif;
+      font-size:0.82rem;
+      font-weight:600;
+      transition:all .15s;
     }
+
     .att-status-btn.s-present { background:#d1fae5; border-color:#1a7a4a; color:#065f46; }
     .att-status-btn.s-late    { background:#fef3c7; border-color:#d97706; color:#92400e; }
     .att-status-btn.s-excused { background:#dbeafe; border-color:#1d4ed8; color:#1e40af; }
     .att-status-btn.s-absent  { background:#fee2e2; border-color:#dc2626; color:#991b1b; }
 
-    /* ===== Numpad ===== */
     .numpad-overlay {
-      position:fixed; inset:0; background:rgba(0,0,0,0.4);
-      display:flex; align-items:flex-end; justify-content:center; z-index:2000;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.4);
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      z-index:2000;
     }
-    @media(min-width:640px){ .numpad-overlay { align-items:center; } }
-    .numpad-box {
-      background:#fff; border-radius:var(--radius) var(--radius) 0 0;
-      padding:20px; width:100%; max-width:380px;
-    }
-    @media(min-width:640px){ .numpad-box { border-radius:var(--radius); } }
-    .numpad-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-    .numpad-btn {
-      padding:14px; border-radius:var(--radius-sm); border:1.5px solid var(--border);
-      background:#fff; font-size:1.3rem; font-weight:700; cursor:pointer;
-      font-family:'Tajawal',sans-serif; transition:all .15s;
-    }
-    .numpad-btn:hover { background:var(--primary-lt); border-color:var(--primary); }
 
-    /* ===== Settings ===== */
-    .setting-row {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:14px 0; border-bottom:1px solid var(--border);
+    @media(min-width:640px) {
+      .numpad-overlay { align-items:center; }
     }
+
+    .numpad-box {
+      background:#fff;
+      border-radius:var(--radius) var(--radius) 0 0;
+      padding:20px;
+      width:100%;
+      max-width:380px;
+    }
+
+    @media(min-width:640px) {
+      .numpad-box { border-radius:var(--radius); }
+    }
+
+    .numpad-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+
+    .numpad-btn {
+      padding:14px;
+      border-radius:var(--radius-sm);
+      border:1.5px solid var(--border);
+      background:#fff;
+      font-size:1.3rem;
+      font-weight:700;
+      cursor:pointer;
+      font-family:'Tajawal',sans-serif;
+      transition:all .15s;
+    }
+
+    .numpad-btn:hover {
+      background:var(--primary-lt);
+      border-color:var(--primary);
+    }
+
+    .setting-row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 0;
+      border-bottom:1px solid var(--border);
+      gap:12px;
+    }
+
     .setting-row:last-child { border-bottom:none; }
     .setting-label { font-size:.93rem; font-weight:600; color:var(--text); }
     .setting-desc  { font-size:.8rem; color:var(--text-muted); margin-top:2px; }
-    .toggle-wrap { position:relative; width:48px; height:26px; cursor:pointer; }
+
+    .toggle-wrap {
+      position:relative;
+      width:48px;
+      height:26px;
+      cursor:pointer;
+      flex-shrink:0;
+    }
+
     .toggle-wrap input { display:none; }
+
     .toggle-track {
-      position:absolute; inset:0; border-radius:13px;
-      background:var(--border); transition:background .2s;
+      position:absolute;
+      inset:0;
+      border-radius:13px;
+      background:var(--border);
+      transition:background .2s;
     }
+
     .toggle-wrap input:checked + .toggle-track { background:var(--primary); }
+
     .toggle-knob {
-      position:absolute; top:3px; right:3px;
-      width:20px; height:20px; border-radius:50%; background:#fff;
-      box-shadow:0 1px 4px rgba(0,0,0,.25); transition:transform .2s;
+      position:absolute;
+      top:3px;
+      right:3px;
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      background:#fff;
+      box-shadow:0 1px 4px rgba(0,0,0,.25);
+      transition:transform .2s;
     }
+
     .toggle-wrap input:checked ~ .toggle-knob { transform:translateX(-22px); }
 
-    /* ===== Utilities ===== */
     .view { display:none; }
     .view.active { display:block; }
-    .page-wrap { padding:20px; max-width:960px; margin:auto; padding-bottom:80px; }
-    @media(min-width:640px) { .page-wrap { padding-bottom:20px; } }
-    .section-header { font-size:1.05rem; font-weight:700; color:var(--primary); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
-    .sticky-bottom { position:sticky; bottom:70px; z-index:100; }
-    @media(min-width:640px) { .sticky-bottom { bottom:20px; } }
+
+    .page-wrap {
+      padding:20px;
+      max-width:960px;
+      margin:auto;
+      padding-bottom:80px;
+    }
+
+    @media(min-width:640px) {
+      .page-wrap { padding-bottom:20px; }
+    }
+
+    .section-header {
+      font-size:1.05rem;
+      font-weight:700;
+      color:var(--primary);
+      margin-bottom:12px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .sticky-bottom {
+      position:sticky;
+      bottom:70px;
+      z-index:100;
+    }
+
+    @media(min-width:640px) {
+      .sticky-bottom { bottom:20px; }
+    }
+
     .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
     .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+
     @media(max-width:640px) {
       .grid-4 { grid-template-columns:repeat(2,1fr); }
       .grid-3 { grid-template-columns:repeat(2,1fr); }
+      .grid-2 { grid-template-columns:1fr; }
     }
+
     .d-flex { display:flex; }
     .align-center { align-items:center; }
     .justify-between { justify-content:space-between; }
+    .gap-1 { gap:4px; }
     .gap-2 { gap:8px; }
     .gap-3 { gap:12px; }
     .mt-3 { margin-top:12px; }
@@ -337,13 +605,19 @@
     .w-100 { width:100%; }
     .text-muted { color:var(--text-muted); font-size:.85rem; }
     .fw-bold { font-weight:700; }
+    .text-center { text-align:center; }
+    .flex-wrap { flex-wrap:wrap; }
+
     .animate-in { animation:fadeUp .3s ease; }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(12px); }
+      to   { opacity:1; transform:none; }
+    }
   </style>
 </head>
 <body>
 
-<!-- ===== Spinner ===== -->
 <div id="spinner" class="spinner-overlay">
   <div class="spinner-box">
     <div class="spinner-border text-primary" style="width:48px;height:48px;border-width:4px;--bs-primary:#014979;"></div>
@@ -351,13 +625,13 @@
   </div>
 </div>
 
-<!-- ===== Navbar ===== -->
 <nav class="navbar-sard" id="mainNav" style="display:none;">
   <div class="navbar-brand">
     <i class="fas fa-quran"></i>
     <span>برنامج السرد</span>
     <span id="navComplexName" style="font-size:.8rem;opacity:.7;font-weight:400;"></span>
   </div>
+
   <div class="nav-links">
     <button class="nav-link-btn active" onclick="showView('selection')" id="nb-selection">
       <i class="fas fa-home"></i> الرئيسية
@@ -369,6 +643,7 @@
       <i class="fas fa-cog"></i> الإعدادات
     </button>
   </div>
+
   <div class="d-flex align-center gap-2">
     <span id="navTeacher" style="font-size:.85rem;color:rgba(255,255,255,.8);"></span>
     <button onclick="doLogout()" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:1rem;" title="تسجيل خروج">
@@ -377,7 +652,6 @@
   </div>
 </nav>
 
-<!-- ===== Mobile Nav ===== -->
 <div class="mobile-nav" id="mobileNav" style="display:none;">
   <button class="mob-btn active" onclick="showView('selection')" id="mb-selection">
     <i class="fas fa-home"></i><span>الرئيسية</span>
@@ -390,7 +664,6 @@
   </button>
 </div>
 
-<!-- ===== LOGIN ===== -->
 <div id="loginWrap" class="login-wrap">
   <div class="login-card animate-in">
     <div class="login-header">
@@ -411,10 +684,8 @@
   </div>
 </div>
 
-<!-- ===== MAIN APP ===== -->
 <div id="appWrap" style="display:none;">
 
-  <!-- === VIEW: SELECTION === -->
   <div id="view-selection" class="view active page-wrap">
     <div class="d-flex justify-between align-center" style="margin-bottom:16px;">
       <h2 style="font-size:1.1rem;font-weight:800;color:var(--primary);">
@@ -422,19 +693,16 @@
       </h2>
     </div>
 
-    <!-- اختيار الحلقة -->
     <div class="card-sard animate-in">
       <div class="card-title"><i class="fas fa-users"></i> <span id="halaqaTitle">اختر الحلقة</span></div>
       <div class="grid-4" id="halaqaGrid"></div>
     </div>
 
-    <!-- اختيار الطالب -->
     <div class="card-sard animate-in" id="studentSection" style="display:none;">
       <div class="card-title"><i class="fas fa-user-graduate"></i> اختر الطالب</div>
       <div class="grid-3" id="studentGrid"></div>
     </div>
 
-    <!-- زر بدء السرد -->
     <div id="startBtnWrap" style="display:none;" class="sticky-bottom">
       <button class="btn-primary-sard w-100" onclick="startEvaluation()" style="padding:14px;font-size:1rem;justify-content:center;border-radius:var(--radius);">
         <i class="fas fa-play-circle"></i> بدء السرد
@@ -442,7 +710,6 @@
     </div>
   </div>
 
-  <!-- === VIEW: EVALUATION === -->
   <div id="view-evaluation" class="view page-wrap">
     <div class="d-flex align-center gap-2" style="margin-bottom:16px;">
       <button class="btn-outline-sard" onclick="showView('selection')" style="padding:8px 12px;">
@@ -454,7 +721,6 @@
       </div>
     </div>
 
-    <!-- ملخص المقاطع -->
     <div class="grid-2 animate-in" style="margin-bottom:16px;">
       <div class="kpi-card">
         <div class="kpi-label">المقاطع الكلية</div>
@@ -468,10 +734,8 @@
       </div>
     </div>
 
-    <!-- المقاطع -->
     <div id="sectionsContainer"></div>
 
-    <!-- زر حفظ -->
     <div class="sticky-bottom mt-3">
       <button class="btn-primary-sard w-100" onclick="doSaveRecord()" style="padding:14px;font-size:1rem;justify-content:center;border-radius:var(--radius);" id="saveBtn">
         <i class="fas fa-save"></i> حفظ النتيجة
@@ -479,11 +743,10 @@
     </div>
   </div>
 
-  <!-- === VIEW: ATTENDANCE === -->
   <div id="view-attendance" class="view page-wrap">
     <div class="card-sard animate-in">
       <div class="card-title"><i class="fas fa-clipboard-check"></i> التحضير اليومي</div>
-      <div class="d-flex align-center gap-2" style="margin-bottom:14px;flex-wrap:wrap;">
+      <div class="d-flex align-center gap-2 flex-wrap" style="margin-bottom:14px;">
         <label class="fw-bold text-muted" style="font-size:.85rem;">التاريخ:</label>
         <input type="date" id="attDate" class="form-control" style="width:auto;" />
         <button class="btn-outline-sard" onclick="loadAttendanceHalaqas()" style="padding:8px 14px;">
@@ -507,10 +770,7 @@
     </div>
   </div>
 
-  <!-- === VIEW: SETTINGS === -->
   <div id="view-settings" class="view page-wrap">
-
-    <!-- قفل الإعدادات -->
     <div id="settingsLockOverlay" style="display:none;" class="card-sard text-center animate-in">
       <i class="fas fa-lock" style="font-size:3rem;color:var(--primary);margin-bottom:12px;"></i>
       <h3 style="font-weight:700;color:var(--primary);margin-bottom:8px;">الإعدادات مقفلة</h3>
@@ -520,90 +780,136 @@
     </div>
 
     <div id="settingsContent" style="display:none;">
-
-      <!-- الإعدادات العامة -->
       <div class="card-sard animate-in">
         <div class="card-title"><i class="fas fa-sliders-h"></i> الإعدادات العامة</div>
 
         <div class="setting-row">
-          <div><div class="setting-label">تقسيم الجزء</div><div class="setting-desc">عدد مقاطع الجزء الواحد (1، 2، أو 4)</div></div>
+          <div>
+            <div class="setting-label">تقسيم الجزء</div>
+            <div class="setting-desc">عدد مقاطع الجزء الواحد (1، 2، أو 4)</div>
+          </div>
           <select id="s-partsDivisions" class="form-select" style="width:90px;">
-            <option value="1">1</option><option value="2">2</option><option value="4">4</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="4">4</option>
           </select>
         </div>
+
         <div class="setting-row">
-          <div><div class="setting-label">خصم الخطأ</div><div class="setting-desc">نقاط تُخصم لكل خطأ</div></div>
+          <div>
+            <div class="setting-label">خصم الخطأ</div>
+            <div class="setting-desc">نقاط تُخصم لكل خطأ</div>
+          </div>
           <input type="number" id="s-mistakeDeduction" class="form-control" style="width:90px;" step="0.25" min="0"/>
         </div>
+
         <div class="setting-row">
-          <div><div class="setting-label">خصم التنبيه</div><div class="setting-desc">نقاط تُخصم لكل تنبيه</div></div>
+          <div>
+            <div class="setting-label">خصم التنبيه</div>
+            <div class="setting-desc">نقاط تُخصم لكل تنبيه</div>
+          </div>
           <input type="number" id="s-warningDeduction" class="form-control" style="width:90px;" step="0.25" min="0"/>
         </div>
+
         <div class="setting-row">
-          <div><div class="setting-label">درجة النجاح</div><div class="setting-desc">الحد الأدنى لاجتياز المقطع</div></div>
+          <div>
+            <div class="setting-label">درجة النجاح</div>
+            <div class="setting-desc">الحد الأدنى لاجتياز المقطع</div>
+          </div>
           <input type="number" id="s-passingScore" class="form-control" style="width:90px;" step="0.5" min="0"/>
         </div>
 
         <div class="setting-row">
-          <div><div class="setting-label">إظهار المسار مع الطالب</div><div class="setting-desc">يظهر اسم المسار بجانب الطالب في الاختيار</div></div>
+          <div>
+            <div class="setting-label">إظهار المسار مع الطالب</div>
+            <div class="setting-desc">يظهر اسم المسار بجانب الطالب في الاختيار</div>
+          </div>
           <label class="toggle-wrap">
-            <input type="checkbox" id="s-showTrack" /><div class="toggle-track"></div><div class="toggle-knob"></div>
+            <input type="checkbox" id="s-showTrack" />
+            <div class="toggle-track"></div>
+            <div class="toggle-knob"></div>
           </label>
         </div>
+
         <div class="setting-row">
-          <div><div class="setting-label">استخدام المسارات فقط</div><div class="setting-desc">إخفاء الحلقات والاستناد للمسارات</div></div>
+          <div>
+            <div class="setting-label">استخدام المسارات فقط</div>
+            <div class="setting-desc">إخفاء الحلقات والاستناد للمسارات</div>
+          </div>
           <label class="toggle-wrap">
-            <input type="checkbox" id="s-hideHalaqas" /><div class="toggle-track"></div><div class="toggle-knob"></div>
+            <input type="checkbox" id="s-hideHalaqas" />
+            <div class="toggle-track"></div>
+            <div class="toggle-knob"></div>
           </label>
         </div>
+
         <div class="setting-row">
-          <div><div class="setting-label">إلزام سبب الرسوب</div><div class="setting-desc">يُطلب من المسمّع تحديد سبب الرسوب</div></div>
+          <div>
+            <div class="setting-label">إلزام سبب الرسوب</div>
+            <div class="setting-desc">يُطلب من المسمّع تحديد سبب الرسوب</div>
+          </div>
           <label class="toggle-wrap">
-            <input type="checkbox" id="s-requireFail" /><div class="toggle-track"></div><div class="toggle-knob"></div>
+            <input type="checkbox" id="s-requireFail" />
+            <div class="toggle-track"></div>
+            <div class="toggle-knob"></div>
           </label>
         </div>
+
         <div class="setting-row">
-          <div><div class="setting-label">المسار النشط</div><div class="setting-desc">مسار يُضاف فوق قائمة الحلقات</div></div>
+          <div>
+            <div class="setting-label">المسار النشط</div>
+            <div class="setting-desc">مسار يُضاف فوق قائمة الحلقات</div>
+          </div>
           <input type="text" id="s-activeTrack" class="form-control" style="width:160px;" placeholder="اختياري"/>
         </div>
       </div>
 
-      <!-- إعدادات الأمان -->
       <div class="card-sard animate-in">
         <div class="card-title"><i class="fas fa-shield-alt"></i> الأمان والصلاحيات</div>
+
         <div class="setting-row">
-          <div><div class="setting-label">رمز قفل الإعدادات</div><div class="setting-desc">فارغ = بدون قفل</div></div>
+          <div>
+            <div class="setting-label">رمز قفل الإعدادات</div>
+            <div class="setting-desc">فارغ = بدون قفل</div>
+          </div>
           <input type="password" id="s-lockCode" class="form-control" style="width:140px;" placeholder="فارغ = بدون قفل"/>
         </div>
+
         <div class="setting-row">
-          <div><div class="setting-label">رمز تعديل المقاطع</div><div class="setting-desc">فارغ = لا يُسمح بتعديل المقاطع المحفوظة</div></div>
+          <div>
+            <div class="setting-label">رمز تعديل المقاطع</div>
+            <div class="setting-desc">فارغ = لا يُسمح بتعديل المقاطع المحفوظة</div>
+          </div>
           <input type="password" id="s-editCode" class="form-control" style="width:140px;" placeholder="فارغ = منع التعديل"/>
         </div>
       </div>
 
-      <!-- قالب واتساب -->
       <div class="card-sard animate-in">
         <div class="card-title"><i class="fab fa-whatsapp"></i> قالب رسالة واتساب</div>
         <p class="text-muted" style="margin-bottom:10px;font-size:.85rem;">
-          المتغيرات المتاحة: <code>{اسم_الطالب}</code> <code>{الحلقة}</code> <code>{الدرجة}</code> <code>{المسمع}</code>
+          المتغيرات المتاحة:
+          <code>{اسم_الطالب}</code>
+          <code>{الحلقة}</code>
+          <code>{الدرجة}</code>
+          <code>{المسمع}</code>
         </p>
         <textarea id="s-whatsapp" class="form-control" rows="3" placeholder="أدخل نص الرسالة..."></textarea>
       </div>
 
-      <!-- روابط خارجية -->
       <div class="card-sard animate-in">
         <div class="card-title"><i class="fas fa-link"></i> روابط خارجية</div>
+
         <div class="setting-row">
           <div><div class="setting-label">رابط تقويم Google</div></div>
           <input type="url" id="s-calendarUrl" class="form-control" style="max-width:300px;" placeholder="https://calendar.google.com/..."/>
         </div>
+
         <div class="setting-row">
           <div><div class="setting-label">رابط Google Drive</div></div>
           <input type="url" id="s-driveUrl" class="form-control" style="max-width:300px;" placeholder="https://drive.google.com/..."/>
         </div>
       </div>
 
-      <!-- إعدادات المسارات -->
       <div class="card-sard animate-in">
         <div class="card-title"><i class="fas fa-route"></i> إعدادات المسارات الخاصة</div>
         <p class="text-muted" style="font-size:.85rem;margin-bottom:12px;">كل مسار يمكن أن يُلغي الإعدادات العامة</p>
@@ -613,7 +919,6 @@
         </button>
       </div>
 
-      <!-- حفظ الإعدادات -->
       <div class="text-center mt-4 animate-in">
         <button class="btn-primary-sard" onclick="doSaveSettings()" style="padding:12px 36px;font-size:1rem;">
           <i class="fas fa-save"></i> حفظ جميع الإعدادات
@@ -621,10 +926,8 @@
       </div>
     </div>
   </div>
+</div>
 
-</div><!-- /appWrap -->
-
-<!-- ===== Numpad Modal ===== -->
 <div id="numpadOverlay" class="numpad-overlay" style="display:none;" onclick="if(event.target===this)closeNumpad()">
   <div class="numpad-box animate-in">
     <div class="d-flex justify-between align-center" style="margin-bottom:12px;">
@@ -633,8 +936,10 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
+
     <div class="form-control fw-bold" id="numpadDisplay" style="font-size:1.5rem;text-align:center;letter-spacing:.1em;margin-bottom:12px;min-height:52px;display:flex;align-items:center;justify-content:center;">—</div>
     <p class="text-muted text-center" id="numpadHint" style="font-size:.8rem;margin-bottom:10px;"></p>
+
     <div class="numpad-grid">
       <button class="numpad-btn" onclick="numpadPress('1')">١</button>
       <button class="numpad-btn" onclick="numpadPress('2')">٢</button>
@@ -649,6 +954,7 @@
       <button class="numpad-btn" onclick="numpadPress('0')">٠</button>
       <button class="numpad-btn" onclick="numpadClear()" style="font-size:.85rem;color:var(--danger);">مسح</button>
     </div>
+
     <div class="grid-2 mt-3">
       <button class="btn-outline-sard" onclick="closeNumpad()" style="padding:10px;justify-content:center;">إلغاء</button>
       <button class="btn-primary-sard" onclick="numpadConfirm()" style="padding:10px;justify-content:center;">تأكيد</button>
@@ -659,116 +965,162 @@
 <script>
 const API = "https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec";
 
-// ===== google.script.run emulator =====
 class _GSCall {
-  constructor() { this._ok = null; this._err = null; }
-  withSuccessHandler(fn) { this._ok = fn; return this; }
-  withFailureHandler(fn) { this._err = fn; return this; }
+  constructor() {
+    this._ok = null;
+    this._err = null;
+  }
+
+  withSuccessHandler(fn) {
+    this._ok = fn;
+    return this;
+  }
+
+  withFailureHandler(fn) {
+    this._err = fn;
+    return this;
+  }
+
   _resolve(promise) {
     promise
-      .then(d  => { if (this._ok)  this._ok(d);  })
+      .then(d => { if (this._ok) this._ok(d); })
       .catch(e => { if (this._err) this._err(e); });
   }
-  getData()               { this._resolve(_apiGet('getData')); }
-  saveRecord(r)           { this._resolve(_apiPost('saveRecord', r)); }
-  saveSettings(s)         { this._resolve(_apiPost('saveSettings', s)); }
-  saveTrackConfigs(tc)    { this._resolve(_apiPost('saveTrackConfigs', tc)); }
-  saveSardAttendance(p)   { this._resolve(_apiPost('saveSardAttendance', p)); }
-  checkSettingsLockCode(c){ this._resolve(_apiGet('checkSettingsLockCode', {code:c}).then(d => d.ok)); }
+
+  getData()                { this._resolve(_apiGet('getData')); }
+  saveRecord(r)            { this._resolve(_apiPost('saveRecord', r)); }
+  saveSettings(s)          { this._resolve(_apiPost('saveSettings', s)); }
+  saveTrackConfigs(tc)     { this._resolve(_apiPost('saveTrackConfigs', tc)); }
+  saveSardAttendance(p)    { this._resolve(_apiPost('saveSardAttendance', p)); }
+  checkSettingsLockCode(c) { this._resolve(_apiGet('checkSettingsLockCode', { code:c }).then(d => d.ok)); }
 }
 
-// يُنشئ instance جديد في كل مرة تماماً كـ google.script.run
-// النمط: google.script.run.withSuccessHandler(fn).withFailureHandler(fn).method(args)
 const google = {
   script: {
     run: new Proxy({}, {
       get(_, prop) {
-        // إنشاء instance جديد لكل سلسلة استدعاء
         const call = new _GSCall();
-        // إرجاع دالة تستدعي الميثود على الـ instance
-        return typeof _GSCall.prototype[prop] === 'function'
-          ? (...args) => { _GSCall.prototype[prop].apply(call, args); return call; }
-          : call[prop];
+        if (typeof _GSCall.prototype[prop] === 'function') {
+          return (...args) => {
+            _GSCall.prototype[prop].apply(call, args);
+            return call;
+          };
+        }
+        return call[prop];
       }
     })
   }
 };
 
-// ===== كل الطلبات GET عبر JSONP لتجاوز CORS =====
-async function _apiGet(action, params={}) {
-  const url = new URL(API);
-  url.searchParams.set('action', action);
-  Object.keys(params).forEach(k => url.searchParams.set(k, String(params[k])));
-  const res = await fetch(url.toString(), { redirect: 'follow' });
-  const data = await res.json();
-  if (data && data.error) throw new Error(data.error);
-  return data;
+function _jsonpRequest(params = {}) {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+    const script = document.createElement('script');
+    const url = new URL(API);
+
+    Object.keys(params).forEach(key => {
+      let value = params[key];
+      if (typeof value === 'object') value = JSON.stringify(value);
+      url.searchParams.set(key, String(value));
+    });
+
+    url.searchParams.set('prefix', callbackName);
+
+    let finished = false;
+    const cleanup = () => {
+      try { delete window[callbackName]; } catch (e) {}
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+
+    window[callbackName] = function(data) {
+      if (finished) return;
+      finished = true;
+      cleanup();
+
+      if (data && data.error) {
+        reject(new Error(data.error));
+      } else {
+        resolve(data);
+      }
+    };
+
+    script.onerror = function() {
+      if (finished) return;
+      finished = true;
+      cleanup();
+      reject(new Error('فشل طلب JSONP'));
+    };
+
+    script.src = url.toString();
+    document.body.appendChild(script);
+  });
 }
 
-async function _apiPost(action, payload) {
-  // Apps Script لا يدعم CORS مع POST — نحوّل لـ GET مع encode
-  const url = new URL(API);
-  url.searchParams.set('action', action);
-  url.searchParams.set('payload', JSON.stringify(payload));
-  const res = await fetch(url.toString(), { redirect: 'follow' });
-  const data = await res.json();
-  if (data && data.error) throw new Error(data.error);
-  return data;
+function _apiGet(action, params = {}) {
+  return _jsonpRequest({
+    action,
+    ...params
+  });
 }
 
-// ====================================================
-// STATE
-// ====================================================
+function _apiPost(action, payload = {}) {
+  return _jsonpRequest({
+    action,
+    payload: JSON.stringify(payload)
+  });
+}
+
 const STATE = {
-  teacher:        '',
-  settings:       {},
-  trackConfigs:   [],
-  halaqas:        [],
-  students:       [],
-  records:        [],
-  complex:        {},
-  selHalaqa:      null,
-  selStudent:     null,
-  evalSections:   [],
-  evalRecord:     null,
-  attHalaqa:      null,
-  attStatuses:    {},
+  teacher: '',
+  settings: {},
+  trackConfigs: [],
+  halaqas: [],
+  students: [],
+  records: [],
+  complex: {},
+  selHalaqa: null,
+  selStudent: null,
+  evalSections: [],
+  evalRecord: null,
+  attHalaqa: null,
+  attStatuses: {},
   settingsUnlocked: false,
-  numpad: { resolve:null, value:'', maxLen:2, hint:'' },
+  numpad: { resolve:null, value:'', maxLen:2, hint:'' }
 };
 
-// ====================================================
-// INIT
-// ====================================================
 window.addEventListener('load', () => {
   const saved = localStorage.getItem('sard_teacher') || '';
-  if (saved) { STATE.teacher = saved; showApp(); loadData(); }
-  else        { hideSpinner(); }
+  if (saved) {
+    STATE.teacher = saved;
+    showApp();
+    loadData();
+  } else {
+    hideSpinner();
+  }
 
-  // تاريخ اليوم
   const today = new Date().toISOString().split('T')[0];
   const attDateEl = document.getElementById('attDate');
   if (attDateEl) attDateEl.value = today;
 });
 
 function showApp() {
-  document.getElementById('loginWrap').style.display  = 'none';
-  document.getElementById('appWrap').style.display    = 'block';
-  document.getElementById('mainNav').style.display    = 'flex';
-  document.getElementById('mobileNav').style.display  = 'flex';
-  document.getElementById('navTeacher').textContent   = STATE.teacher;
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('appWrap').style.display = 'block';
+  document.getElementById('mainNav').style.display = 'flex';
+  document.getElementById('mobileNav').style.display = 'flex';
+  document.getElementById('navTeacher').textContent = STATE.teacher;
 }
 
 function loadData() {
   showSpinner();
   google.script.run
     .withSuccessHandler(data => {
-      STATE.settings     = data.settings     || {};
+      STATE.settings     = data.settings || {};
       STATE.trackConfigs = data.trackConfigs || [];
-      STATE.halaqas      = data.halaqas      || [];
-      STATE.students     = data.students     || [];
-      STATE.records      = data.records      || [];
-      STATE.complex      = data.complex      || {};
+      STATE.halaqas      = data.halaqas || [];
+      STATE.students     = data.students || [];
+      STATE.records      = data.records || [];
+      STATE.complex      = data.complex || {};
 
       const cn = STATE.complex.complexName || '';
       if (cn) document.getElementById('navComplexName').textContent = '— ' + cn;
@@ -780,17 +1132,18 @@ function loadData() {
     })
     .withFailureHandler(err => {
       hideSpinner();
-      showToast('خطأ في تحميل البيانات: ' + err.message, 'error');
+      showToast('خطأ في تحميل البيانات: ' + (err.message || err), 'error');
     })
     .getData();
 }
 
-// ====================================================
-// LOGIN / LOGOUT
-// ====================================================
 function doLogin() {
   const name = document.getElementById('loginInput').value.trim();
-  if (!name) { showToast('أدخل اسمك أولاً', 'warning'); return; }
+  if (!name) {
+    showToast('أدخل اسمك أولاً', 'warning');
+    return;
+  }
+
   STATE.teacher = name;
   localStorage.setItem('sard_teacher', name);
   showApp();
@@ -799,11 +1152,17 @@ function doLogin() {
 }
 
 function doLogout() {
-  Swal.fire({ title:'تسجيل الخروج', text:'هل تريد الخروج؟', icon:'question',
-    showCancelButton:true, confirmButtonText:'خروج', cancelButtonText:'إلغاء',
-    confirmButtonColor:'#014979' })
-  .then(r => {
+  Swal.fire({
+    title:'تسجيل الخروج',
+    text:'هل تريد الخروج؟',
+    icon:'question',
+    showCancelButton:true,
+    confirmButtonText:'خروج',
+    cancelButtonText:'إلغاء',
+    confirmButtonColor:'#014979'
+  }).then(r => {
     if (!r.isConfirmed) return;
+
     STATE.teacher = '';
     localStorage.removeItem('sard_teacher');
     localStorage.removeItem('sard_admin_unlocked');
@@ -812,49 +1171,44 @@ function doLogout() {
   });
 }
 
-// ====================================================
-// VIEWS
-// ====================================================
 function showView(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-'+id).classList.add('active');
+  const target = document.getElementById('view-' + id);
+  if (target) target.classList.add('active');
+
   document.querySelectorAll('.nav-link-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.mob-btn').forEach(b => b.classList.remove('active'));
-  const nb = document.getElementById('nb-'+id);
-  const mb = document.getElementById('mb-'+id);
+
+  const nb = document.getElementById('nb-' + id);
+  const mb = document.getElementById('mb-' + id);
   if (nb) nb.classList.add('active');
   if (mb) mb.classList.add('active');
-  window.scrollTo({top:0, behavior:'smooth'});
 
-  if (id === 'evaluation') {
-    // لا ننفّذ أي شيء إضافي
-  }
+  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-// ====================================================
-// SELECTION
-// ====================================================
 function renderHalaqas() {
   const s = STATE.settings;
-  const useTracksOnly = s.hideHalaqasAndUseTracksOnly;
-  const activeTrack   = s.activeTrackForSelection || '';
+  const useTracksOnly = !!s.hideHalaqasAndUseTracksOnly;
+  const activeTrack = s.activeTrackForSelection || '';
 
   document.getElementById('halaqaTitle').textContent = useTracksOnly ? 'اختر المسار' : 'اختر الحلقة';
 
   let items = [];
   if (useTracksOnly) {
-    items = STATE.trackConfigs.filter(t=>t.name).map(t=>({ id:'track:'+t.name, name:'مسار '+t.name }));
+    items = STATE.trackConfigs.filter(t => t.name).map(t => ({ id:'track:' + t.name, name:'مسار ' + t.name }));
   } else {
     items = [...STATE.halaqas];
-    if (activeTrack) items.push({ id:'track:'+activeTrack, name:'مسار '+activeTrack });
+    if (activeTrack) items.push({ id:'track:' + activeTrack, name:'مسار ' + activeTrack });
   }
 
   const grid = document.getElementById('halaqaGrid');
   grid.innerHTML = '';
+
   items.forEach(h => {
     const btn = document.createElement('button');
     btn.className = 'sel-btn';
-    btn.innerHTML = `<div class="fw-bold">${h.name}</div>`;
+    btn.innerHTML = `<div class="fw-bold">${escapeHtml(h.name)}</div>`;
     btn.onclick = () => selectHalaqa(h.id, h.name, btn);
     grid.appendChild(btn);
   });
@@ -866,8 +1220,9 @@ function renderHalaqas() {
 }
 
 function selectHalaqa(id, name, btn) {
-  STATE.selHalaqa  = id;
+  STATE.selHalaqa = id;
   STATE.selStudent = null;
+
   document.querySelectorAll('#halaqaGrid .sel-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('startBtnWrap').style.display = 'none';
@@ -876,13 +1231,13 @@ function selectHalaqa(id, name, btn) {
 
 function renderStudents() {
   const hid = STATE.selHalaqa;
-  const isTrack = hid && hid.startsWith('track:');
-  const trackName = isTrack ? hid.replace('track:','') : null;
-  const useTracksOnly = STATE.settings.hideHalaqasAndUseTracksOnly;
+  const isTrack = hid && String(hid).startsWith('track:');
+  const trackName = isTrack ? String(hid).replace('track:', '') : null;
+  const useTracksOnly = !!STATE.settings.hideHalaqasAndUseTracksOnly;
 
   const filtered = STATE.students.filter(s => {
     if (!hid) return false;
-    if (isTrack || useTracksOnly) return s.track === trackName || s.track === (isTrack?trackName:null);
+    if (isTrack || useTracksOnly) return s.track === trackName;
     return s.halaqa === hid;
   });
 
@@ -897,9 +1252,9 @@ function renderStudents() {
 
   filtered.forEach(s => {
     const info = [];
-    if (STATE.settings.showTrackInSelection && s.track) info.push('مسار '+s.track);
+    if (STATE.settings.showTrackInSelection && s.track) info.push('مسار ' + s.track);
     if (!useTracksOnly && s.halaqa) info.push(s.halaqa);
-    if (s.partsCount) info.push(s.partsCount+' جزء');
+    if (s.partsCount) info.push(s.partsCount + ' جزء');
 
     const btn = document.createElement('button');
     btn.className = 'sel-btn';
@@ -909,10 +1264,11 @@ function renderStudents() {
           <i class="fas fa-user" style="color:var(--primary);font-size:.9rem;"></i>
         </div>
         <div style="text-align:right;">
-          <div class="fw-bold" style="font-size:.93rem;">${s.name}</div>
-          <div class="text-muted" style="font-size:.75rem;">${info.join(' · ')}</div>
+          <div class="fw-bold" style="font-size:.93rem;">${escapeHtml(s.name || '')}</div>
+          <div class="text-muted" style="font-size:.75rem;">${escapeHtml(info.join(' · '))}</div>
         </div>
-      </div>`;
+      </div>
+    `;
     btn.onclick = () => selectStudent(s.id, btn);
     grid.appendChild(btn);
   });
@@ -922,204 +1278,207 @@ function renderStudents() {
 
 function selectStudent(id, btn) {
   STATE.selStudent = id;
-  document.querySelectorAll('#studentGrid .sel-btn').forEach(b => {
-    b.classList.remove('active','active-gold');
-  });
+  document.querySelectorAll('#studentGrid .sel-btn').forEach(b => b.classList.remove('active', 'active-gold'));
   btn.classList.add('active-gold');
   document.getElementById('startBtnWrap').style.display = 'block';
 }
 
 function startEvaluation() {
   if (!STATE.selStudent) return;
+
   const student = STATE.students.find(s => s.id === STATE.selStudent);
   if (!student) return;
 
   const eff = getEffectiveSettings(student);
-  const numSec = Math.ceil(student.partsCount * eff.partsDivisions);
-
-  // جلب المقاطع المحفوظة
+  const numSec = Math.ceil((Number(student.partsCount) || 0) * eff.partsDivisions);
   const rec = STATE.records.find(r => r.studentId === student.id);
-  const savedSections = rec ? rec.sections : [];
+  const savedSections = rec && Array.isArray(rec.sections) ? rec.sections : [];
 
-  // بناء مصفوفة المقاطع
   STATE.evalSections = [];
   for (let i = 0; i < numSec; i++) {
     const saved = savedSections[i] || null;
     if (saved && saved.partNumber) {
-      STATE.evalSections.push({ ...saved, wasSavedRead: true, _editing: false });
+      STATE.evalSections.push({ ...saved, wasSavedRead:true, _editing:false });
     } else {
       STATE.evalSections.push({
-        partNumber:'', hizb:'', mistakes:0, warnings:0,
-        score:0, isPassed:false, failFace:'', teacherName:STATE.teacher,
-        wasSavedRead:false, _editing:true
+        partNumber:'',
+        hizb:'',
+        mistakes:0,
+        warnings:0,
+        score:0,
+        isPassed:false,
+        failFace:'',
+        teacherName:STATE.teacher,
+        wasSavedRead:false,
+        _editing:true
       });
     }
   }
 
   STATE.evalRecord = { student, eff };
 
-  // عرض المعلومات
-  document.getElementById('evalStudentName').textContent = student.name;
+  document.getElementById('evalStudentName').textContent = student.name || '';
   document.getElementById('evalStudentInfo').textContent =
-    student.halaqa + ' · مسار ' + (student.track||'—') + ' · ' + student.partsCount + ' جزء · تقسيم ' + eff.partsDivisions;
+    (student.halaqa || '—') +
+    ' · مسار ' + (student.track || '—') +
+    ' · ' + (student.partsCount || 0) +
+    ' جزء · تقسيم ' + eff.partsDivisions;
 
   renderSections();
   updateKPI();
   showView('evaluation');
 }
 
-// ====================================================
-// EVALUATION
-// ====================================================
 function getEffectiveSettings(student) {
   const tc = STATE.trackConfigs.find(t => t.name === student.track);
-  const s  = STATE.settings;
+  const s = STATE.settings;
+
   return {
-    partsDivisions:        tc && tc.partsDivisions        ? tc.partsDivisions        : s.partsDivisions || 2,
-    mistakeDeduction:      tc && tc.mistakeDeduction != null ? tc.mistakeDeduction    : s.mistakeDeduction || 0.5,
-    warningDeduction:      tc && tc.warningDeduction != null ? tc.warningDeduction    : s.warningDeduction || 0.25,
-    passingScorePerSection:tc && tc.passingScorePerSection ? tc.passingScorePerSection: s.passingScorePerSection || 7,
-    requireFailReason:     s.requireFailReason || false,
-    editSectionsCode:      s.editSectionsCode || '',
+    partsDivisions: tc && tc.partsDivisions ? Number(tc.partsDivisions) : Number(s.partsDivisions || 2),
+    mistakeDeduction: tc && tc.mistakeDeduction != null ? Number(tc.mistakeDeduction) : Number(s.mistakeDeduction || 0.5),
+    warningDeduction: tc && tc.warningDeduction != null ? Number(tc.warningDeduction) : Number(s.warningDeduction || 0.25),
+    passingScorePerSection: tc && tc.passingScorePerSection ? Number(tc.passingScorePerSection) : Number(s.passingScorePerSection || 7),
+    requireFailReason: !!s.requireFailReason,
+    editSectionsCode: s.editSectionsCode || ''
   };
 }
 
 function calcScore(sec, eff) {
   const maxScore = 20 / eff.partsDivisions;
-  const score = maxScore - (sec.mistakes * eff.mistakeDeduction) - (sec.warnings * eff.warningDeduction);
+  const score = maxScore - (Number(sec.mistakes || 0) * eff.mistakeDeduction) - (Number(sec.warnings || 0) * eff.warningDeduction);
   return +Math.max(0, score).toFixed(2);
 }
 
 function divLabel(div) {
-  if (div===4) return 'الربع';
-  if (div===1) return 'كامل';
+  if (div === 4) return 'الربع';
+  if (div === 1) return 'كامل';
   return 'الحزب';
 }
 
 function renderSections() {
   const container = document.getElementById('sectionsContainer');
   container.innerHTML = '';
+
   const eff = STATE.evalRecord.eff;
   const div = eff.partsDivisions;
-  const divOptions = div > 1 ? Array.from({length:div},(_,i)=>i+1) : [1];
+  const divOptions = div > 1 ? Array.from({ length:div }, (_, i) => i + 1) : [1];
 
   STATE.evalSections.forEach((sec, idx) => {
-    const isSaved   = sec.wasSavedRead && !sec._editing;
-    const isPassed  = sec.isPassed;
-    const hasData   = sec.partNumber && sec.hizb;
+    const isSaved = sec.wasSavedRead && !sec._editing;
+    const isPassed = !!sec.isPassed;
+    const hasData = !!(sec.partNumber && sec.hizb);
 
     const card = document.createElement('div');
-    card.id = 'sec-card-'+idx;
-    card.className = 'section-card' + (isSaved ? (isPassed?' passed':' failed') : sec._editing?' editing':'');
+    card.id = 'sec-card-' + idx;
+    card.className = 'section-card' + (isSaved ? (isPassed ? ' passed' : ' failed') : (sec._editing ? ' editing' : ''));
 
     if (isSaved && !sec._editing) {
-      // ===== مقطع محفوظ - وضع عرض =====
       const editAllowed = !!eff.editSectionsCode || !!localStorage.getItem('sard_edit_unlocked');
+
       card.innerHTML = `
         <div class="d-flex justify-between align-center" style="margin-bottom:8px;">
           <div class="d-flex align-center gap-2">
-            <span class="badge-sard badge-prim" style="font-size:.75rem;">مقطع ${idx+1}</span>
+            <span class="badge-sard badge-prim" style="font-size:.75rem;">مقطع ${idx + 1}</span>
             ${isPassed
               ? '<span class="badge-sard badge-pass"><i class="fas fa-check-circle"></i> ناجح</span>'
               : '<span class="badge-sard badge-fail"><i class="fas fa-times-circle"></i> راسب</span>'}
           </div>
           <div class="d-flex align-center gap-2">
-            <div class="score-circle ${isPassed?'score-pass':'score-fail'}" style="width:48px;height:48px;font-size:1rem;">
-              ${sec.score}
+            <div class="score-circle ${isPassed ? 'score-pass' : 'score-fail'}" style="width:48px;height:48px;font-size:1rem;">
+              ${escapeHtml(String(sec.score ?? 0))}
             </div>
-            ${editAllowed ? `<button class="btn-outline-sard" style="padding:5px 10px;font-size:.8rem;" onclick="editSection(${idx})">
-              <i class="fas fa-edit"></i>
-            </button>` : ''}
+            ${editAllowed ? `
+              <button class="btn-outline-sard" style="padding:5px 10px;font-size:.8rem;" onclick="editSection(${idx})">
+                <i class="fas fa-edit"></i>
+              </button>
+            ` : ''}
           </div>
         </div>
         <div class="d-flex align-center gap-2 flex-wrap">
-          <span class="badge-sard badge-gold"><i class="fas fa-book"></i> جزء ${sec.partNumber} · ${divLabel(div)} ${sec.hizb}</span>
-          ${sec.mistakes ? `<span class="badge-sard badge-fail">أخطاء: ${sec.mistakes}</span>` : ''}
-          ${sec.warnings ? `<span class="badge-sard" style="background:#fef3c7;color:#92400e;">تنبيهات: ${sec.warnings}</span>` : ''}
-          ${sec.failFace ? `<span class="badge-sard badge-fail"><i class="fas fa-comment"></i> ${sec.failFace}</span>` : ''}
-          ${sec.teacherName ? `<span class="text-muted" style="font-size:.78rem;"><i class="fas fa-user-tie"></i> ${sec.teacherName}</span>` : ''}
-        </div>`;
+          <span class="badge-sard badge-gold"><i class="fas fa-book"></i> جزء ${escapeHtml(String(sec.partNumber))} · ${escapeHtml(divLabel(div))} ${escapeHtml(String(sec.hizb))}</span>
+          ${sec.mistakes ? `<span class="badge-sard badge-fail">أخطاء: ${escapeHtml(String(sec.mistakes))}</span>` : ''}
+          ${sec.warnings ? `<span class="badge-sard" style="background:#fef3c7;color:#92400e;">تنبيهات: ${escapeHtml(String(sec.warnings))}</span>` : ''}
+          ${sec.failFace ? `<span class="badge-sard badge-fail"><i class="fas fa-comment"></i> ${escapeHtml(sec.failFace)}</span>` : ''}
+          ${sec.teacherName ? `<span class="text-muted" style="font-size:.78rem;"><i class="fas fa-user-tie"></i> ${escapeHtml(sec.teacherName)}</span>` : ''}
+        </div>
+      `;
     } else {
-      // ===== مقطع للإدخال =====
       const score = hasData ? calcScore(sec, eff) : 0;
       const passed = hasData ? score >= eff.passingScorePerSection : false;
       const maxScore = 20 / div;
 
       card.innerHTML = `
         <div class="d-flex justify-between align-center" style="margin-bottom:12px;">
-          <span class="badge-sard badge-prim">مقطع ${idx+1}</span>
+          <span class="badge-sard badge-prim">مقطع ${idx + 1}</span>
           ${hasData
-            ? `<div class="score-circle ${passed?'score-pass':'score-fail'}" id="score-circle-${idx}">
-                ${score} <span style="font-size:.65rem;">/${maxScore}</span>
+            ? `<div class="score-circle ${passed ? 'score-pass' : 'score-fail'}" id="score-circle-${idx}">
+                ${escapeHtml(String(score))} <span style="font-size:.65rem;">/${escapeHtml(String(maxScore))}</span>
                </div>`
             : `<div class="score-circle" style="border-color:var(--border);color:var(--text-muted);" id="score-circle-${idx}">—</div>`}
         </div>
 
-        <!-- رقم الجزء -->
         <div class="grid-2" style="margin-bottom:10px;">
           <div>
             <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">رقم الجزء</label>
-            <button class="form-control" style="text-align:center;cursor:pointer;font-weight:700;font-size:1.1rem;" 
-              id="partBtn-${idx}" onclick="openPartPad(${idx})">
-              ${sec.partNumber || '—'}
+            <button class="form-control" style="text-align:center;cursor:pointer;font-weight:700;font-size:1.1rem;" id="partBtn-${idx}" onclick="openPartPad(${idx})">
+              ${escapeHtml(sec.partNumber || '—')}
             </button>
           </div>
           <div>
-            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">${divLabel(div)}</label>
+            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">${escapeHtml(divLabel(div))}</label>
             <div class="d-flex gap-2 flex-wrap">
               ${divOptions.map(o => `
-                <button class="sel-btn ${String(sec.hizb)===String(o)?'active':''}" 
-                  onclick="setHizb(${idx},${o},this)" style="padding:6px 14px;flex:1;text-align:center;">
+                <button class="sel-btn ${String(sec.hizb) === String(o) ? 'active' : ''}"
+                        onclick="setHizb(${idx},${o},this)"
+                        style="padding:6px 14px;flex:1;text-align:center;">
                   ${o}
-                </button>`).join('')}
+                </button>
+              `).join('')}
             </div>
           </div>
         </div>
 
-        <!-- الأخطاء والتنبيهات -->
         <div class="grid-2" style="margin-bottom:10px;">
           <div>
             <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
               <i class="fas fa-times-circle" style="color:var(--danger);"></i> أخطاء
-              <small style="font-size:.72rem;">(−${eff.mistakeDeduction}/خطأ)</small>
+              <small style="font-size:.72rem;">(−${escapeHtml(String(eff.mistakeDeduction))}/خطأ)</small>
             </label>
             <div class="counter-wrap">
               <button class="counter-btn" onclick="changeCount(${idx},'mistakes',-1)">−</button>
-              <span class="counter-val" id="mis-${idx}">${sec.mistakes}</span>
+              <span class="counter-val" id="mis-${idx}">${escapeHtml(String(sec.mistakes || 0))}</span>
               <button class="counter-btn" onclick="changeCount(${idx},'mistakes',1)">+</button>
             </div>
           </div>
           <div>
             <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
               <i class="fas fa-exclamation-triangle" style="color:var(--warning);"></i> تنبيهات
-              <small style="font-size:.72rem;">(−${eff.warningDeduction}/تنبيه)</small>
+              <small style="font-size:.72rem;">(−${escapeHtml(String(eff.warningDeduction))}/تنبيه)</small>
             </label>
             <div class="counter-wrap">
               <button class="counter-btn" onclick="changeCount(${idx},'warnings',-1)">−</button>
-              <span class="counter-val" id="war-${idx}">${sec.warnings}</span>
+              <span class="counter-val" id="war-${idx}">${escapeHtml(String(sec.warnings || 0))}</span>
               <button class="counter-btn" onclick="changeCount(${idx},'warnings',1)">+</button>
             </div>
           </div>
         </div>
 
-        <!-- سبب الرسوب -->
-        ${(!passed && hasData) || eff.requireFailReason && !passed ? `
-        <div style="margin-bottom:6px;">
-          <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
-            <i class="fas fa-comment-alt" style="color:var(--danger);"></i> سبب الرسوب
-          </label>
-          <input type="text" class="form-control" style="font-size:.88rem;" 
-            id="fail-${idx}" value="${sec.failFace||''}"
-            placeholder="اختياري..." onchange="setFailFace(${idx},this.value)"/>
-        </div>` : ''}
+        ${((!passed && hasData) || (eff.requireFailReason && !passed)) ? `
+          <div style="margin-bottom:6px;">
+            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
+              <i class="fas fa-comment-alt" style="color:var(--danger);"></i> سبب الرسوب
+            </label>
+            <input type="text" class="form-control" style="font-size:.88rem;" id="fail-${idx}" value="${escapeAttr(sec.failFace || '')}" placeholder="اختياري..." onchange="setFailFace(${idx}, this.value)"/>
+          </div>
+        ` : ''}
 
-        <!-- رقم الهاتف إذا راسب مع قالب واتساب -->
         ${(!passed && hasData && STATE.evalRecord.student.guardianPhone && STATE.settings.whatsappTemplate) ? `
-        <div class="mt-3">
-          <button class="btn-outline-sard" style="font-size:.82rem;padding:6px 12px;" onclick="sendWhatsapp(${idx})">
-            <i class="fab fa-whatsapp" style="color:#25d366;"></i> إرسال للولي
-          </button>
-        </div>` : ''}
+          <div class="mt-3">
+            <button class="btn-outline-sard" style="font-size:.82rem;padding:6px 12px;" onclick="sendWhatsapp(${idx})">
+              <i class="fab fa-whatsapp" style="color:#25d366;"></i> إرسال للولي
+            </button>
+          </div>
+        ` : ''}
       `;
     }
 
@@ -1134,16 +1493,21 @@ function editSection(idx) {
   const code = STATE.evalRecord.eff.editSectionsCode;
 
   if (code && !localStorage.getItem('sard_edit_unlocked')) {
-    Swal.fire({ title:'رمز التعديل', input:'password', inputPlaceholder:'أدخل رمز التعديل',
-      confirmButtonText:'فتح', confirmButtonColor:'#014979' })
-    .then(r => {
+    Swal.fire({
+      title:'رمز التعديل',
+      input:'password',
+      inputPlaceholder:'أدخل رمز التعديل',
+      confirmButtonText:'فتح',
+      confirmButtonColor:'#014979'
+    }).then(r => {
       if (!r.isConfirmed) return;
+
       if (r.value === code) {
-        localStorage.setItem('sard_edit_unlocked','1');
+        localStorage.setItem('sard_edit_unlocked', '1');
         sec._editing = true;
         renderSections();
       } else {
-        showToast('رمز غير صحيح','error');
+        showToast('رمز غير صحيح', 'error');
       }
     });
   } else {
@@ -1154,13 +1518,19 @@ function editSection(idx) {
 
 function openPartPad(idx) {
   const sec = STATE.evalSections[idx];
-  openNumpad('رقم الجزء (1-30)', sec.partNumber||'', 2, 'أدخل رقماً من 1 إلى 30')
+
+  openNumpad('رقم الجزء (1-30)', sec.partNumber || '', 2, 'أدخل رقماً من 1 إلى 30')
     .then(val => {
-      const n = parseInt(val);
-      if (!val || isNaN(n) || n<1 || n>30) { showToast('رقم غير صالح','warning'); return; }
+      const n = parseInt(val, 10);
+      if (!val || isNaN(n) || n < 1 || n > 30) {
+        showToast('رقم غير صالح', 'warning');
+        return;
+      }
+
       STATE.evalSections[idx].partNumber = String(n);
       recalcSection(idx);
-      document.getElementById('partBtn-'+idx).textContent = n;
+      const partBtn = document.getElementById('partBtn-' + idx);
+      if (partBtn) partBtn.textContent = String(n);
     });
 }
 
@@ -1174,8 +1544,11 @@ function setHizb(idx, val, btn) {
 
 function changeCount(idx, field, delta) {
   const sec = STATE.evalSections[idx];
-  sec[field] = Math.max(0, (sec[field]||0) + delta);
-  document.getElementById((field==='mistakes'?'mis':'war')+'-'+idx).textContent = sec[field];
+  sec[field] = Math.max(0, Number(sec[field] || 0) + delta);
+
+  const el = document.getElementById((field === 'mistakes' ? 'mis' : 'war') + '-' + idx);
+  if (el) el.textContent = String(sec[field]);
+
   recalcSection(idx);
 }
 
@@ -1186,25 +1559,23 @@ function setFailFace(idx, val) {
 function recalcSection(idx) {
   const sec = STATE.evalSections[idx];
   const eff = STATE.evalRecord.eff;
+
   if (!sec.partNumber || !sec.hizb) return;
 
-  const score  = calcScore(sec, eff);
+  const score = calcScore(sec, eff);
   const passed = score >= eff.passingScorePerSection;
-  sec.score    = score;
+  sec.score = score;
   sec.isPassed = passed;
 
   const maxScore = 20 / eff.partsDivisions;
-  const circle = document.getElementById('score-circle-'+idx);
+  const circle = document.getElementById('score-circle-' + idx);
   if (circle) {
-    circle.className = 'score-circle '+(passed?'score-pass':'score-fail');
-    circle.innerHTML = `${score} <span style="font-size:.65rem;">/${maxScore}</span>`;
+    circle.className = 'score-circle ' + (passed ? 'score-pass' : 'score-fail');
+    circle.innerHTML = `${escapeHtml(String(score))} <span style="font-size:.65rem;">/${escapeHtml(String(maxScore))}</span>`;
   }
 
-  // إعادة رسم سبب الرسوب إذا تغيرت الحالة
-  const card = document.getElementById('sec-card-'+idx);
-  if (card) {
-    card.className = 'section-card editing';
-  }
+  const card = document.getElementById('sec-card-' + idx);
+  if (card) card.className = 'section-card editing';
 
   updateKPI();
 }
@@ -1212,29 +1583,39 @@ function recalcSection(idx) {
 function updateKPI() {
   const secs = STATE.evalSections.filter(s => s.partNumber && s.hizb);
   const passed = secs.filter(s => s.isPassed).length;
-  document.getElementById('kpiTotal').textContent  = STATE.evalSections.length;
+
+  document.getElementById('kpiTotal').textContent = String(STATE.evalSections.length);
   document.getElementById('kpiPassed').textContent = passed + '/' + secs.length;
 }
 
 function sendWhatsapp(idx) {
   const sec = STATE.evalSections[idx];
-  const st  = STATE.evalRecord.student;
-  let tpl   = STATE.settings.whatsappTemplate || '';
-  tpl = tpl.replace(/{اسم_الطالب}/g, st.name)
-            .replace(/{الحلقة}/g, st.halaqa)
-            .replace(/{الدرجة}/g, sec.score)
-            .replace(/{المسمع}/g, STATE.teacher);
-  const phone = st.guardianPhone.replace(/\D/g,'');
-  const url   = `https://wa.me/966${phone.replace(/^0/,'')}?text=${encodeURIComponent(tpl)}`;
-  window.open(url,'_blank');
+  const st = STATE.evalRecord.student;
+  const guardianPhone = String(st.guardianPhone || '').replace(/\D/g, '');
+
+  if (!guardianPhone) {
+    showToast('لا يوجد رقم ولي أمر', 'warning');
+    return;
+  }
+
+  let tpl = STATE.settings.whatsappTemplate || '';
+  tpl = tpl.replace(/{اسم_الطالب}/g, st.name || '')
+           .replace(/{الحلقة}/g, st.halaqa || '')
+           .replace(/{الدرجة}/g, String(sec.score || 0))
+           .replace(/{المسمع}/g, STATE.teacher || '');
+
+  const url = `https://wa.me/966${guardianPhone.replace(/^0/, '')}?text=${encodeURIComponent(tpl)}`;
+  window.open(url, '_blank');
 }
 
 function doSaveRecord() {
   const student = STATE.evalRecord.student;
-  const eff     = STATE.evalRecord.eff;
-
   const sections = STATE.evalSections.filter(s => s.partNumber && s.hizb);
-  if (!sections.length) { showToast('لم تُدخل أي مقطع','warning'); return; }
+
+  if (!sections.length) {
+    showToast('لم تُدخل أي مقطع', 'warning');
+    return;
+  }
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -1242,45 +1623,54 @@ function doSaveRecord() {
   google.script.run
     .withSuccessHandler(() => {
       hideSpinner();
-      Swal.fire({ icon:'success', title:'تم الحفظ!', text:'تم حفظ نتيجة '+student.name+' بنجاح',
-        confirmButtonColor:'#014979', confirmButtonText:'ممتاز' })
-      .then(() => { loadData(); showView('selection'); });
+      Swal.fire({
+        icon:'success',
+        title:'تم الحفظ!',
+        text:'تم حفظ نتيجة ' + (student.name || '') + ' بنجاح',
+        confirmButtonColor:'#014979',
+        confirmButtonText:'ممتاز'
+      }).then(() => {
+        loadData();
+        showView('selection');
+      });
     })
     .withFailureHandler(err => {
       hideSpinner();
-      showToast('خطأ في الحفظ: ' + err.message,'error');
+      showToast('خطأ في الحفظ: ' + (err.message || err), 'error');
     })
     .saveRecord({
-      studentId:   student.id,
+      studentId: student.id,
       teacherName: STATE.teacher,
-      date:        today,
-      sections:    STATE.evalSections,
+      date: today,
+      sections: STATE.evalSections
     });
 }
 
-// ====================================================
-// ATTENDANCE
-// ====================================================
 function loadAttendanceHalaqas() {
   const s = STATE.settings;
-  const useTracksOnly = s.hideHalaqasAndUseTracksOnly;
+  const useTracksOnly = !!s.hideHalaqasAndUseTracksOnly;
+
   let items = [];
   if (useTracksOnly) {
-    items = STATE.trackConfigs.filter(t=>t.name).map(t=>({ id:'track:'+t.name, name:'مسار '+t.name }));
+    items = STATE.trackConfigs.filter(t => t.name).map(t => ({ id:'track:' + t.name, name:'مسار ' + t.name }));
   } else {
     items = [...STATE.halaqas];
-    if (s.activeTrackForSelection) items.push({ id:'track:'+s.activeTrackForSelection, name:'مسار '+s.activeTrackForSelection });
+    if (s.activeTrackForSelection) {
+      items.push({ id:'track:' + s.activeTrackForSelection, name:'مسار ' + s.activeTrackForSelection });
+    }
   }
 
   const grid = document.getElementById('attHalaqaGrid');
   grid.innerHTML = '';
+
   items.forEach(h => {
     const btn = document.createElement('button');
     btn.className = 'sel-btn';
-    btn.innerHTML = `<div class="fw-bold">${h.name}</div>`;
+    btn.innerHTML = `<div class="fw-bold">${escapeHtml(h.name)}</div>`;
     btn.onclick = () => selectAttHalaqa(h.id, h.name, btn);
     grid.appendChild(btn);
   });
+
   STATE.attHalaqa = null;
   STATE.attStatuses = {};
   document.getElementById('attStudentsCard').style.display = 'none';
@@ -1289,6 +1679,7 @@ function loadAttendanceHalaqas() {
 function selectAttHalaqa(id, name, btn) {
   STATE.attHalaqa = { id, name };
   STATE.attStatuses = {};
+
   document.querySelectorAll('#attHalaqaGrid .sel-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderAttStudents();
@@ -1296,45 +1687,52 @@ function selectAttHalaqa(id, name, btn) {
 
 function renderAttStudents() {
   const hid = STATE.attHalaqa.id;
-  const isTrack = hid.startsWith('track:');
-  const trackName = isTrack ? hid.replace('track:','') : null;
-  const useTracksOnly = STATE.settings.hideHalaqasAndUseTracksOnly;
+  const isTrack = String(hid).startsWith('track:');
+  const trackName = isTrack ? String(hid).replace('track:', '') : null;
+  const useTracksOnly = !!STATE.settings.hideHalaqasAndUseTracksOnly;
 
   const filtered = STATE.students.filter(s => {
-    if (isTrack||useTracksOnly) return s.track === trackName;
+    if (isTrack || useTracksOnly) return s.track === trackName;
     return s.halaqa === hid;
   });
 
   document.getElementById('attStudentCount').textContent = filtered.length + ' طالب';
+
   const list = document.getElementById('attStudentsList');
   list.innerHTML = '';
 
   const statuses = [
     { id:'present', label:'حاضر',  cls:'s-present' },
-    { id:'late',    label:'متأخر', cls:'s-late'    },
-    { id:'excused', label:'معتذر', cls:'s-excused'  },
-    { id:'absent',  label:'غائب',  cls:'s-absent'  },
+    { id:'late',    label:'متأخر', cls:'s-late' },
+    { id:'excused', label:'معتذر', cls:'s-excused' },
+    { id:'absent',  label:'غائب',  cls:'s-absent' }
   ];
 
   filtered.forEach(s => {
     const row = document.createElement('div');
     row.className = 'att-row';
+
     const btns = statuses.map(st => `
-      <button class="att-status-btn ${(STATE.attStatuses[s.id]||'present')===st.id?st.cls:''}" 
-        id="att-${s.id}-${st.id}" onclick="setAttStatus('${s.id}','${st.id}')">
+      <button class="att-status-btn ${(STATE.attStatuses[s.id] || 'present') === st.id ? st.cls : ''}"
+              id="att-${escapeAttr(String(s.id))}-${st.id}"
+              onclick="setAttStatus('${jsString(String(s.id))}','${st.id}')">
         ${st.label}
-      </button>`).join('');
+      </button>
+    `).join('');
+
     row.innerHTML = `
       <div class="d-flex align-center gap-2" style="flex-shrink:0;">
         <div style="width:32px;height:32px;border-radius:50%;background:var(--primary-lt);display:flex;align-items:center;justify-content:center;">
           <i class="fas fa-user" style="color:var(--primary);font-size:.8rem;"></i>
         </div>
         <div>
-          <div class="fw-bold" style="font-size:.9rem;">${s.name}</div>
-          ${s.track ? `<div class="text-muted" style="font-size:.75rem;">مسار ${s.track}</div>` : ''}
+          <div class="fw-bold" style="font-size:.9rem;">${escapeHtml(s.name || '')}</div>
+          ${s.track ? `<div class="text-muted" style="font-size:.75rem;">مسار ${escapeHtml(s.track)}</div>` : ''}
         </div>
       </div>
-      <div class="d-flex gap-1 flex-wrap">${btns}</div>`;
+      <div class="d-flex gap-1 flex-wrap">${btns}</div>
+    `;
+
     list.appendChild(row);
   });
 
@@ -1343,107 +1741,139 @@ function renderAttStudents() {
 
 function setAttStatus(studentId, status) {
   STATE.attStatuses[studentId] = status;
-  const statuses = ['present','late','excused','absent'];
-  const cls      = { present:'s-present', late:'s-late', excused:'s-excused', absent:'s-absent' };
+
+  const statuses = ['present', 'late', 'excused', 'absent'];
+  const cls = {
+    present:'s-present',
+    late:'s-late',
+    excused:'s-excused',
+    absent:'s-absent'
+  };
+
   statuses.forEach(s => {
     const btn = document.getElementById(`att-${studentId}-${s}`);
-    if (btn) btn.className = 'att-status-btn' + (s===status?' '+cls[s]:'');
+    if (btn) btn.className = 'att-status-btn' + (s === status ? ' ' + cls[s] : '');
   });
 }
 
 function doSaveAttendance() {
-  if (!STATE.attHalaqa) { showToast('اختر الحلقة أولاً','warning'); return; }
+  if (!STATE.attHalaqa) {
+    showToast('اختر الحلقة أولاً', 'warning');
+    return;
+  }
+
   const date = document.getElementById('attDate').value;
-  if (!date) { showToast('اختر التاريخ','warning'); return; }
+  if (!date) {
+    showToast('اختر التاريخ', 'warning');
+    return;
+  }
 
   const hid = STATE.attHalaqa.id;
-  const isTrack = hid.startsWith('track:');
-  const trackName = isTrack ? hid.replace('track:','') : null;
-  const useTracksOnly = STATE.settings.hideHalaqasAndUseTracksOnly;
+  const isTrack = String(hid).startsWith('track:');
+  const trackName = isTrack ? String(hid).replace('track:', '') : null;
+  const useTracksOnly = !!STATE.settings.hideHalaqasAndUseTracksOnly;
 
   const filtered = STATE.students.filter(s => {
-    if (isTrack||useTracksOnly) return s.track === trackName;
+    if (isTrack || useTracksOnly) return s.track === trackName;
     return s.halaqa === hid;
   });
 
-  if (!filtered.length) { showToast('لا يوجد طلاب','warning'); return; }
+  if (!filtered.length) {
+    showToast('لا يوجد طلاب', 'warning');
+    return;
+  }
 
   const payload = {
-    date, halaqaId: hid, halaqaName: STATE.attHalaqa.name,
-    students: filtered.map(s => ({ studentId:s.id, status: STATE.attStatuses[s.id]||'present' }))
+    date,
+    halaqaId: hid,
+    halaqaName: STATE.attHalaqa.name,
+    students: filtered.map(s => ({
+      studentId: s.id,
+      status: STATE.attStatuses[s.id] || 'present'
+    }))
   };
 
-  document.getElementById('attSaveBtn').disabled = true;
+  const saveBtn = document.getElementById('attSaveBtn');
+  saveBtn.disabled = true;
+
   google.script.run
     .withSuccessHandler(() => {
-      document.getElementById('attSaveBtn').disabled = false;
-      Swal.fire({ icon:'success', title:'تم الحفظ!', text:'تم حفظ تحضير '+filtered.length+' طالب',
-        confirmButtonColor:'#014979', confirmButtonText:'ممتاز', timer:2000, timerProgressBar:true });
+      saveBtn.disabled = false;
+      Swal.fire({
+        icon:'success',
+        title:'تم الحفظ!',
+        text:'تم حفظ تحضير ' + filtered.length + ' طالب',
+        confirmButtonColor:'#014979',
+        confirmButtonText:'ممتاز',
+        timer:2000,
+        timerProgressBar:true
+      });
     })
     .withFailureHandler(err => {
-      document.getElementById('attSaveBtn').disabled = false;
-      showToast('خطأ: '+err.message,'error');
+      saveBtn.disabled = false;
+      showToast('خطأ: ' + (err.message || err), 'error');
     })
     .saveSardAttendance(payload);
 }
 
-// ====================================================
-// SETTINGS
-// ====================================================
 function loadSettingsForm() {
-  const s  = STATE.settings;
-  const hs = s.hasSettingsLock;
+  const s = STATE.settings;
+  const hs = !!s.hasSettingsLock;
 
   document.getElementById('settingsLockOverlay').style.display = hs && !STATE.settingsUnlocked ? 'block' : 'none';
-  document.getElementById('settingsContent').style.display     = !hs || STATE.settingsUnlocked ? 'block' : 'none';
+  document.getElementById('settingsContent').style.display = (!hs || STATE.settingsUnlocked) ? 'block' : 'none';
 
   if (!hs || STATE.settingsUnlocked) {
-    document.getElementById('s-partsDivisions').value  = s.partsDivisions || 2;
+    document.getElementById('s-partsDivisions').value = s.partsDivisions || 2;
     document.getElementById('s-mistakeDeduction').value = s.mistakeDeduction ?? 0.5;
     document.getElementById('s-warningDeduction').value = s.warningDeduction ?? 0.25;
-    document.getElementById('s-passingScore').value    = s.passingScorePerSection ?? 7;
-    document.getElementById('s-showTrack').checked     = !!s.showTrackInSelection;
-    document.getElementById('s-hideHalaqas').checked   = !!s.hideHalaqasAndUseTracksOnly;
-    document.getElementById('s-requireFail').checked   = !!s.requireFailReason;
-    document.getElementById('s-activeTrack').value     = s.activeTrackForSelection || '';
-    document.getElementById('s-lockCode').value        = '';
-    document.getElementById('s-editCode').value        = '';
-    document.getElementById('s-whatsapp').value        = s.whatsappTemplate || '';
-    document.getElementById('s-calendarUrl').value     = s.calendarUrl || '';
-    document.getElementById('s-driveUrl').value        = s.driveUrl || '';
+    document.getElementById('s-passingScore').value = s.passingScorePerSection ?? 7;
+    document.getElementById('s-showTrack').checked = !!s.showTrackInSelection;
+    document.getElementById('s-hideHalaqas').checked = !!s.hideHalaqasAndUseTracksOnly;
+    document.getElementById('s-requireFail').checked = !!s.requireFailReason;
+    document.getElementById('s-activeTrack').value = s.activeTrackForSelection || '';
+    document.getElementById('s-lockCode').value = '';
+    document.getElementById('s-editCode').value = '';
+    document.getElementById('s-whatsapp').value = s.whatsappTemplate || '';
+    document.getElementById('s-calendarUrl').value = s.calendarUrl || '';
+    document.getElementById('s-driveUrl').value = s.driveUrl || '';
+
     renderTrackConfigs();
   }
 }
 
 function unlockSettings() {
   const code = document.getElementById('settingsCodeInput').value;
+
   google.script.run
     .withSuccessHandler(ok => {
       if (ok) {
         STATE.settingsUnlocked = true;
         loadSettingsForm();
       } else {
-        showToast('رمز غير صحيح','error');
+        showToast('رمز غير صحيح', 'error');
       }
     })
-    .withFailureHandler(() => showToast('خطأ في التحقق','error'))
+    .withFailureHandler(() => {
+      showToast('خطأ في التحقق', 'error');
+    })
     .checkSettingsLockCode(code);
 }
 
 function doSaveSettings() {
   const newSettings = {
-    partsDivisions:              Number(document.getElementById('s-partsDivisions').value),
-    mistakeDeduction:            Number(document.getElementById('s-mistakeDeduction').value),
-    warningDeduction:            Number(document.getElementById('s-warningDeduction').value),
-    passingScorePerSection:      Number(document.getElementById('s-passingScore').value),
-    showTrackInSelection:        document.getElementById('s-showTrack').checked,
+    partsDivisions: Number(document.getElementById('s-partsDivisions').value),
+    mistakeDeduction: Number(document.getElementById('s-mistakeDeduction').value),
+    warningDeduction: Number(document.getElementById('s-warningDeduction').value),
+    passingScorePerSection: Number(document.getElementById('s-passingScore').value),
+    showTrackInSelection: document.getElementById('s-showTrack').checked,
     hideHalaqasAndUseTracksOnly: document.getElementById('s-hideHalaqas').checked,
-    requireFailReason:           document.getElementById('s-requireFail').checked,
-    activeTrackForSelection:     document.getElementById('s-activeTrack').value.trim(),
-    editSectionsCode:            document.getElementById('s-editCode').value.trim(),
-    whatsappTemplate:            document.getElementById('s-whatsapp').value.trim(),
-    calendarUrl:                 document.getElementById('s-calendarUrl').value.trim(),
-    driveUrl:                    document.getElementById('s-driveUrl').value.trim(),
+    requireFailReason: document.getElementById('s-requireFail').checked,
+    activeTrackForSelection: document.getElementById('s-activeTrack').value.trim(),
+    editSectionsCode: document.getElementById('s-editCode').value.trim(),
+    whatsappTemplate: document.getElementById('s-whatsapp').value.trim(),
+    calendarUrl: document.getElementById('s-calendarUrl').value.trim(),
+    driveUrl: document.getElementById('s-driveUrl').value.trim()
   };
 
   const lockCode = document.getElementById('s-lockCode').value.trim();
@@ -1452,110 +1882,194 @@ function doSaveSettings() {
   showSpinner();
   google.script.run
     .withSuccessHandler(() => {
-      google.script.run.saveTrackConfigs(STATE.trackConfigs);
-      hideSpinner();
-      Swal.fire({ icon:'success', title:'تم الحفظ!', confirmButtonColor:'#014979',
-        confirmButtonText:'ممتاز', timer:1800, timerProgressBar:true });
-      loadData();
+      google.script.run
+        .withSuccessHandler(() => {
+          hideSpinner();
+          Swal.fire({
+            icon:'success',
+            title:'تم الحفظ!',
+            confirmButtonColor:'#014979',
+            confirmButtonText:'ممتاز',
+            timer:1800,
+            timerProgressBar:true
+          });
+          loadData();
+        })
+        .withFailureHandler(err => {
+          hideSpinner();
+          showToast('تم حفظ الإعدادات لكن فشل حفظ المسارات: ' + (err.message || err), 'warning');
+        })
+        .saveTrackConfigs(STATE.trackConfigs);
     })
-    .withFailureHandler(err => { hideSpinner(); showToast('خطأ: '+err.message,'error'); })
+    .withFailureHandler(err => {
+      hideSpinner();
+      showToast('خطأ: ' + (err.message || err), 'error');
+    })
     .saveSettings(newSettings);
 }
 
-// ===== Track Configs =====
 function renderTrackConfigs() {
   const list = document.getElementById('trackConfigsList');
   list.innerHTML = '';
+
   STATE.trackConfigs.forEach((tc, idx) => {
     const div = document.createElement('div');
     div.className = 'card-sard animate-in';
     div.style.marginBottom = '10px';
+
     div.innerHTML = `
       <div class="d-flex justify-between align-center" style="margin-bottom:10px;">
-        <span class="fw-bold" style="font-size:.9rem;color:var(--primary);">${tc.name||'مسار جديد'}</span>
+        <span class="fw-bold" style="font-size:.9rem;color:var(--primary);">${escapeHtml(tc.name || 'مسار جديد')}</span>
         <button class="btn-danger-sard" style="padding:5px 10px;font-size:.8rem;" onclick="removeTrackConfig(${idx})">
           <i class="fas fa-trash"></i>
         </button>
       </div>
+
       <div class="grid-2" style="gap:8px;">
-        <div><label class="text-muted" style="font-size:.8rem;">اسم المسار</label>
-          <input class="form-control" value="${tc.name||''}" onchange="updateTC(${idx},'name',this.value)"/></div>
-        <div><label class="text-muted" style="font-size:.8rem;">تقسيم الجزء</label>
+        <div>
+          <label class="text-muted" style="font-size:.8rem;">اسم المسار</label>
+          <input class="form-control" value="${escapeAttr(tc.name || '')}" onchange="updateTC(${idx},'name',this.value)"/>
+        </div>
+
+        <div>
+          <label class="text-muted" style="font-size:.8rem;">تقسيم الجزء</label>
           <select class="form-select" onchange="updateTC(${idx},'partsDivisions',+this.value)">
-            <option ${tc.partsDivisions==1?'selected':''}>1</option>
-            <option ${tc.partsDivisions==2?'selected':''}>2</option>
-            <option ${tc.partsDivisions==4?'selected':''}>4</option>
-          </select></div>
-        <div><label class="text-muted" style="font-size:.8rem;">خصم الخطأ</label>
-          <input type="number" class="form-control" step="0.25" value="${tc.mistakeDeduction||0}" onchange="updateTC(${idx},'mistakeDeduction',+this.value)"/></div>
-        <div><label class="text-muted" style="font-size:.8rem;">خصم التنبيه</label>
-          <input type="number" class="form-control" step="0.25" value="${tc.warningDeduction||0}" onchange="updateTC(${idx},'warningDeduction',+this.value)"/></div>
-        <div><label class="text-muted" style="font-size:.8rem;">درجة النجاح</label>
-          <input type="number" class="form-control" step="0.5" value="${tc.passingScorePerSection||0}" onchange="updateTC(${idx},'passingScorePerSection',+this.value)"/></div>
-      </div>`;
+            <option ${Number(tc.partsDivisions) === 1 ? 'selected' : ''}>1</option>
+            <option ${Number(tc.partsDivisions) === 2 ? 'selected' : ''}>2</option>
+            <option ${Number(tc.partsDivisions) === 4 ? 'selected' : ''}>4</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-muted" style="font-size:.8rem;">خصم الخطأ</label>
+          <input type="number" class="form-control" step="0.25" value="${escapeAttr(String(tc.mistakeDeduction ?? 0))}" onchange="updateTC(${idx},'mistakeDeduction',+this.value)"/>
+        </div>
+
+        <div>
+          <label class="text-muted" style="font-size:.8rem;">خصم التنبيه</label>
+          <input type="number" class="form-control" step="0.25" value="${escapeAttr(String(tc.warningDeduction ?? 0))}" onchange="updateTC(${idx},'warningDeduction',+this.value)"/>
+        </div>
+
+        <div>
+          <label class="text-muted" style="font-size:.8rem;">درجة النجاح</label>
+          <input type="number" class="form-control" step="0.5" value="${escapeAttr(String(tc.passingScorePerSection ?? 0))}" onchange="updateTC(${idx},'passingScorePerSection',+this.value)"/>
+        </div>
+      </div>
+    `;
+
     list.appendChild(div);
   });
 }
 
-function updateTC(idx, field, val) { STATE.trackConfigs[idx][field] = val; }
-function addTrackConfig() {
-  STATE.trackConfigs.push({ name:'', partsDivisions:2, mistakeDeduction:0.5, warningDeduction:0.25, passingScorePerSection:7 });
-  renderTrackConfigs();
+function updateTC(idx, field, val) {
+  STATE.trackConfigs[idx][field] = val;
 }
-function removeTrackConfig(idx) {
-  STATE.trackConfigs.splice(idx,1);
+
+function addTrackConfig() {
+  STATE.trackConfigs.push({
+    name:'',
+    partsDivisions:2,
+    mistakeDeduction:0.5,
+    warningDeduction:0.25,
+    passingScorePerSection:7
+  });
   renderTrackConfigs();
 }
 
-// ====================================================
-// NUMPAD
-// ====================================================
+function removeTrackConfig(idx) {
+  STATE.trackConfigs.splice(idx, 1);
+  renderTrackConfigs();
+}
+
 function openNumpad(title, initVal, maxLen, hint) {
-  STATE.numpad = { resolve:null, value:String(initVal||''), maxLen, hint };
+  STATE.numpad = {
+    resolve:null,
+    value:String(initVal || ''),
+    maxLen,
+    hint
+  };
+
   document.getElementById('numpadTitle').textContent = title;
-  document.getElementById('numpadHint').textContent  = hint;
+  document.getElementById('numpadHint').textContent = hint;
   document.getElementById('numpadDisplay').textContent = STATE.numpad.value || '—';
   document.getElementById('numpadOverlay').style.display = 'flex';
-  return new Promise(res => { STATE.numpad.resolve = res; });
+
+  return new Promise(res => {
+    STATE.numpad.resolve = res;
+  });
 }
+
 function closeNumpad() {
   document.getElementById('numpadOverlay').style.display = 'none';
   if (STATE.numpad.resolve) STATE.numpad.resolve(null);
 }
+
 function numpadPress(d) {
   const np = STATE.numpad;
   if (np.value.length >= np.maxLen) return;
   np.value += d;
   document.getElementById('numpadDisplay').textContent = np.value || '—';
 }
+
 function numpadBackspace() {
-  STATE.numpad.value = STATE.numpad.value.slice(0,-1);
+  STATE.numpad.value = STATE.numpad.value.slice(0, -1);
   document.getElementById('numpadDisplay').textContent = STATE.numpad.value || '—';
 }
+
 function numpadClear() {
   STATE.numpad.value = '';
   document.getElementById('numpadDisplay').textContent = '—';
 }
+
 function numpadConfirm() {
   document.getElementById('numpadOverlay').style.display = 'none';
   if (STATE.numpad.resolve) STATE.numpad.resolve(STATE.numpad.value);
 }
 
-// ====================================================
-// HELPERS
-// ====================================================
-function showSpinner() { document.getElementById('spinner').style.display = 'flex'; }
-function hideSpinner() { document.getElementById('spinner').style.display = 'none'; }
+function showSpinner() {
+  document.getElementById('spinner').style.display = 'flex';
+}
 
-function showToast(msg, icon='info') {
-  Swal.fire({ toast:true, position:'top-end', icon, title:msg,
-    showConfirmButton:false, timer:3000, timerProgressBar:true,
-    didOpen:(t)=>{ t.addEventListener('mouseenter',Swal.stopTimer); t.addEventListener('mouseleave',Swal.resumeTimer); }
+function hideSpinner() {
+  document.getElementById('spinner').style.display = 'none';
+}
+
+function showToast(msg, icon = 'info') {
+  Swal.fire({
+    toast:true,
+    position:'top-end',
+    icon,
+    title:msg,
+    showConfirmButton:false,
+    timer:3000,
+    timerProgressBar:true,
+    didOpen:(t) => {
+      t.addEventListener('mouseenter', Swal.stopTimer);
+      t.addEventListener('mouseleave', Swal.resumeTimer);
+    }
   });
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value);
+}
+
+function jsString(value) {
+  return String(value ?? '')
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'");
 }
 </script>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
