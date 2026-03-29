@@ -659,16 +659,39 @@
 <script>
 const API = "https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec";
 
-const _GS = {
-  withSuccessHandler(fn){ this._ok=fn; return this; },
-  withFailureHandler(fn){ this._err=fn; return this; },
-  _ok:null, _err:null,
-  getData(){ _apiGet('getData').then(d=>this._ok&&this._ok(d)).catch(e=>this._err&&this._err(e)); return this; },
-  saveRecord(r){ _apiPost('saveRecord',r).then(d=>this._ok&&this._ok(d)).catch(e=>this._err&&this._err(e)); return this; },
-  saveSettings(s){ _apiPost('saveSettings',s).then(d=>this._ok&&this._ok(d)).catch(e=>this._err&&this._err(e)); return this; },
-  saveTrackConfigs(tc){ _apiPost('saveTrackConfigs',tc).then(d=>this._ok&&this._ok(d)).catch(e=>this._err&&this._err(e)); return this; },
-  saveSardAttendance(p){ _apiPost('saveSardAttendance',p).then(d=>this._ok&&this._ok(d)).catch(e=>this._err&&this._err(e)); return this; },
-  checkSettingsLockCode(c){ _apiGet('checkSettingsLockCode',{code:c}).then(d=>this._ok&&this._ok(d.ok)).catch(e=>this._err&&this._err(e)); return this; },
+// ===== google.script.run emulator =====
+class _GSCall {
+  constructor() { this._ok = null; this._err = null; }
+  withSuccessHandler(fn) { this._ok = fn; return this; }
+  withFailureHandler(fn) { this._err = fn; return this; }
+  _resolve(promise) {
+    promise
+      .then(d  => { if (this._ok)  this._ok(d);  })
+      .catch(e => { if (this._err) this._err(e); });
+  }
+  getData()               { this._resolve(_apiGet('getData')); }
+  saveRecord(r)           { this._resolve(_apiPost('saveRecord', r)); }
+  saveSettings(s)         { this._resolve(_apiPost('saveSettings', s)); }
+  saveTrackConfigs(tc)    { this._resolve(_apiPost('saveTrackConfigs', tc)); }
+  saveSardAttendance(p)   { this._resolve(_apiPost('saveSardAttendance', p)); }
+  checkSettingsLockCode(c){ this._resolve(_apiGet('checkSettingsLockCode', {code:c}).then(d => d.ok)); }
+}
+
+// يُنشئ instance جديد في كل مرة تماماً كـ google.script.run
+// النمط: google.script.run.withSuccessHandler(fn).withFailureHandler(fn).method(args)
+const google = {
+  script: {
+    run: new Proxy({}, {
+      get(_, prop) {
+        // إنشاء instance جديد لكل سلسلة استدعاء
+        const call = new _GSCall();
+        // إرجاع دالة تستدعي الميثود على الـ instance
+        return typeof _GSCall.prototype[prop] === 'function'
+          ? (...args) => { _GSCall.prototype[prop].apply(call, args); return call; }
+          : call[prop];
+      }
+    })
+  }
 };
 
 async function _apiGet(action, params={}) {
@@ -737,7 +760,7 @@ function showApp() {
 
 function loadData() {
   showSpinner();
-  window._GS
+  google.script.run
     .withSuccessHandler(data => {
       STATE.settings     = data.settings     || {};
       STATE.trackConfigs = data.trackConfigs || [];
@@ -1215,7 +1238,7 @@ function doSaveRecord() {
   const today = new Date().toISOString().split('T')[0];
 
   showSpinner();
-  window._GS
+  google.script.run
     .withSuccessHandler(() => {
       hideSpinner();
       Swal.fire({ icon:'success', title:'تم الحفظ!', text:'تم حفظ نتيجة '+student.name+' بنجاح',
@@ -1350,7 +1373,7 @@ function doSaveAttendance() {
   };
 
   document.getElementById('attSaveBtn').disabled = true;
-  window._GS
+  google.script.run
     .withSuccessHandler(() => {
       document.getElementById('attSaveBtn').disabled = false;
       Swal.fire({ icon:'success', title:'تم الحفظ!', text:'تم حفظ تحضير '+filtered.length+' طالب',
@@ -1393,7 +1416,7 @@ function loadSettingsForm() {
 
 function unlockSettings() {
   const code = document.getElementById('settingsCodeInput').value;
-  window._GS
+  google.script.run
     .withSuccessHandler(ok => {
       if (ok) {
         STATE.settingsUnlocked = true;
@@ -1426,9 +1449,9 @@ function doSaveSettings() {
   if (lockCode) newSettings.settingsLockCode = lockCode;
 
   showSpinner();
-  window._GS
+  google.script.run
     .withSuccessHandler(() => {
-      window._GS.saveTrackConfigs(STATE.trackConfigs);
+      google.script.run.saveTrackConfigs(STATE.trackConfigs);
       hideSpinner();
       Swal.fire({ icon:'success', title:'تم الحفظ!', confirmButtonColor:'#014979',
         confirmButtonText:'ممتاز', timer:1800, timerProgressBar:true });
