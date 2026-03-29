@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"> 
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -454,53 +454,43 @@
     .att-status-btn.s-excused { background:#dbeafe; border-color:#1d4ed8; color:#1e40af; }
     .att-status-btn.s-absent  { background:#fee2e2; border-color:#dc2626; color:#991b1b; }
 
-    .numpad-overlay {
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.4);
-      display:flex;
-      align-items:flex-end;
-      justify-content:center;
-      z-index:2000;
-    }
-
-    @media(min-width:640px) {
-      .numpad-overlay { align-items:center; }
-    }
-
-    .numpad-box {
-      background:#fff;
-      border-radius:var(--radius) var(--radius) 0 0;
-      padding:20px;
+    /* ====== Student History Table ====== */
+    .history-table {
       width:100%;
-      max-width:380px;
+      border-collapse:collapse;
+      font-size:.82rem;
+      margin-top:8px;
     }
 
-    @media(min-width:640px) {
-      .numpad-box { border-radius:var(--radius); }
-    }
-
-    .numpad-grid {
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:8px;
-    }
-
-    .numpad-btn {
-      padding:14px;
-      border-radius:var(--radius-sm);
-      border:1.5px solid var(--border);
-      background:#fff;
-      font-size:1.3rem;
-      font-weight:700;
-      cursor:pointer;
-      font-family:'Tajawal',sans-serif;
-      transition:all .15s;
-    }
-
-    .numpad-btn:hover {
+    .history-table th {
       background:var(--primary-lt);
-      border-color:var(--primary);
+      color:var(--primary);
+      font-weight:700;
+      padding:7px 10px;
+      text-align:center;
+      border:1px solid var(--border);
+    }
+
+    .history-table td {
+      padding:6px 10px;
+      border:1px solid var(--border);
+      text-align:center;
+      background:#fff;
+    }
+
+    .history-table tr.pass-row td { background:#f0faf5; }
+    .history-table tr.fail-row td { background:#fef2f2; }
+
+    /* ====== Section inline counters on mobile ====== */
+    .counters-row {
+      display:flex;
+      gap:12px;
+      flex-wrap:nowrap;
+      margin-bottom:10px;
+    }
+
+    .counters-row > div {
+      flex:1;
     }
 
     .setting-row {
@@ -614,6 +604,29 @@
       from { opacity:0; transform:translateY(12px); }
       to   { opacity:1; transform:none; }
     }
+
+    /* Native input styling */
+    input[type="number"].native-input {
+      font-family:'Tajawal',sans-serif !important;
+      border-radius:var(--radius-sm) !important;
+      border:1.5px solid var(--border) !important;
+      font-size:0.95rem !important;
+      padding:8px 12px !important;
+      width:100%;
+      text-align:center;
+      -moz-appearance:textfield;
+    }
+
+    input[type="number"].native-input:focus {
+      border-color:var(--primary) !important;
+      outline:none;
+      box-shadow:0 0 0 3px rgba(1,73,121,0.10) !important;
+    }
+
+    input[type="number"].native-input::-webkit-outer-spin-button,
+    input[type="number"].native-input::-webkit-inner-spin-button {
+      -webkit-appearance:none;
+    }
   </style>
 </head>
 <body>
@@ -686,6 +699,7 @@
 
 <div id="appWrap" style="display:none;">
 
+  <!-- ===== صفحة الاختيار ===== -->
   <div id="view-selection" class="view active page-wrap">
     <div class="d-flex justify-between align-center" style="margin-bottom:16px;">
       <h2 style="font-size:1.1rem;font-weight:800;color:var(--primary);">
@@ -710,6 +724,7 @@
     </div>
   </div>
 
+  <!-- ===== صفحة التسميع ===== -->
   <div id="view-evaluation" class="view page-wrap">
     <div class="d-flex align-center gap-2" style="margin-bottom:16px;">
       <button class="btn-outline-sard" onclick="showView('selection')" style="padding:8px 12px;">
@@ -719,6 +734,14 @@
         <div id="evalStudentName" style="font-size:1.1rem;font-weight:800;color:var(--primary);"></div>
         <div id="evalStudentInfo" class="text-muted"></div>
       </div>
+    </div>
+
+    <!-- جدول ملخص ما قرأه الطالب -->
+    <div class="card-sard animate-in" id="studentHistoryCard" style="display:none;">
+      <div class="card-title" style="margin-bottom:10px;">
+        <i class="fas fa-history" style="color:var(--gold);"></i> سجل قراءة الطالب
+      </div>
+      <div id="studentHistoryContent"></div>
     </div>
 
     <div class="grid-2 animate-in" style="margin-bottom:16px;">
@@ -743,33 +766,44 @@
     </div>
   </div>
 
+  <!-- ===== صفحة التحضير ===== -->
   <div id="view-attendance" class="view page-wrap">
-    <div class="card-sard animate-in">
-      <div class="card-title"><i class="fas fa-clipboard-check"></i> التحضير اليومي</div>
-      <div class="d-flex align-center gap-2 flex-wrap" style="margin-bottom:14px;">
-        <label class="fw-bold text-muted" style="font-size:.85rem;">التاريخ:</label>
-        <input type="date" id="attDate" class="form-control" style="width:auto;" />
-        <button class="btn-outline-sard" onclick="loadAttendanceHalaqas()" style="padding:8px 14px;">
-          <i class="fas fa-sync-alt"></i>
-        </button>
-      </div>
-      <div class="grid-4" id="attHalaqaGrid"></div>
+    <!-- قفل التحضير -->
+    <div id="attLockOverlay" class="card-sard text-center animate-in" style="display:none;">
+      <i class="fas fa-lock" style="font-size:3rem;color:var(--primary);margin-bottom:12px;"></i>
+      <h3 style="font-weight:700;color:var(--primary);margin-bottom:8px;">التحضير مقفل</h3>
+      <p class="text-muted" style="margin-bottom:16px;">أدخل رمز الدخول للمتابعة</p>
+      <input type="password" id="attCodeInput" class="form-control" placeholder="رمز الدخول..." style="max-width:280px;margin:0 auto 12px;"/>
+      <button class="btn-primary-sard" onclick="unlockAttendance()"><i class="fas fa-unlock"></i> فتح التحضير</button>
     </div>
 
-    <div class="card-sard animate-in" id="attStudentsCard" style="display:none;">
-      <div class="d-flex justify-between align-center" style="margin-bottom:14px;">
-        <div class="card-title" style="margin-bottom:0;"><i class="fas fa-users"></i> طلاب الحلقة</div>
-        <span id="attStudentCount" class="badge-sard badge-prim"></span>
+    <div id="attContent" style="display:none;">
+      <div class="card-sard animate-in">
+        <div class="card-title"><i class="fas fa-clipboard-check"></i> التحضير اليومي</div>
+        <div class="d-flex align-center gap-2 flex-wrap" style="margin-bottom:14px;">
+          <button class="btn-outline-sard" onclick="loadAttendanceHalaqas()" style="padding:8px 14px;">
+            <i class="fas fa-sync-alt"></i> تحديث
+          </button>
+        </div>
+        <div class="grid-4" id="attHalaqaGrid"></div>
       </div>
-      <div id="attStudentsList" style="display:flex;flex-direction:column;gap:8px;"></div>
-      <div class="mt-4">
-        <button class="btn-primary-sard" onclick="doSaveAttendance()" id="attSaveBtn">
-          <i class="fas fa-save"></i> حفظ التحضير
-        </button>
+
+      <div class="card-sard animate-in" id="attStudentsCard" style="display:none;">
+        <div class="d-flex justify-between align-center" style="margin-bottom:14px;">
+          <div class="card-title" style="margin-bottom:0;"><i class="fas fa-users"></i> طلاب الحلقة</div>
+          <span id="attStudentCount" class="badge-sard badge-prim"></span>
+        </div>
+        <div id="attStudentsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        <div class="mt-4">
+          <button class="btn-primary-sard" onclick="doSaveAttendance()" id="attSaveBtn">
+            <i class="fas fa-save"></i> حفظ التحضير
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- ===== صفحة الإعدادات ===== -->
   <div id="view-settings" class="view page-wrap">
     <div id="settingsLockOverlay" style="display:none;" class="card-sard text-center animate-in">
       <i class="fas fa-lock" style="font-size:3rem;color:var(--primary);margin-bottom:12px;"></i>
@@ -846,7 +880,7 @@
         <div class="setting-row">
           <div>
             <div class="setting-label">إلزام سبب الرسوب</div>
-            <div class="setting-desc">يُطلب من المسمّع تحديد سبب الرسوب</div>
+            <div class="setting-desc">يُطلب من المسمّع تحديد وجه الرسوب (اختياري دائماً)</div>
           </div>
           <label class="toggle-wrap">
             <input type="checkbox" id="s-requireFail" />
@@ -870,7 +904,7 @@
         <div class="setting-row">
           <div>
             <div class="setting-label">رمز قفل الإعدادات</div>
-            <div class="setting-desc">فارغ = بدون قفل</div>
+            <div class="setting-desc">فارغ = بدون قفل (يُستخدم أيضاً لقفل التحضير)</div>
           </div>
           <input type="password" id="s-lockCode" class="form-control" style="width:140px;" placeholder="فارغ = بدون قفل"/>
         </div>
@@ -878,9 +912,9 @@
         <div class="setting-row">
           <div>
             <div class="setting-label">رمز تعديل المقاطع</div>
-            <div class="setting-desc">فارغ = لا يُسمح بتعديل المقاطع المحفوظة</div>
+            <div class="setting-desc">فارغ = يُسمح بالتعديل بحرية</div>
           </div>
-          <input type="password" id="s-editCode" class="form-control" style="width:140px;" placeholder="فارغ = منع التعديل"/>
+          <input type="password" id="s-editCode" class="form-control" style="width:140px;" placeholder="فارغ = تعديل حر"/>
         </div>
       </div>
 
@@ -892,22 +926,13 @@
           <code>{الحلقة}</code>
           <code>{الدرجة}</code>
           <code>{المسمع}</code>
+          <code>{اجزاء_مجتازة}</code>
+          <code>{اجزاء_رسوب}</code>
+          <code>{اجزاء_محفوظة}</code>
+          <code>{اجزاء_معروضة}</code>
+          <code>{النسبة}</code>
         </p>
-        <textarea id="s-whatsapp" class="form-control" rows="3" placeholder="أدخل نص الرسالة..."></textarea>
-      </div>
-
-      <div class="card-sard animate-in">
-        <div class="card-title"><i class="fas fa-link"></i> روابط خارجية</div>
-
-        <div class="setting-row">
-          <div><div class="setting-label">رابط تقويم Google</div></div>
-          <input type="url" id="s-calendarUrl" class="form-control" style="max-width:300px;" placeholder="https://calendar.google.com/..."/>
-        </div>
-
-        <div class="setting-row">
-          <div><div class="setting-label">رابط Google Drive</div></div>
-          <input type="url" id="s-driveUrl" class="form-control" style="max-width:300px;" placeholder="https://drive.google.com/..."/>
-        </div>
+        <textarea id="s-whatsapp" class="form-control" rows="4" placeholder="أدخل نص الرسالة..."></textarea>
       </div>
 
       <div class="card-sard animate-in">
@@ -928,40 +953,6 @@
   </div>
 </div>
 
-<div id="numpadOverlay" class="numpad-overlay" style="display:none;" onclick="if(event.target===this)closeNumpad()">
-  <div class="numpad-box animate-in">
-    <div class="d-flex justify-between align-center" style="margin-bottom:12px;">
-      <span id="numpadTitle" class="fw-bold" style="color:var(--primary);font-size:.95rem;"></span>
-      <button onclick="closeNumpad()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--text-muted);">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-
-    <div class="form-control fw-bold" id="numpadDisplay" style="font-size:1.5rem;text-align:center;letter-spacing:.1em;margin-bottom:12px;min-height:52px;display:flex;align-items:center;justify-content:center;">—</div>
-    <p class="text-muted text-center" id="numpadHint" style="font-size:.8rem;margin-bottom:10px;"></p>
-
-    <div class="numpad-grid">
-      <button class="numpad-btn" onclick="numpadPress('1')">١</button>
-      <button class="numpad-btn" onclick="numpadPress('2')">٢</button>
-      <button class="numpad-btn" onclick="numpadPress('3')">٣</button>
-      <button class="numpad-btn" onclick="numpadPress('4')">٤</button>
-      <button class="numpad-btn" onclick="numpadPress('5')">٥</button>
-      <button class="numpad-btn" onclick="numpadPress('6')">٦</button>
-      <button class="numpad-btn" onclick="numpadPress('7')">٧</button>
-      <button class="numpad-btn" onclick="numpadPress('8')">٨</button>
-      <button class="numpad-btn" onclick="numpadPress('9')">٩</button>
-      <button class="numpad-btn" onclick="numpadBackspace()" style="font-size:1rem;">⌫</button>
-      <button class="numpad-btn" onclick="numpadPress('0')">٠</button>
-      <button class="numpad-btn" onclick="numpadClear()" style="font-size:.85rem;color:var(--danger);">مسح</button>
-    </div>
-
-    <div class="grid-2 mt-3">
-      <button class="btn-outline-sard" onclick="closeNumpad()" style="padding:10px;justify-content:center;">إلغاء</button>
-      <button class="btn-primary-sard" onclick="numpadConfirm()" style="padding:10px;justify-content:center;">تأكيد</button>
-    </div>
-  </div>
-</div>
-
 <script>
 const API = "https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec";
 
@@ -970,29 +961,19 @@ class _GSCall {
     this._ok = null;
     this._err = null;
   }
-
-  withSuccessHandler(fn) {
-    this._ok = fn;
-    return this;
-  }
-
-  withFailureHandler(fn) {
-    this._err = fn;
-    return this;
-  }
-
+  withSuccessHandler(fn) { this._ok = fn; return this; }
+  withFailureHandler(fn) { this._err = fn; return this; }
   _resolve(promise) {
     promise
       .then(d => { if (this._ok) this._ok(d); })
       .catch(e => { if (this._err) this._err(e); });
   }
-
   getData()                { this._resolve(_apiGet('getData')); }
   saveRecord(r)            { this._resolve(_apiPost('saveRecord', r)); }
   saveSettings(s)          { this._resolve(_apiPost('saveSettings', s)); }
   saveTrackConfigs(tc)     { this._resolve(_apiPost('saveTrackConfigs', tc)); }
   saveSardAttendance(p)    { this._resolve(_apiPost('saveSardAttendance', p)); }
-  checkSettingsLockCode(c) { this._resolve(_apiGet('checkSettingsLockCode', { code:c }).then(d => d.ok)); }
+  checkSettingsLockCode(c) { this._resolve(_apiGet('checkSettingsLockCode', { code:c })); }
 }
 
 const google = {
@@ -1036,12 +1017,8 @@ function _jsonpRequest(params = {}) {
       if (finished) return;
       finished = true;
       cleanup();
-
-      if (data && data.error) {
-        reject(new Error(data.error));
-      } else {
-        resolve(data);
-      }
+      if (data && data.error) reject(new Error(data.error));
+      else resolve(data);
     };
 
     script.onerror = function() {
@@ -1057,19 +1034,16 @@ function _jsonpRequest(params = {}) {
 }
 
 function _apiGet(action, params = {}) {
-  return _jsonpRequest({
-    action,
-    ...params
-  });
+  return _jsonpRequest({ action, ...params });
 }
 
 function _apiPost(action, payload = {}) {
-  return _jsonpRequest({
-    action,
-    payload: JSON.stringify(payload)
-  });
+  return _jsonpRequest({ action, payload: JSON.stringify(payload) });
 }
 
+// =============================================
+// STATE
+// =============================================
 const STATE = {
   teacher: '',
   settings: {},
@@ -1085,9 +1059,12 @@ const STATE = {
   attHalaqa: null,
   attStatuses: {},
   settingsUnlocked: false,
-  numpad: { resolve:null, value:'', maxLen:2, hint:'' }
+  attUnlocked: false
 };
 
+// =============================================
+// INIT
+// =============================================
 window.addEventListener('load', () => {
   const saved = localStorage.getItem('sard_teacher') || '';
   if (saved) {
@@ -1097,10 +1074,6 @@ window.addEventListener('load', () => {
   } else {
     hideSpinner();
   }
-
-  const today = new Date().toISOString().split('T')[0];
-  const attDateEl = document.getElementById('attDate');
-  if (attDateEl) attDateEl.value = today;
 });
 
 function showApp() {
@@ -1139,11 +1112,7 @@ function loadData() {
 
 function doLogin() {
   const name = document.getElementById('loginInput').value.trim();
-  if (!name) {
-    showToast('أدخل اسمك أولاً', 'warning');
-    return;
-  }
-
+  if (!name) { showToast('أدخل اسمك أولاً', 'warning'); return; }
   STATE.teacher = name;
   localStorage.setItem('sard_teacher', name);
   showApp();
@@ -1162,10 +1131,8 @@ function doLogout() {
     confirmButtonColor:'#014979'
   }).then(r => {
     if (!r.isConfirmed) return;
-
     STATE.teacher = '';
     localStorage.removeItem('sard_teacher');
-    localStorage.removeItem('sard_admin_unlocked');
     localStorage.removeItem('sard_edit_unlocked');
     location.reload();
   });
@@ -1184,9 +1151,15 @@ function showView(id) {
   if (nb) nb.classList.add('active');
   if (mb) mb.classList.add('active');
 
+  // إذا فتح صفحة التحضير تحقق من القفل
+  if (id === 'attendance') checkAttendanceLock();
+
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
+// =============================================
+// HALAQAS & STUDENTS
+// =============================================
 function renderHalaqas() {
   const s = STATE.settings;
   const useTracksOnly = !!s.hideHalaqasAndUseTracksOnly;
@@ -1204,7 +1177,6 @@ function renderHalaqas() {
 
   const grid = document.getElementById('halaqaGrid');
   grid.innerHTML = '';
-
   items.forEach(h => {
     const btn = document.createElement('button');
     btn.className = 'sel-btn';
@@ -1222,7 +1194,6 @@ function renderHalaqas() {
 function selectHalaqa(id, name, btn) {
   STATE.selHalaqa = id;
   STATE.selStudent = null;
-
   document.querySelectorAll('#halaqaGrid .sel-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('startBtnWrap').style.display = 'none';
@@ -1283,9 +1254,11 @@ function selectStudent(id, btn) {
   document.getElementById('startBtnWrap').style.display = 'block';
 }
 
+// =============================================
+// EVALUATION
+// =============================================
 function startEvaluation() {
   if (!STATE.selStudent) return;
-
   const student = STATE.students.find(s => s.id === STATE.selStudent);
   if (!student) return;
 
@@ -1324,15 +1297,78 @@ function startEvaluation() {
     ' · ' + (student.partsCount || 0) +
     ' جزء · تقسيم ' + eff.partsDivisions;
 
+  renderStudentHistory(student, rec, eff);
   renderSections();
   updateKPI();
   showView('evaluation');
 }
 
+// ===== جدول تاريخ الطالب =====
+function renderStudentHistory(student, rec, eff) {
+  const card = document.getElementById('studentHistoryCard');
+  const content = document.getElementById('studentHistoryContent');
+
+  const sections = rec && Array.isArray(rec.sections) ? rec.sections.filter(s => s && s.partNumber) : [];
+
+  if (!sections.length) {
+    card.style.display = 'none';
+    return;
+  }
+
+  const totalParts = student.partsCount || 0;
+  const displayedCount = sections.length;
+  const passedCount = sections.filter(s => s.isPassed).length;
+  const failedCount = displayedCount - passedCount;
+  const remaining = Math.max(0, totalParts - displayedCount / eff.partsDivisions);
+  const percent = displayedCount > 0 ? Math.round(passedCount / displayedCount * 100) : 0;
+
+  // صفوف الجدول
+  let rows = '';
+  sections.forEach((s, i) => {
+    const isPassed = !!s.isPassed;
+    rows += `
+      <tr class="${isPassed ? 'pass-row' : 'fail-row'}">
+        <td>${i + 1}</td>
+        <td>${escapeHtml(String(s.partNumber || ''))}</td>
+        <td>${escapeHtml(String(s.hizb || ''))}</td>
+        <td>${escapeHtml(String(s.score ?? 0))}</td>
+        <td>${isPassed ? '<span style="color:#1a7a4a;font-weight:700;">✓</span>' : '<span style="color:#c0392b;font-weight:700;">✗</span>'}</td>
+        <td style="font-size:.75rem;">${escapeHtml(s.teacherName || '')}</td>
+      </tr>
+    `;
+  });
+
+  content.innerHTML = `
+    <div class="d-flex gap-2 flex-wrap" style="margin-bottom:10px;">
+      <span class="badge-sard badge-prim">المحفوظة: ${totalParts}</span>
+      <span class="badge-sard badge-prim">المعروضة: ${displayedCount}</span>
+      <span class="badge-sard badge-pass">المجتازة: ${passedCount}</span>
+      <span class="badge-sard badge-fail">الرسوب: ${failedCount}</span>
+      <span class="badge-sard badge-gold">المتبقية: ${remaining}</span>
+      <span class="badge-sard" style="background:#f1f5f9;color:#475569;">النسبة: ${percent}%</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>الجزء</th>
+            <th>الحزب/الربع</th>
+            <th>الدرجة</th>
+            <th>النتيجة</th>
+            <th>المسمّع</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+  card.style.display = 'block';
+}
+
 function getEffectiveSettings(student) {
   const tc = STATE.trackConfigs.find(t => t.name === student.track);
   const s = STATE.settings;
-
   return {
     partsDivisions: tc && tc.partsDivisions ? Number(tc.partsDivisions) : Number(s.partsDivisions || 2),
     mistakeDeduction: tc && tc.mistakeDeduction != null ? Number(tc.mistakeDeduction) : Number(s.mistakeDeduction || 0.5),
@@ -1355,10 +1391,46 @@ function divLabel(div) {
   return 'الحزب';
 }
 
+// الحصول على قيم الأجزاء/الأحزاب المستخدمة مسبقاً (لمنع التكرار)
+function getUsedCombos(currentIdx) {
+  const used = {};
+  STATE.evalSections.forEach((sec, i) => {
+    if (i !== currentIdx && sec.partNumber && sec.hizb) {
+      const key = String(sec.partNumber) + '_' + String(sec.hizb);
+      used[key] = true;
+    }
+  });
+  return used;
+}
+
+// اقتراح الحزب/الربع التالي تلقائياً
+function autoSuggestHizb(idx) {
+  const eff = STATE.evalRecord.eff;
+  const div = eff.partsDivisions;
+  const sec = STATE.evalSections[idx];
+  if (!sec.partNumber || div <= 1) return;
+
+  const partNum = String(sec.partNumber);
+  // ابحث عن أي حزب مستخدم لهذا الجزء في مقاطع أخرى
+  const usedHizbs = new Set();
+  STATE.evalSections.forEach((s, i) => {
+    if (i !== idx && String(s.partNumber) === partNum && s.hizb) {
+      usedHizbs.add(String(s.hizb));
+    }
+  });
+
+  // اقترح أول حزب غير مستخدم
+  for (let h = 1; h <= div; h++) {
+    if (!usedHizbs.has(String(h))) {
+      sec.hizb = h;
+      break;
+    }
+  }
+}
+
 function renderSections() {
   const container = document.getElementById('sectionsContainer');
   container.innerHTML = '';
-
   const eff = STATE.evalRecord.eff;
   const div = eff.partsDivisions;
   const divOptions = div > 1 ? Array.from({ length:div }, (_, i) => i + 1) : [1];
@@ -1373,8 +1445,7 @@ function renderSections() {
     card.className = 'section-card' + (isSaved ? (isPassed ? ' passed' : ' failed') : (sec._editing ? ' editing' : ''));
 
     if (isSaved && !sec._editing) {
-      const editAllowed = !!eff.editSectionsCode || !!localStorage.getItem('sard_edit_unlocked');
-
+      const editAllowed = !eff.editSectionsCode || !!localStorage.getItem('sard_edit_unlocked');
       card.innerHTML = `
         <div class="d-flex justify-between align-center" style="margin-bottom:8px;">
           <div class="d-flex align-center gap-2">
@@ -1387,18 +1458,16 @@ function renderSections() {
             <div class="score-circle ${isPassed ? 'score-pass' : 'score-fail'}" style="width:48px;height:48px;font-size:1rem;">
               ${escapeHtml(String(sec.score ?? 0))}
             </div>
-            ${editAllowed ? `
-              <button class="btn-outline-sard" style="padding:5px 10px;font-size:.8rem;" onclick="editSection(${idx})">
-                <i class="fas fa-edit"></i>
-              </button>
-            ` : ''}
+            <button class="btn-outline-sard" style="padding:5px 10px;font-size:.8rem;" onclick="editSection(${idx})">
+              <i class="fas fa-edit"></i>
+            </button>
           </div>
         </div>
         <div class="d-flex align-center gap-2 flex-wrap">
           <span class="badge-sard badge-gold"><i class="fas fa-book"></i> جزء ${escapeHtml(String(sec.partNumber))} · ${escapeHtml(divLabel(div))} ${escapeHtml(String(sec.hizb))}</span>
           ${sec.mistakes ? `<span class="badge-sard badge-fail">أخطاء: ${escapeHtml(String(sec.mistakes))}</span>` : ''}
           ${sec.warnings ? `<span class="badge-sard" style="background:#fef3c7;color:#92400e;">تنبيهات: ${escapeHtml(String(sec.warnings))}</span>` : ''}
-          ${sec.failFace ? `<span class="badge-sard badge-fail"><i class="fas fa-comment"></i> ${escapeHtml(sec.failFace)}</span>` : ''}
+          ${sec.failFace ? `<span class="badge-sard badge-fail"><i class="fas fa-comment"></i> وجه ${escapeHtml(sec.failFace)}</span>` : ''}
           ${sec.teacherName ? `<span class="text-muted" style="font-size:.78rem;"><i class="fas fa-user-tie"></i> ${escapeHtml(sec.teacherName)}</span>` : ''}
         </div>
       `;
@@ -1406,6 +1475,7 @@ function renderSections() {
       const score = hasData ? calcScore(sec, eff) : 0;
       const passed = hasData ? score >= eff.passingScorePerSection : false;
       const maxScore = 20 / div;
+      const usedCombos = getUsedCombos(idx);
 
       card.innerHTML = `
         <div class="d-flex justify-between align-center" style="margin-bottom:12px;">
@@ -1420,29 +1490,39 @@ function renderSections() {
         <div class="grid-2" style="margin-bottom:10px;">
           <div>
             <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">رقم الجزء</label>
-            <button class="form-control" style="text-align:center;cursor:pointer;font-weight:700;font-size:1.1rem;" id="partBtn-${idx}" onclick="openPartPad(${idx})">
-              ${escapeHtml(sec.partNumber || '—')}
-            </button>
+            <input type="number" class="native-input" id="partInput-${idx}"
+              value="${escapeAttr(String(sec.partNumber || ''))}"
+              min="1" max="30" placeholder="1-30"
+              onchange="setPartNumber(${idx}, this.value)"
+              oninput="setPartNumber(${idx}, this.value)"
+            />
           </div>
           <div>
             <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">${escapeHtml(divLabel(div))}</label>
             <div class="d-flex gap-2 flex-wrap">
-              ${divOptions.map(o => `
-                <button class="sel-btn ${String(sec.hizb) === String(o) ? 'active' : ''}"
-                        onclick="setHizb(${idx},${o},this)"
-                        style="padding:6px 14px;flex:1;text-align:center;">
-                  ${o}
-                </button>
-              `).join('')}
+              ${divOptions.map(o => {
+                const comboKey = String(sec.partNumber || '') + '_' + String(o);
+                const isUsed = sec.partNumber && usedCombos[comboKey];
+                const isActive = String(sec.hizb) === String(o);
+                return `
+                  <button class="sel-btn ${isActive ? 'active' : ''} ${isUsed ? 'used-combo' : ''}"
+                    id="hizb-btn-${idx}-${o}"
+                    onclick="setHizb(${idx},${o},this)"
+                    style="padding:6px 14px;flex:1;text-align:center;${isUsed ? 'opacity:.4;cursor:not-allowed;' : ''}"
+                    ${isUsed ? 'disabled' : ''}>
+                    ${o}
+                  </button>
+                `;
+              }).join('')}
             </div>
           </div>
         </div>
 
-        <div class="grid-2" style="margin-bottom:10px;">
+        <div class="counters-row">
           <div>
             <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
               <i class="fas fa-times-circle" style="color:var(--danger);"></i> أخطاء
-              <small style="font-size:.72rem;">(−${escapeHtml(String(eff.mistakeDeduction))}/خطأ)</small>
+              <small style="font-size:.72rem;">(−${escapeHtml(String(eff.mistakeDeduction))})</small>
             </label>
             <div class="counter-wrap">
               <button class="counter-btn" onclick="changeCount(${idx},'mistakes',-1)">−</button>
@@ -1453,7 +1533,7 @@ function renderSections() {
           <div>
             <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
               <i class="fas fa-exclamation-triangle" style="color:var(--warning);"></i> تنبيهات
-              <small style="font-size:.72rem;">(−${escapeHtml(String(eff.warningDeduction))}/تنبيه)</small>
+              <small style="font-size:.72rem;">(−${escapeHtml(String(eff.warningDeduction))})</small>
             </label>
             <div class="counter-wrap">
               <button class="counter-btn" onclick="changeCount(${idx},'warnings',-1)">−</button>
@@ -1466,17 +1546,9 @@ function renderSections() {
         ${((!passed && hasData) || (eff.requireFailReason && !passed)) ? `
           <div style="margin-bottom:6px;">
             <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
-              <i class="fas fa-comment-alt" style="color:var(--danger);"></i> سبب الرسوب
+              <i class="fas fa-comment-alt" style="color:var(--danger);"></i> وجه الرسوب (اختياري)
             </label>
-            <input type="text" class="form-control" style="font-size:.88rem;" id="fail-${idx}" value="${escapeAttr(sec.failFace || '')}" placeholder="اختياري..." onchange="setFailFace(${idx}, this.value)"/>
-          </div>
-        ` : ''}
-
-        ${(!passed && hasData && STATE.evalRecord.student.guardianPhone && STATE.settings.whatsappTemplate) ? `
-          <div class="mt-3">
-            <button class="btn-outline-sard" style="font-size:.82rem;padding:6px 12px;" onclick="sendWhatsapp(${idx})">
-              <i class="fab fa-whatsapp" style="color:#25d366;"></i> إرسال للولي
-            </button>
+            <input type="number" class="native-input" id="fail-${idx}" value="${escapeAttr(sec.failFace || '')}" placeholder="رقم وجه الرسوب..." min="1" onchange="setFailFace(${idx}, this.value)"/>
           </div>
         ` : ''}
       `;
@@ -1488,54 +1560,69 @@ function renderSections() {
   updateKPI();
 }
 
-function editSection(idx) {
+function setPartNumber(idx, val) {
+  const n = parseInt(val, 10);
+  if (!val || isNaN(n) || n < 1 || n > 30) return;
+
+  STATE.evalSections[idx].partNumber = String(n);
+
+  // اقتراح الحزب التالي تلقائياً إذا لم يكن محددا
+  if (!STATE.evalSections[idx].hizb) {
+    autoSuggestHizb(idx);
+  }
+
+  // تحديث أزرار الحزب لمنع المكرر
+  refreshHizbButtons(idx);
+  recalcSection(idx);
+}
+
+function refreshHizbButtons(idx) {
+  const eff = STATE.evalRecord.eff;
+  const div = eff.partsDivisions;
   const sec = STATE.evalSections[idx];
-  const code = STATE.evalRecord.eff.editSectionsCode;
+  const usedCombos = getUsedCombos(idx);
 
-  if (code && !localStorage.getItem('sard_edit_unlocked')) {
-    Swal.fire({
-      title:'رمز التعديل',
-      input:'password',
-      inputPlaceholder:'أدخل رمز التعديل',
-      confirmButtonText:'فتح',
-      confirmButtonColor:'#014979'
-    }).then(r => {
-      if (!r.isConfirmed) return;
+  for (let o = 1; o <= div; o++) {
+    const btn = document.getElementById('hizb-btn-' + idx + '-' + o);
+    if (!btn) continue;
+    const comboKey = String(sec.partNumber || '') + '_' + String(o);
+    const isUsed = sec.partNumber && usedCombos[comboKey];
+    const isActive = String(sec.hizb) === String(o);
 
-      if (r.value === code) {
-        localStorage.setItem('sard_edit_unlocked', '1');
-        sec._editing = true;
-        renderSections();
-      } else {
-        showToast('رمز غير صحيح', 'error');
+    btn.className = 'sel-btn' + (isActive ? ' active' : '');
+    btn.disabled = !!isUsed;
+    btn.style.opacity = isUsed ? '0.4' : '1';
+    btn.style.cursor = isUsed ? 'not-allowed' : 'pointer';
+  }
+
+  // إذا كان الحزب المختار أصبح مكرراً، ألغِه
+  if (sec.hizb && sec.partNumber) {
+    const selectedKey = String(sec.partNumber) + '_' + String(sec.hizb);
+    if (usedCombos[selectedKey]) {
+      STATE.evalSections[idx].hizb = '';
+      autoSuggestHizb(idx);
+      // تحديث الأزرار مجدداً
+      for (let o = 1; o <= div; o++) {
+        const btn = document.getElementById('hizb-btn-' + idx + '-' + o);
+        if (btn) btn.className = 'sel-btn' + (String(STATE.evalSections[idx].hizb) === String(o) ? ' active' : '');
       }
-    });
-  } else {
-    sec._editing = true;
-    renderSections();
+    }
   }
 }
 
-function openPartPad(idx) {
-  const sec = STATE.evalSections[idx];
-
-  openNumpad('رقم الجزء (1-30)', sec.partNumber || '', 2, 'أدخل رقماً من 1 إلى 30')
-    .then(val => {
-      const n = parseInt(val, 10);
-      if (!val || isNaN(n) || n < 1 || n > 30) {
-        showToast('رقم غير صالح', 'warning');
-        return;
-      }
-
-      STATE.evalSections[idx].partNumber = String(n);
-      recalcSection(idx);
-      const partBtn = document.getElementById('partBtn-' + idx);
-      if (partBtn) partBtn.textContent = String(n);
-    });
-}
-
 function setHizb(idx, val, btn) {
-  STATE.evalSections[idx].hizb = val;
+  const eff = STATE.evalRecord.eff;
+  const div = eff.partsDivisions;
+  const sec = STATE.evalSections[idx];
+  const usedCombos = getUsedCombos(idx);
+  const comboKey = String(sec.partNumber || '') + '_' + String(val);
+
+  if (sec.partNumber && usedCombos[comboKey]) {
+    showToast('هذا ' + divLabel(div) + ' سُمِّع مسبقاً في مقطع آخر', 'warning');
+    return;
+  }
+
+  sec.hizb = val;
   const parent = btn.parentElement;
   parent.querySelectorAll('.sel-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -1545,10 +1632,8 @@ function setHizb(idx, val, btn) {
 function changeCount(idx, field, delta) {
   const sec = STATE.evalSections[idx];
   sec[field] = Math.max(0, Number(sec[field] || 0) + delta);
-
   const el = document.getElementById((field === 'mistakes' ? 'mis' : 'war') + '-' + idx);
   if (el) el.textContent = String(sec[field]);
-
   recalcSection(idx);
 }
 
@@ -1559,7 +1644,6 @@ function setFailFace(idx, val) {
 function recalcSection(idx) {
   const sec = STATE.evalSections[idx];
   const eff = STATE.evalRecord.eff;
-
   if (!sec.partNumber || !sec.hizb) return;
 
   const score = calcScore(sec, eff);
@@ -1577,48 +1661,82 @@ function recalcSection(idx) {
   const card = document.getElementById('sec-card-' + idx);
   if (card) card.className = 'section-card editing';
 
+  // إظهار/إخفاء حقل وجه الرسوب
+  const failDiv = document.getElementById('fail-' + idx);
+  if (failDiv) {
+    const parent = failDiv.parentElement;
+    if (parent) parent.style.display = (!passed) ? 'block' : 'none';
+  }
+
   updateKPI();
 }
 
 function updateKPI() {
   const secs = STATE.evalSections.filter(s => s.partNumber && s.hizb);
   const passed = secs.filter(s => s.isPassed).length;
-
   document.getElementById('kpiTotal').textContent = String(STATE.evalSections.length);
   document.getElementById('kpiPassed').textContent = passed + '/' + secs.length;
 }
 
-function sendWhatsapp(idx) {
+function editSection(idx) {
   const sec = STATE.evalSections[idx];
-  const st = STATE.evalRecord.student;
-  const guardianPhone = String(st.guardianPhone || '').replace(/\D/g, '');
+  const code = STATE.evalRecord.eff.editSectionsCode;
 
-  if (!guardianPhone) {
-    showToast('لا يوجد رقم ولي أمر', 'warning');
-    return;
+  if (code && !localStorage.getItem('sard_edit_unlocked')) {
+    Swal.fire({
+      title:'رمز التعديل',
+      input:'password',
+      inputPlaceholder:'أدخل رمز التعديل',
+      confirmButtonText:'فتح',
+      confirmButtonColor:'#014979'
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      if (r.value === code) {
+        localStorage.setItem('sard_edit_unlocked', '1');
+        sec._editing = true;
+        renderSections();
+      } else {
+        showToast('رمز غير صحيح', 'error');
+      }
+    });
+  } else {
+    sec._editing = true;
+    renderSections();
   }
+}
+
+// ===== بناء رسالة واتساب مع كل المتغيرات =====
+function buildWhatsappMessage(student, rec, eff) {
+  const sections = rec && Array.isArray(rec.sections) ? rec.sections.filter(s => s && s.partNumber) : [];
+  const passedCount = sections.filter(s => s.isPassed).length;
+  const failedCount = sections.length - passedCount;
+  const totalParts = student.partsCount || 0;
+  const displayedCount = sections.length;
+  const percent = displayedCount > 0 ? Math.round(passedCount / displayedCount * 100) : 0;
+  const lastSec = sections[sections.length - 1] || {};
 
   let tpl = STATE.settings.whatsappTemplate || '';
-  tpl = tpl.replace(/{اسم_الطالب}/g, st.name || '')
-           .replace(/{الحلقة}/g, st.halaqa || '')
-           .replace(/{الدرجة}/g, String(sec.score || 0))
-           .replace(/{المسمع}/g, STATE.teacher || '');
+  tpl = tpl
+    .replace(/{اسم_الطالب}/g, student.name || '')
+    .replace(/{الحلقة}/g, student.halaqa || '')
+    .replace(/{الدرجة}/g, String(lastSec.score || 0))
+    .replace(/{المسمع}/g, STATE.teacher || '')
+    .replace(/{اجزاء_مجتازة}/g, String(passedCount))
+    .replace(/{اجزاء_رسوب}/g, String(failedCount))
+    .replace(/{اجزاء_محفوظة}/g, String(totalParts))
+    .replace(/{اجزاء_معروضة}/g, String(displayedCount))
+    .replace(/{النسبة}/g, String(percent) + '%');
 
-  const url = `https://wa.me/966${guardianPhone.replace(/^0/, '')}?text=${encodeURIComponent(tpl)}`;
-  window.open(url, '_blank');
+  return tpl;
 }
 
 function doSaveRecord() {
   const student = STATE.evalRecord.student;
   const sections = STATE.evalSections.filter(s => s.partNumber && s.hizb);
 
-  if (!sections.length) {
-    showToast('لم تُدخل أي مقطع', 'warning');
-    return;
-  }
+  if (!sections.length) { showToast('لم تُدخل أي مقطع', 'warning'); return; }
 
   const today = new Date().toISOString().split('T')[0];
-
   showSpinner();
   google.script.run
     .withSuccessHandler(() => {
@@ -1644,6 +1762,36 @@ function doSaveRecord() {
       date: today,
       sections: STATE.evalSections
     });
+}
+
+// =============================================
+// ATTENDANCE
+// =============================================
+function checkAttendanceLock() {
+  const s = STATE.settings;
+  const hasLock = !!String(s.settingsLockCode || s.hasSettingsLock || '');
+  // نستخدم نفس رمز الإعدادات لقفل التحضير
+  const locked = hasLock && !STATE.attUnlocked;
+
+  document.getElementById('attLockOverlay').style.display = locked ? 'block' : 'none';
+  document.getElementById('attContent').style.display = locked ? 'none' : 'block';
+}
+
+function unlockAttendance() {
+  const code = document.getElementById('attCodeInput').value;
+  google.script.run
+    .withSuccessHandler(data => {
+      const ok = data && (data.ok === true || data === true);
+      if (ok) {
+        STATE.attUnlocked = true;
+        document.getElementById('attLockOverlay').style.display = 'none';
+        document.getElementById('attContent').style.display = 'block';
+      } else {
+        showToast('رمز غير صحيح', 'error');
+      }
+    })
+    .withFailureHandler(() => { showToast('خطأ في التحقق', 'error'); })
+    .checkSettingsLockCode(code);
 }
 
 function loadAttendanceHalaqas() {
@@ -1679,7 +1827,6 @@ function loadAttendanceHalaqas() {
 function selectAttHalaqa(id, name, btn) {
   STATE.attHalaqa = { id, name };
   STATE.attStatuses = {};
-
   document.querySelectorAll('#attHalaqaGrid .sel-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderAttStudents();
@@ -1712,8 +1859,11 @@ function renderAttStudents() {
     const row = document.createElement('div');
     row.className = 'att-row';
 
+    // تعيين القيمة الافتراضية
+    if (!STATE.attStatuses[s.id]) STATE.attStatuses[s.id] = 'present';
+
     const btns = statuses.map(st => `
-      <button class="att-status-btn ${(STATE.attStatuses[s.id] || 'present') === st.id ? st.cls : ''}"
+      <button class="att-status-btn ${STATE.attStatuses[s.id] === st.id ? st.cls : ''}"
               id="att-${escapeAttr(String(s.id))}-${st.id}"
               onclick="setAttStatus('${jsString(String(s.id))}','${st.id}')">
         ${st.label}
@@ -1732,7 +1882,6 @@ function renderAttStudents() {
       </div>
       <div class="d-flex gap-1 flex-wrap">${btns}</div>
     `;
-
     list.appendChild(row);
   });
 
@@ -1741,15 +1890,8 @@ function renderAttStudents() {
 
 function setAttStatus(studentId, status) {
   STATE.attStatuses[studentId] = status;
-
   const statuses = ['present', 'late', 'excused', 'absent'];
-  const cls = {
-    present:'s-present',
-    late:'s-late',
-    excused:'s-excused',
-    absent:'s-absent'
-  };
-
+  const cls = { present:'s-present', late:'s-late', excused:'s-excused', absent:'s-absent' };
   statuses.forEach(s => {
     const btn = document.getElementById(`att-${studentId}-${s}`);
     if (btn) btn.className = 'att-status-btn' + (s === status ? ' ' + cls[s] : '');
@@ -1757,17 +1899,9 @@ function setAttStatus(studentId, status) {
 }
 
 function doSaveAttendance() {
-  if (!STATE.attHalaqa) {
-    showToast('اختر الحلقة أولاً', 'warning');
-    return;
-  }
+  if (!STATE.attHalaqa) { showToast('اختر الحلقة أولاً', 'warning'); return; }
 
-  const date = document.getElementById('attDate').value;
-  if (!date) {
-    showToast('اختر التاريخ', 'warning');
-    return;
-  }
-
+  const today = new Date().toISOString().split('T')[0];
   const hid = STATE.attHalaqa.id;
   const isTrack = String(hid).startsWith('track:');
   const trackName = isTrack ? String(hid).replace('track:', '') : null;
@@ -1778,13 +1912,10 @@ function doSaveAttendance() {
     return s.halaqa === hid;
   });
 
-  if (!filtered.length) {
-    showToast('لا يوجد طلاب', 'warning');
-    return;
-  }
+  if (!filtered.length) { showToast('لا يوجد طلاب', 'warning'); return; }
 
   const payload = {
-    date,
+    date: today,
     halaqaId: hid,
     halaqaName: STATE.attHalaqa.name,
     students: filtered.map(s => ({
@@ -1816,6 +1947,9 @@ function doSaveAttendance() {
     .saveSardAttendance(payload);
 }
 
+// =============================================
+// SETTINGS
+// =============================================
 function loadSettingsForm() {
   const s = STATE.settings;
   const hs = !!s.hasSettingsLock;
@@ -1835,18 +1969,15 @@ function loadSettingsForm() {
     document.getElementById('s-lockCode').value = '';
     document.getElementById('s-editCode').value = '';
     document.getElementById('s-whatsapp').value = s.whatsappTemplate || '';
-    document.getElementById('s-calendarUrl').value = s.calendarUrl || '';
-    document.getElementById('s-driveUrl').value = s.driveUrl || '';
-
     renderTrackConfigs();
   }
 }
 
 function unlockSettings() {
   const code = document.getElementById('settingsCodeInput').value;
-
   google.script.run
-    .withSuccessHandler(ok => {
+    .withSuccessHandler(data => {
+      const ok = data && (data.ok === true || data === true);
       if (ok) {
         STATE.settingsUnlocked = true;
         loadSettingsForm();
@@ -1854,9 +1985,7 @@ function unlockSettings() {
         showToast('رمز غير صحيح', 'error');
       }
     })
-    .withFailureHandler(() => {
-      showToast('خطأ في التحقق', 'error');
-    })
+    .withFailureHandler(() => { showToast('خطأ في التحقق', 'error'); })
     .checkSettingsLockCode(code);
 }
 
@@ -1871,9 +2000,7 @@ function doSaveSettings() {
     requireFailReason: document.getElementById('s-requireFail').checked,
     activeTrackForSelection: document.getElementById('s-activeTrack').value.trim(),
     editSectionsCode: document.getElementById('s-editCode').value.trim(),
-    whatsappTemplate: document.getElementById('s-whatsapp').value.trim(),
-    calendarUrl: document.getElementById('s-calendarUrl').value.trim(),
-    driveUrl: document.getElementById('s-driveUrl').value.trim()
+    whatsappTemplate: document.getElementById('s-whatsapp').value.trim()
   };
 
   const lockCode = document.getElementById('s-lockCode').value.trim();
@@ -1916,7 +2043,6 @@ function renderTrackConfigs() {
     const div = document.createElement('div');
     div.className = 'card-sard animate-in';
     div.style.marginBottom = '10px';
-
     div.innerHTML = `
       <div class="d-flex justify-between align-center" style="margin-bottom:10px;">
         <span class="fw-bold" style="font-size:.9rem;color:var(--primary);">${escapeHtml(tc.name || 'مسار جديد')}</span>
@@ -1924,13 +2050,11 @@ function renderTrackConfigs() {
           <i class="fas fa-trash"></i>
         </button>
       </div>
-
       <div class="grid-2" style="gap:8px;">
         <div>
           <label class="text-muted" style="font-size:.8rem;">اسم المسار</label>
           <input class="form-control" value="${escapeAttr(tc.name || '')}" onchange="updateTC(${idx},'name',this.value)"/>
         </div>
-
         <div>
           <label class="text-muted" style="font-size:.8rem;">تقسيم الجزء</label>
           <select class="form-select" onchange="updateTC(${idx},'partsDivisions',+this.value)">
@@ -1939,100 +2063,39 @@ function renderTrackConfigs() {
             <option ${Number(tc.partsDivisions) === 4 ? 'selected' : ''}>4</option>
           </select>
         </div>
-
         <div>
           <label class="text-muted" style="font-size:.8rem;">خصم الخطأ</label>
           <input type="number" class="form-control" step="0.25" value="${escapeAttr(String(tc.mistakeDeduction ?? 0))}" onchange="updateTC(${idx},'mistakeDeduction',+this.value)"/>
         </div>
-
         <div>
           <label class="text-muted" style="font-size:.8rem;">خصم التنبيه</label>
           <input type="number" class="form-control" step="0.25" value="${escapeAttr(String(tc.warningDeduction ?? 0))}" onchange="updateTC(${idx},'warningDeduction',+this.value)"/>
         </div>
-
         <div>
           <label class="text-muted" style="font-size:.8rem;">درجة النجاح</label>
           <input type="number" class="form-control" step="0.5" value="${escapeAttr(String(tc.passingScorePerSection ?? 0))}" onchange="updateTC(${idx},'passingScorePerSection',+this.value)"/>
         </div>
       </div>
     `;
-
     list.appendChild(div);
   });
 }
 
-function updateTC(idx, field, val) {
-  STATE.trackConfigs[idx][field] = val;
-}
-
+function updateTC(idx, field, val) { STATE.trackConfigs[idx][field] = val; }
 function addTrackConfig() {
-  STATE.trackConfigs.push({
-    name:'',
-    partsDivisions:2,
-    mistakeDeduction:0.5,
-    warningDeduction:0.25,
-    passingScorePerSection:7
-  });
+  STATE.trackConfigs.push({ name:'', partsDivisions:2, mistakeDeduction:0.5, warningDeduction:0.25, passingScorePerSection:7 });
   renderTrackConfigs();
 }
-
 function removeTrackConfig(idx) {
   STATE.trackConfigs.splice(idx, 1);
   renderTrackConfigs();
 }
 
-function openNumpad(title, initVal, maxLen, hint) {
-  STATE.numpad = {
-    resolve:null,
-    value:String(initVal || ''),
-    maxLen,
-    hint
-  };
-
-  document.getElementById('numpadTitle').textContent = title;
-  document.getElementById('numpadHint').textContent = hint;
-  document.getElementById('numpadDisplay').textContent = STATE.numpad.value || '—';
-  document.getElementById('numpadOverlay').style.display = 'flex';
-
-  return new Promise(res => {
-    STATE.numpad.resolve = res;
-  });
-}
-
-function closeNumpad() {
-  document.getElementById('numpadOverlay').style.display = 'none';
-  if (STATE.numpad.resolve) STATE.numpad.resolve(null);
-}
-
-function numpadPress(d) {
-  const np = STATE.numpad;
-  if (np.value.length >= np.maxLen) return;
-  np.value += d;
-  document.getElementById('numpadDisplay').textContent = np.value || '—';
-}
-
-function numpadBackspace() {
-  STATE.numpad.value = STATE.numpad.value.slice(0, -1);
-  document.getElementById('numpadDisplay').textContent = STATE.numpad.value || '—';
-}
-
-function numpadClear() {
-  STATE.numpad.value = '';
-  document.getElementById('numpadDisplay').textContent = '—';
-}
-
-function numpadConfirm() {
-  document.getElementById('numpadOverlay').style.display = 'none';
-  if (STATE.numpad.resolve) STATE.numpad.resolve(STATE.numpad.value);
-}
-
-function showSpinner() {
-  document.getElementById('spinner').style.display = 'flex';
-}
-
-function hideSpinner() {
-  document.getElementById('spinner').style.display = 'none';
-}
+// =============================================
+// UTILITIES
+// =============================================
+function showSpinner() { document.getElementById('spinner').style.display = 'flex'; }
+function hideSpinner() { document.getElementById('spinner').style.display = 'none'; }
 
 function showToast(msg, icon = 'info') {
   Swal.fire({
@@ -2059,9 +2122,7 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
-function escapeAttr(value) {
-  return escapeHtml(value);
-}
+function escapeAttr(value) { return escapeHtml(value); }
 
 function jsString(value) {
   return String(value ?? '')
