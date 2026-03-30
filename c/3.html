@@ -9,45 +9,56 @@
   <style>
 
 ```
-:root{--primary:#014979;--primary-dk:#013560;--primary-lt:#e8f2fb;--gold:#b19738;--gold-lt:#faf3e0;--success:#1a7a4a;--danger:#c0392b;--warning:#d97706;--bg:#f4f6f9;--card-bg:#ffffff;--text:#1e293b;--text-muted:#64748b;--border:rgba(1,73,121,0.10);--shadow-sm:0 2px 8px rgba(1,73,121,0.07);--shadow-md:0 6px 24px rgba(1,73,121,0.10);--shadow-lg:0 12px 40px rgba(1,73,121,0.14);--radius:14px;--radius-sm:8px;}
+:root{
+  --primary:#014979;--primary-dk:#013560;--primary-lt:#e8f2fb;
+  --gold:#b19738;--gold-lt:#faf3e0;--success:#1a7a4a;
+  --danger:#c0392b;--warning:#d97706;--bg:#f4f6f9;
+  --card-bg:#ffffff;--text:#1e293b;--text-muted:#64748b;
+  --border:rgba(1,73,121,0.10);
+  --shadow-sm:0 2px 8px rgba(1,73,121,0.07);
+  --shadow-lg:0 12px 40px rgba(1,73,121,0.14);
+  --radius:14px;--radius-sm:8px;
+}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 .navbar-sard{background:var(--primary);padding:0 16px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,0.18);}
 .navbar-brand{color:#fff;font-size:1.2rem;font-weight:800;display:flex;align-items:center;gap:8px;}
-.navbar-brand i{color:var(--gold);font-size:1.3rem;}
-.nav-back{padding:6px 14px;border-radius:20px;border:none;background:rgba(255,255,255,0.12);color:rgba(255,255,255,.85);font-family:'Tajawal',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;text-decoration:none;transition:background .2s;}
+.navbar-brand i{color:var(--gold);}
+.nav-back{padding:6px 14px;border-radius:20px;border:none;background:rgba(255,255,255,0.12);color:rgba(255,255,255,.85);font-family:'Tajawal',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:background .2s;}
 .nav-back:hover{background:rgba(255,255,255,0.22);}
+.btn-nav{padding:7px 16px;border-radius:var(--radius-sm);border:none;background:rgba(255,255,255,0.15);color:#fff;font-family:'Tajawal',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .2s;}
+.btn-nav:hover{background:rgba(255,255,255,0.25);}
 .page-wrap{padding:20px;max-width:1100px;margin:auto;padding-bottom:40px;}
 .card-sard{background:var(--card-bg);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow-sm);padding:20px;margin-bottom:16px;}
 .card-title{font-size:1rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:8px;margin-bottom:16px;}
 .kpi-card{background:var(--card-bg);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow-sm);padding:20px;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s;}
 .kpi-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
-.kpi-card .bg-icon{position:absolute;left:-10px;bottom:-10px;font-size:5rem;opacity:.07;pointer-events:none;}
+.kpi-float{position:absolute;left:-10px;bottom:-10px;font-size:5rem;opacity:.07;pointer-events:none;}
 .kpi-label{font-size:.8rem;color:var(--text-muted);font-weight:500;margin-bottom:4px;}
-.kpi-value{font-size:2rem;font-weight:800;color:var(--primary);line-height:1;}
+.kpi-value{font-size:1.9rem;font-weight:800;color:var(--primary);line-height:1.1;}
 .kpi-value.green{color:var(--success);}.kpi-value.red{color:var(--danger);}.kpi-value.gold{color:var(--gold);}
-.badge-sard{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
-.badge-pass{background:#d1fae5;color:#065f46;}.badge-fail{background:#fee2e2;color:#991b1b;}
-.badge-prim{background:var(--primary-lt);color:var(--primary);}.badge-gold{background:var(--gold-lt);color:#7c6620;}
-.badge-warn{background:#fef3c7;color:#92400e;}.badge-info{background:#dbeafe;color:#1e40af;}
-.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-weight:800;font-size:.8rem;}
-.rank-1{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;box-shadow:0 3px 8px rgba(245,158,11,.4);}
-.rank-2{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff;}
-.rank-3{background:linear-gradient(135deg,#d97706,#b45309);color:#fff;}
-.rank-n{background:#e2e8f0;color:#475569;}
 .prog-bar{width:100%;height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:6px;}
 .prog-fill{height:100%;border-radius:99px;transition:width .5s;}
 .prog-green{background:linear-gradient(90deg,#10b981,#34d399);}
 .prog-blue{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
 .prog-amber{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
 .prog-red{background:linear-gradient(90deg,#ef4444,#f87171);}
+.badge-sard{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
+.badge-pass{background:#d1fae5;color:#065f46;}.badge-fail{background:#fee2e2;color:#991b1b;}
+.badge-prim{background:var(--primary-lt);color:var(--primary);}.badge-gold{background:var(--gold-lt);color:#7c6620;}
+.badge-warn{background:#fef3c7;color:#92400e;}.badge-info{background:#dbeafe;color:#1e40af;}
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-weight:800;font-size:.8rem;}
+.rk-1{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;box-shadow:0 3px 8px rgba(245,158,11,.4);}
+.rk-2{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff;}
+.rk-3{background:linear-gradient(135deg,#d97706,#b45309);color:#fff;}
+.rk-n{background:#e2e8f0;color:#475569;}
 .tbl-wrap{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow-sm);}
 .sard-table{width:100%;border-collapse:collapse;font-size:.82rem;}
-.sard-table thead th{background:var(--primary-lt);color:var(--primary);font-weight:700;padding:10px 12px;text-align:right;border-bottom:2px solid var(--primary);white-space:nowrap;}
+.sard-table thead th{background:var(--primary-lt);color:var(--primary);font-weight:700;padding:10px 12px;text-align:right;border-bottom:2px solid rgba(1,73,121,.15);white-space:nowrap;}
 .sard-table tbody tr{background:#fff;transition:background .15s;}
 .sard-table tbody tr:nth-child(even){background:#fafbfd;}
 .sard-table tbody tr:hover{background:var(--primary-lt);}
-.sard-table tbody tr.row-sel{background:var(--primary-lt);outline:2px solid var(--primary);}
+.sard-table tbody tr.row-sel{background:var(--primary-lt);outline:2px solid var(--primary);outline-offset:-2px;}
 .sard-table tbody td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
 .sard-select{appearance:none;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 32px 8px 12px;font-size:.9rem;font-weight:500;color:var(--primary);cursor:pointer;font-family:'Tajawal',sans-serif;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23014979' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:left 8px center;background-repeat:no-repeat;background-size:1.2em;}
 .sard-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(1,73,121,.10);}
@@ -55,7 +66,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .btn-primary-sard:hover{background:var(--primary-dk);transform:translateY(-1px);}
 .btn-outline-sard{background:transparent;color:var(--primary);border:1.5px solid var(--primary);border-radius:var(--radius-sm);padding:8px 18px;font-family:'Tajawal',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
 .btn-outline-sard:hover{background:var(--primary);color:#fff;}
-.sel-chip{padding:8px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:#fff;cursor:pointer;transition:all .2s;font-family:'Tajawal',sans-serif;font-size:.88rem;}
+.sel-chip{padding:8px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:#fff;cursor:pointer;transition:all .2s;font-family:'Tajawal',sans-serif;font-size:.88rem;color:var(--text);}
 .sel-chip:hover{border-color:var(--primary);background:var(--primary-lt);}
 .sel-chip.active{background:var(--primary);color:#fff;border-color:var(--primary);}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -63,32 +74,32 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
 .grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
 @media(max-width:900px){.grid-5{grid-template-columns:repeat(3,1fr);}.grid-4{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:640px){.grid-3,.grid-4,.grid-5{grid-template-columns:1fr 1fr;}.grid-2{grid-template-columns:1fr;}}
+@media(max-width:640px){.grid-5,.grid-4,.grid-3{grid-template-columns:1fr 1fr;}.grid-2{grid-template-columns:1fr;}}
 .spinner-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px;}
 .spinner{width:44px;height:44px;border:4px solid var(--primary-lt);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .d-flex{display:flex;}.align-center{align-items:center;}.justify-between{justify-content:space-between;}
-.gap-2{gap:8px;}.gap-3{gap:12px;}.fw-bold{font-weight:700;}.mt-3{margin-top:12px;}.flex-wrap{flex-wrap:wrap;}
-.text-muted{color:var(--text-muted);font-size:.85rem;}
+.gap-2{gap:8px;}.gap-3{gap:12px;}.flex-wrap{flex-wrap:wrap;}
+.fw-bold{font-weight:700;}.text-muted{color:var(--text-muted);font-size:.85rem;}
+.mt-2{margin-top:8px;}.mt-3{margin-top:12px;}
 .animate-in{animation:fadeUp .35s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
-/* sard-mini-table - dynamic cols */
-.sard-mini-table{width:100%;border-collapse:collapse;}
-.sard-mini-table th,.sard-mini-table td{border:1px solid var(--border);padding:5px 8px;font-size:.78rem;text-align:center;vertical-align:middle;white-space:nowrap;}
-.sard-mini-table th{background:var(--primary-lt);color:var(--primary);font-weight:700;}
-.sard-mini-table th.th-part{background:var(--primary);color:#fff;}
-.sard-mini-table td.td-label{background:var(--primary-lt);color:var(--primary);font-weight:700;text-align:right;min-width:80px;}
-.sard-mini-table tbody tr:nth-child(even) td:not(.td-label){background:#fafbfd;}
-.mc-pass{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:5px;background:#d1fae5;color:#065f46;font-weight:800;font-size:.78rem;}
-.mc-fail{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:5px;background:#fee2e2;color:#991b1b;font-weight:800;font-size:.78rem;}
-.mc-score{font-size:.62rem;color:var(--primary-dk);font-weight:700;margin-top:1px;}
-.mc-empty{color:#d1d5db;font-size:.85rem;}
+/* mini table for sections */
+.mini-tbl-wrap{overflow-x:auto;}
+.mini-table{width:100%;border-collapse:collapse;font-size:.78rem;}
+.mini-table th,.mini-table td{border:1px solid var(--border);padding:5px 8px;text-align:center;vertical-align:middle;white-space:nowrap;}
+.mini-table thead th{background:var(--primary-lt);color:var(--primary);font-weight:700;}
+.mini-table thead th.th-part{background:var(--primary);color:#fff;}
+.mini-table td.td-label{background:var(--primary-lt);color:var(--primary);font-weight:700;text-align:right;min-width:80px;}
+.mini-table tbody tr:nth-child(even) td:not(.td-label){background:#fafbfd;}
 
-.search-wrap{max-width:720px;margin:0 auto 20px;}
+.search-wrap{max-width:700px;margin:0 auto 0;}
 .search-input{width:100%;height:48px;padding:0 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Tajawal',sans-serif;font-size:1rem;background:#fff;outline:none;transition:border-color .2s;}
 .search-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(1,73,121,.10);}
-.tab-btn{padding:8px 18px;border-radius:20px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.85rem;font-weight:700;transition:all .2s;color:var(--primary);}
+.tab-btn{padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.85rem;font-weight:700;color:var(--primary);transition:all .2s;}
 .tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+@media(max-width:640px){.metric-grid{grid-template-columns:repeat(2,1fr);}}
 .metric-card{background:#fff;border-radius:var(--radius-sm);border:1px solid var(--border);padding:14px 16px;}
 .metric-card.ok{background:#f0faf5;border-color:var(--success);}
 .metric-card.bad{background:#fef2f2;border-color:var(--danger);}
@@ -105,287 +116,267 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
   <a href="../برنامج_السرد.html" class="nav-back"><i class="fas fa-arrow-right"></i> العودة</a>
 </nav>
 <div class="page-wrap" style="max-width:800px;">
-
   <div class="card-sard animate-in search-wrap">
     <div class="card-title"><i class="fas fa-magnifying-glass" style="color:var(--gold);"></i> الاستعلام عن نتيجة الطالب</div>
     <p class="text-muted" style="margin-bottom:12px;">البحث عبر: <b>جوال ولي الأمر</b> أو <b>ID الهوية</b></p>
-    <div class="d-flex gap-2" style="margin-bottom:0;">
+    <div class="d-flex gap-2">
       <input id="q" type="text" class="search-input" placeholder="أدخل جوال ولي الأمر أو ID الهوية" autocomplete="off"/>
-      <button id="btn" class="btn-primary-sard" style="white-space:nowrap;" onclick="run()">
-        <span id="sp" style="display:none;" class="spinner" style="width:16px;height:16px;"></span>
-        <i class="fas fa-search" id="searchIco"></i> بحث
+      <button id="btn" class="btn-primary-sard" onclick="run()" style="white-space:nowrap;">
+        <i class="fas fa-search" id="ico"></i> بحث
       </button>
     </div>
   </div>
-
   <div id="tabs" class="d-flex gap-2 flex-wrap" style="margin-bottom:12px;display:none!important;"></div>
   <div id="out"></div>
 </div>
-
 <script>
+const API="https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec";
 
-const API = 'https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec';
-function jsonp(action,params){return new Promise((res,rej)=>{const cb='jcb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const url=new URL(API);url.searchParams.set('action',action);if(params)Object.keys(params).forEach(k=>url.searchParams.set(k,String(params[k])));url.searchParams.set('prefix',cb);let done=false;const cleanup=()=>{try{delete window[cb];}catch(e){}const s=document.getElementById(cb);if(s)s.remove();};window[cb]=d=>{if(done)return;done=true;cleanup();d&&d.error?rej(new Error(d.error)):res(d);};const s=document.createElement('script');s.id=cb;s.onerror=()=>{if(done)return;done=true;cleanup();rej(new Error('فشل الاتصال'));};s.src=url.toString();document.body.appendChild(s);});}
-const fN=v=>Number(v||0).toLocaleString('en-US');
-const fP=v=>Number(v||0).toLocaleString('en-US',{maximumFractionDigits:1});
-const escH=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const rankCls=r=>r===1?'rank-1':r===2?'rank-2':r===3?'rank-3':'rank-n';
-const progCls=p=>p>=80?'prog-green':p>=60?'prog-blue':p>=40?'prog-amber':'prog-red';
-function kpiCard(label,value,icon,colorCls='',sub=''){return`<div class="kpi-card animate-in"><div class="kpi-label">${escH(label)}</div><div class="kpi-value ${colorCls}">${escH(String(value))}</div>${sub?`<div class="text-muted" style="margin-top:4px;font-size:.75rem;">${sub}</div>`:''}<i class="fas ${escH(icon)} bg-icon"></i></div>`;}
-function kpiCardBar(label,value,icon){const pct=Math.min(Number(value)||0,100);return`<div class="kpi-card animate-in"><div class="kpi-label">${escH(label)}</div><div class="kpi-value">${escH(fP(value))}%</div><div class="prog-bar"><div class="prog-fill ${progCls(pct)}" style="width:${pct}%"></div></div><i class="fas ${escH(icon)} bg-icon"></i></div>`;}
-function setSpinner(id){document.getElementById(id).innerHTML='<div class="spinner-wrap animate-in"><div class="spinner"></div><span class="text-muted">جاري التحميل...</span></div>';}
-
-
-function exportCert(data) {
-  const W=1920,H=1080;
-  const canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
-  const ctx=canvas.getContext('2d');
-
-  // ── خلفية فاخرة ──
-  const bg=ctx.createLinearGradient(0,0,W,H);
-  bg.addColorStop(0,'#0a1628');bg.addColorStop(.4,'#0d2244');bg.addColorStop(1,'#0a1628');
-  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
-
-  // زخارف دوائر في الخلفية
-  [[W*.1,H*.1,320,'rgba(177,151,56,.06)'],[W*.9,H*.9,400,'rgba(177,151,56,.05)'],[W*.5,H*.5,600,'rgba(1,73,121,.08)']].forEach(([x,y,r,c])=>{
-    ctx.save();ctx.globalAlpha=1;const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,c);g.addColorStop(1,'transparent');
-    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.restore();
-  });
-
-  // ── إطار ذهبي مزدوج ──
-  function rrect(cx,x,y,w,h,r,lw,col){cx.lineWidth=lw;cx.strokeStyle=col;cx.beginPath();const rr=Math.min(r,w/2,h/2);cx.moveTo(x+rr,y);cx.arcTo(x+w,y,x+w,y+h,rr);cx.arcTo(x+w,y+h,x,y+h,rr);cx.arcTo(x,y+h,x,y,rr);cx.arcTo(x,y,x+w,y,rr);cx.closePath();cx.stroke();}
-  rrect(ctx,30,30,W-60,H-60,40,6,'rgba(177,151,56,.9)');
-  rrect(ctx,48,48,W-96,H-96,32,2,'rgba(177,151,56,.4)');
-  rrect(ctx,56,56,W-112,H-112,28,1,'rgba(177,151,56,.2)');
-
-  // ── زخارف زوايا ──
-  function corner(cx,x,y,flip){
-    cx.save();cx.translate(x,y);if(flip&1)cx.scale(-1,1);if(flip&2)cx.scale(1,-1);
-    cx.strokeStyle='rgba(177,151,56,.7)';cx.lineWidth=3;
-    cx.beginPath();cx.moveTo(0,60);cx.lineTo(0,0);cx.lineTo(60,0);cx.stroke();
-    cx.beginPath();cx.moveTo(0,80);cx.lineTo(0,20);cx.lineTo(20,20);cx.stroke();
-    cx.restore();
-  }
-  corner(ctx,60,60,0);corner(ctx,W-60,60,1);corner(ctx,60,H-60,2);corner(ctx,W-60,H-60,3);
-
-  // ── نجوم ذهبية ──
-  function star(cx,x,y,r,pts=5){cx.save();cx.fillStyle='rgba(177,151,56,.5)';cx.beginPath();for(let i=0;i<pts*2;i++){const a=i*Math.PI/pts-Math.PI/2;const rr=i%2===0?r:r*.4;cx.lineTo(x+rr*Math.cos(a),y+rr*Math.sin(a));}cx.closePath();cx.fill();cx.restore();}
-  [120,200,280].forEach(x=>star(ctx,x,H/2,8));[W-120,W-200,W-280].forEach(x=>star(ctx,x,H/2,8));
-
-  // ── شريط ذهبي أعلى وأسفل ──
-  const goldGrad=ctx.createLinearGradient(0,0,W,0);
-  goldGrad.addColorStop(0,'transparent');goldGrad.addColorStop(.2,'rgba(177,151,56,.6)');
-  goldGrad.addColorStop(.5,'rgba(218,185,76,.9)');goldGrad.addColorStop(.8,'rgba(177,151,56,.6)');
-  goldGrad.addColorStop(1,'transparent');
-  ctx.fillStyle=goldGrad;ctx.fillRect(0,90,W,3);ctx.fillRect(0,H-93,W,3);
-
-  // ── النصوص ──
-  ctx.textAlign='center';
-
-  // اسم المجمع
-  ctx.fillStyle='rgba(218,185,76,.9)';ctx.font='700 38px Tajawal';
-  ctx.fillText(data.complexName||'اسم المجمع',W/2,155);
-
-  // خط فاصل ذهبي
-  ctx.fillStyle='rgba(177,151,56,.5)';ctx.fillRect(W/2-180,170,360,1.5);
-
-  // عنوان الشهادة
-  ctx.fillStyle='#ffffff';ctx.font='900 76px Tajawal';
-  const titleGrad=ctx.createLinearGradient(W/2-300,0,W/2+300,0);
-  titleGrad.addColorStop(0,'#c9a227');titleGrad.addColorStop(.5,'#f0d060');titleGrad.addColorStop(1,'#c9a227');
-  ctx.fillStyle=titleGrad;ctx.fillText('شهادة إنجاز',W/2,265);
-
-  // نص تقديمي
-  ctx.fillStyle='rgba(200,220,255,.75)';ctx.font='600 28px Tajawal';
-  ctx.fillText('تُمنح هذه الشهادة تقديرًا للطالب على نتائجه المتميزة في برنامج السرد القرآني',W/2,315);
-
-  // اسم الطالب - بارز
-  ctx.fillStyle='rgba(177,151,56,.25)';ctx.fillRect(W/2-380,340,760,80);
-  ctx.fillStyle='#ffffff';ctx.font='900 68px Tajawal';
-  ctx.fillText(data.studentName||'اسم الطالب',W/2,400);
-
-  // الحلقة والمسار
-  const info=[data.halaqaName?`حلقة: ${data.halaqaName}`:'',data.track?`المسار: ${data.track}`:''].filter(Boolean).join('  •  ');
-  if(info){ctx.fillStyle='rgba(218,185,76,.8)';ctx.font='700 30px Tajawal';ctx.fillText(info,W/2,450);}
-
-  // بطاقات الإحصائيات
-  const cards=[
-    {t:'الأجزاء المحفوظة',v:String(data.partsSaved)},
-    {t:'عدد المقاطع',v:String(data.totalSections)},
-    {t:'المجتاز',v:String(data.passed)},
-    {t:'الرسوب',v:String(data.failed)},
-    {t:'مجموع الدرجات',v:String(Math.round(data.totalScore*10)/10)}
-  ];
-  const cW=280,cH=150,gap=20,totalW=cards.length*(cW+gap)-gap;
-  const startX=(W-totalW)/2;
-  cards.forEach((c,i)=>{
-    const x=startX+i*(cW+gap),y=490;
-    // بطاقة زجاجية
-    ctx.save();
-    ctx.globalAlpha=.15;ctx.fillStyle='#ffffff';
-    ctx.beginPath();ctx.roundRect(x,y,cW,cH,16);ctx.fill();
-    ctx.globalAlpha=1;
-    ctx.strokeStyle='rgba(177,151,56,.5)';ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.roundRect(x,y,cW,cH,16);ctx.stroke();
-    ctx.restore();
-    // عنوان البطاقة
-    ctx.fillStyle='rgba(200,220,255,.7)';ctx.font='700 21px Tajawal';
-    ctx.fillText(c.t,x+cW/2,y+42);
-    // قيمة البطاقة
-    const valGrad=ctx.createLinearGradient(x,y+50,x,y+120);
-    valGrad.addColorStop(0,'#f0d060');valGrad.addColorStop(1,'#c9a227');
-    ctx.fillStyle=valGrad;ctx.font='900 54px Tajawal';
-    ctx.fillText(c.v,x+cW/2,y+110);
-  });
-
-  // خط فاصل
-  ctx.fillStyle='rgba(177,151,56,.3)';ctx.fillRect(W/2-300,665,600,1.5);
-
-  // نص الختم
-  ctx.fillStyle='rgba(180,200,240,.7)';ctx.font='600 24px Tajawal';
-  ctx.fillText('نشهد أن هذا الطالب قد أكمل العرض المطلوب وفق معايير البرنامج المعتمدة',W/2,700);
-
-  // المدير والتاريخ
-  ctx.textAlign='right';ctx.fillStyle='rgba(218,185,76,.85)';ctx.font='800 26px Tajawal';
-  ctx.fillText(`مدير المجمع: ${data.managerName||'—'}`,W-130,H-130);
-  ctx.textAlign='left';ctx.fillStyle='rgba(200,220,255,.7)';ctx.font='700 24px Tajawal';
-  ctx.fillText(`تاريخ الإصدار: ${data.issueDate}`,130,H-130);
-
-  // ختم دائري
-  ctx.save();ctx.translate(W/2,H-110);
-  ctx.strokeStyle='rgba(177,151,56,.7)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,45,0,Math.PI*2);ctx.stroke();
-  ctx.strokeStyle='rgba(177,151,56,.4)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(0,0,38,0,Math.PI*2);ctx.stroke();
-  ctx.fillStyle='rgba(177,151,56,.8)';ctx.font='900 20px Tajawal';ctx.textAlign='center';ctx.fillText('✦',0,8);
-  ctx.restore();
-
-  const url=canvas.toDataURL('image/png');
-  const a=document.createElement('a');a.href=url;
-  const sn=(data.studentName||'certificate').replace(/[^\u0600-\u06FFa-zA-Z0-9\s_-]/g,'').trim();
-  a.download=`شهادة_${sn||'طالب'}.png`;a.click();
+function jsonp(action,params){
+return new Promise(function(resolve,reject){
+var cb=‘jcb_’+Date.now()+’_’+Math.random().toString(36).slice(2);
+var url=new URL(API);
+url.searchParams.set(‘action’,action);
+if(params)Object.keys(params).forEach(function(k){url.searchParams.set(k,String(params[k]));});
+url.searchParams.set(‘prefix’,cb);
+var done=false;
+var cleanup=function(){try{delete window[cb];}catch(e){}var s=document.getElementById(cb);if(s)s.remove();};
+window[cb]=function(d){if(done)return;done=true;cleanup();if(d&&d.error)reject(new Error(d.error));else resolve(d);};
+var s=document.createElement(‘script’);s.id=cb;
+s.onerror=function(){if(done)return;done=true;cleanup();reject(new Error(‘فشل الاتصال’));};
+s.src=url.toString();document.body.appendChild(s);
+});
+}
+function fN(v){return Number(v||0).toLocaleString(‘en-US’);}
+function fP(v){return Number(v||0).toLocaleString(‘en-US’,{maximumFractionDigits:1});}
+function escH(s){return String(s==null?’’:s).replace(/[&<>”’]/g,function(c){return({’&’:’&’,’<’:’<’,’>’:’>’,’”’:’"’,”’”:’'’}[c]);});}
+function rkCls(r){return r===1?‘rk-1’:r===2?‘rk-2’:r===3?‘rk-3’:‘rk-n’;}
+function pgCls(p){return p>=80?‘prog-green’:p>=60?‘prog-blue’:p>=40?‘prog-amber’:‘prog-red’;}
+function kpiCard(label,value,icon,colorCls,sub){
+return ‘<div class="kpi-card animate-in">’
++’<div class="kpi-label">’+escH(label)+’</div>’
++’<div class=“kpi-value ‘+(colorCls||’”)>’+escH(String(value))+’</div>’
++(sub?’<div class="text-muted" style="margin-top:4px;font-size:.75rem;">’+sub+’</div>’:’’)
++’<i class="fas '+escH(icon)+' kpi-float"></i></div>’;
+}
+function kpiCardBar(label,value,icon){
+var pct=Math.min(Number(value)||0,100);
+return ‘<div class="kpi-card animate-in">’
++’<div class="kpi-label">’+escH(label)+’</div>’
++’<div class="kpi-value">’+escH(fP(value))+’%</div>’
++’<div class="prog-bar"><div class="prog-fill '+pgCls(pct)+'" style="width:'+pct+'%"></div></div>’
++’<i class="fas '+escH(icon)+' kpi-float"></i></div>’;
+}
+function setSpinner(id){document.getElementById(id).innerHTML=’<div class="spinner-wrap animate-in"><div class="spinner"></div><span class="text-muted">جاري التحميل…</span></div>’;}
+/* build mini-table dynamically based on partsDivisions */
+function buildMiniTable(sections,partsDivisions){
+if(!sections||!sections.length)return ‘<p class="text-muted" style="padding:16px;text-align:center;">لا توجد مقاطع مسجَّلة</p>’;
+var div=Number(partsDivisions)||2;
+var label=div===4?‘الربع’:div===1?‘الجزء’:‘الحزب’;
+var map={};
+sections.forEach(function(s){
+if(!s||!s.partNumber)return;
+var pn=Number(s.partNumber);if(!pn||pn<1||pn>30)return;
+if(!map[pn]){map[pn]={};for(var i=1;i<=div;i++)map[pn][i]=null;}
+var hz=Number(s.hizb||1);if(hz>=1&&hz<=div)map[pn][hz]=s;
+});
+var parts=Object.keys(map).sort(function(a,b){return Number(a)-Number(b);});
+if(!parts.length)return ‘<p class="text-muted" style="padding:16px;text-align:center;">لا توجد مقاطع مسجَّلة</p>’;
+var thead=’<thead><tr><th class="td-label" rowspan="2">المسمّع</th><th rowspan="2">الجزء</th>’;
+for(var i=1;i<=div;i++)thead+=’<th colspan="4" class="th-part">’+escH(label)+’ ‘+i+’</th>’;
+thead+=’</tr><tr>’;
+for(var i=1;i<=div;i++)thead+=’<th>خطأ</th><th>تنبيه</th><th>الدرجة</th><th>وجه</th>’;
+thead+=’</tr></thead>’;
+var tbody=parts.map(function(pn){
+var hizbArr=[];for(var i=1;i<=div;i++)hizbArr.push(map[pn][i]);
+var teachers=[];
+hizbArr.forEach(function(h){if(h&&h.teacherName&&h.teacherName.trim())teachers.push(h.teacherName.trim());});
+teachers=[…new Set(teachers)];
+var tD=teachers.length?teachers.join(’ / ‘):’—’;
+var cells=hizbArr.map(function(h){
+if(!h)return’<td></td><td></td><td></td><td></td>’;
+var sc=Number(h.score);
+var scStr=isFinite(sc)?(Math.abs(sc-Math.round(sc))<1e-9?String(Math.round(sc)):String(Math.round(sc*10)/10)):’’;
+return’<td>’+escH(String(h.mistakes||0))+’</td>’
++’<td>’+escH(String(h.warnings||0))+’</td>’
++’<td style="font-weight:700;color:'+(h.isPassed?'var(--success)':'var(--danger)')+'">’+escH(scStr)+’</td>’
++’<td style="font-size:.65rem;">’+((!h.isPassed)?escH(String(h.failFace||’’)):’’)+’</td>’;
+}).join(’’);
+return’<tr><td class="td-label">’+escH(tD)+’</td><td style="font-weight:700;">’+pn+’</td>’+cells+’</tr>’;
+}).join(’’);
+return’<div class="mini-tbl-wrap"><table class="mini-table">’+thead+’<tbody>’+tbody+’</tbody></table></div>’;
 }
 
+CERT_const API=“https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec”;
 
-document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')run();});
-
-function setLoading(on){
-  document.getElementById('sp').style.display=on?'inline-block':'none';
-  document.getElementById('searchIco').style.display=on?'none':'';
-  document.getElementById('btn').disabled=on;
+function jsonp(action,params){
+return new Promise(function(resolve,reject){
+var cb=‘jcb_’+Date.now()+’_’+Math.random().toString(36).slice(2);
+var url=new URL(API);
+url.searchParams.set(‘action’,action);
+if(params)Object.keys(params).forEach(function(k){url.searchParams.set(k,String(params[k]));});
+url.searchParams.set(‘prefix’,cb);
+var done=false;
+var cleanup=function(){try{delete window[cb];}catch(e){}var s=document.getElementById(cb);if(s)s.remove();};
+window[cb]=function(d){if(done)return;done=true;cleanup();if(d&&d.error)reject(new Error(d.error));else resolve(d);};
+var s=document.createElement(‘script’);s.id=cb;
+s.onerror=function(){if(done)return;done=true;cleanup();reject(new Error(‘فشل الاتصال’));};
+s.src=url.toString();document.body.appendChild(s);
+});
+}
+function fN(v){return Number(v||0).toLocaleString(‘en-US’);}
+function fP(v){return Number(v||0).toLocaleString(‘en-US’,{maximumFractionDigits:1});}
+function escH(s){return String(s==null?’’:s).replace(/[&<>”’]/g,function(c){return({’&’:’&’,’<’:’<’,’>’:’>’,’”’:’"’,”’”:’'’}[c]);});}
+function rkCls(r){return r===1?‘rk-1’:r===2?‘rk-2’:r===3?‘rk-3’:‘rk-n’;}
+function pgCls(p){return p>=80?‘prog-green’:p>=60?‘prog-blue’:p>=40?‘prog-amber’:‘prog-red’;}
+function kpiCard(label,value,icon,colorCls,sub){
+return ‘<div class="kpi-card animate-in">’
++’<div class="kpi-label">’+escH(label)+’</div>’
++’<div class=“kpi-value ‘+(colorCls||’”)>’+escH(String(value))+’</div>’
++(sub?’<div class="text-muted" style="margin-top:4px;font-size:.75rem;">’+sub+’</div>’:’’)
++’<i class="fas '+escH(icon)+' kpi-float"></i></div>’;
+}
+function kpiCardBar(label,value,icon){
+var pct=Math.min(Number(value)||0,100);
+return ‘<div class="kpi-card animate-in">’
++’<div class="kpi-label">’+escH(label)+’</div>’
++’<div class="kpi-value">’+escH(fP(value))+’%</div>’
++’<div class="prog-bar"><div class="prog-fill '+pgCls(pct)+'" style="width:'+pct+'%"></div></div>’
++’<i class="fas '+escH(icon)+' kpi-float"></i></div>’;
+}
+function setSpinner(id){document.getElementById(id).innerHTML=’<div class="spinner-wrap animate-in"><div class="spinner"></div><span class="text-muted">جاري التحميل…</span></div>’;}
+/* build mini-table dynamically based on partsDivisions */
+function buildMiniTable(sections,partsDivisions){
+if(!sections||!sections.length)return ‘<p class="text-muted" style="padding:16px;text-align:center;">لا توجد مقاطع مسجَّلة</p>’;
+var div=Number(partsDivisions)||2;
+var label=div===4?‘الربع’:div===1?‘الجزء’:‘الحزب’;
+var map={};
+sections.forEach(function(s){
+if(!s||!s.partNumber)return;
+var pn=Number(s.partNumber);if(!pn||pn<1||pn>30)return;
+if(!map[pn]){map[pn]={};for(var i=1;i<=div;i++)map[pn][i]=null;}
+var hz=Number(s.hizb||1);if(hz>=1&&hz<=div)map[pn][hz]=s;
+});
+var parts=Object.keys(map).sort(function(a,b){return Number(a)-Number(b);});
+if(!parts.length)return ‘<p class="text-muted" style="padding:16px;text-align:center;">لا توجد مقاطع مسجَّلة</p>’;
+var thead=’<thead><tr><th class="td-label" rowspan="2">المسمّع</th><th rowspan="2">الجزء</th>’;
+for(var i=1;i<=div;i++)thead+=’<th colspan="4" class="th-part">’+escH(label)+’ ‘+i+’</th>’;
+thead+=’</tr><tr>’;
+for(var i=1;i<=div;i++)thead+=’<th>خطأ</th><th>تنبيه</th><th>الدرجة</th><th>وجه</th>’;
+thead+=’</tr></thead>’;
+var tbody=parts.map(function(pn){
+var hizbArr=[];for(var i=1;i<=div;i++)hizbArr.push(map[pn][i]);
+var teachers=[];
+hizbArr.forEach(function(h){if(h&&h.teacherName&&h.teacherName.trim())teachers.push(h.teacherName.trim());});
+teachers=[…new Set(teachers)];
+var tD=teachers.length?teachers.join(’ / ‘):’—’;
+var cells=hizbArr.map(function(h){
+if(!h)return’<td></td><td></td><td></td><td></td>’;
+var sc=Number(h.score);
+var scStr=isFinite(sc)?(Math.abs(sc-Math.round(sc))<1e-9?String(Math.round(sc)):String(Math.round(sc*10)/10)):’’;
+return’<td>’+escH(String(h.mistakes||0))+’</td>’
++’<td>’+escH(String(h.warnings||0))+’</td>’
++’<td style="font-weight:700;color:'+(h.isPassed?'var(--success)':'var(--danger)')+'">’+escH(scStr)+’</td>’
++’<td style="font-size:.65rem;">’+((!h.isPassed)?escH(String(h.failFace||’’)):’’)+’</td>’;
+}).join(’’);
+return’<tr><td class="td-label">’+escH(tD)+’</td><td style="font-weight:700;">’+pn+’</td>’+cells+’</tr>’;
+}).join(’’);
+return’<div class="mini-tbl-wrap"><table class="mini-table">’+thead+’<tbody>’+tbody+’</tbody></table></div>’;
 }
 
+document.getElementById(‘q’).addEventListener(‘keydown’,function(e){if(e.key===‘Enter’)run();});
+function setLoading(on){document.getElementById(‘ico’).className=on?‘fas fa-spinner fa-spin’:‘fas fa-search’;document.getElementById(‘btn’).disabled=on;}
 function run(){
-  const raw=(document.getElementById('q').value||'').trim();
-  if(!raw){renderEmpty('أدخل جوال ولي الأمر أو ID الهوية');return;}
-  document.getElementById('tabs').style.display='none';
-  document.getElementById('out').innerHTML='';
-  setLoading(true);
-  jsonp('lookupStudent',{query:raw})
-    .then(r=>{setLoading(false);handleResp(r);})
-    .catch(e=>{setLoading(false);renderError('خطأ: '+escH(e.message||String(e)));;});
+var raw=(document.getElementById(‘q’).value||’’).trim();
+if(!raw){showEmpty(‘أدخل جوال ولي الأمر أو ID الهوية’);return;}
+document.getElementById(‘tabs’).style.display=‘none’;
+document.getElementById(‘out’).innerHTML=’’;
+setLoading(true);
+jsonp(‘lookupStudent’,{query:raw})
+.then(function(r){setLoading(false);handleResp(r);})
+.catch(function(e){setLoading(false);showError(‘خطأ: ‘+escH(e.message||String(e)));});
 }
-
 function handleResp(resp){
-  if(!resp||!resp.ok||!Array.isArray(resp.results)||!resp.results.length){renderEmpty('لم يُعثَر على نتيجة. تحقق من الرقم أو الـ ID.');return;}
-  window.__res=resp.results;
-  if(resp.results.length>1){
-    const tabsEl=document.getElementById('tabs');
-    tabsEl.style.display='flex';
-    tabsEl.innerHTML=resp.results.map((r,i)=>`<button class="tab-btn ${i===0?'active':''}" onclick="setTab(${i})">${escH(r.student?.name||'طالب '+(i+1))}</button>`).join('');
-  }
-  renderCard(resp.results[0],0);
+if(!resp||!resp.ok||!Array.isArray(resp.results)||!resp.results.length){showEmpty(‘لم يُعثَر على نتيجة. تحقق من الرقم أو الـ ID.’);return;}
+window.__res=resp.results;
+if(resp.results.length>1){
+var t=document.getElementById(‘tabs’);t.style.display=‘flex’;
+t.innerHTML=resp.results.map(function(r,i){
+return ‘<button class="tab-btn'+(i===0?' active':'')+'" onclick="setTab('+i+')">’
++escH(r.student&&r.student.name?r.student.name:(‘طالب ‘+(i+1)))
++(r.student&&r.student.halaqa?’ — ‘+escH(r.student.halaqa):’’)+’</button>’;
+}).join(’’);
 }
-
+renderCard(resp.results[0],0);
+}
 function setTab(i){
-  document.querySelectorAll('.tab-btn').forEach((b,j)=>b.classList.toggle('active',i===j));
-  renderCard(window.__res[i],i);
+document.querySelectorAll(’.tab-btn’).forEach(function(b,j){b.classList.toggle(‘active’,i===j);});
+renderCard(window.__res[i],i);
 }
-
-function buildMiniTable(sections){
-  if(!sections||!sections.length)return'<p class="text-muted" style="padding:16px;text-align:center;">لا توجد مقاطع مسجَّلة</p>';
-  // detect div from sections
-  const hizbNums=[...new Set(sections.map(s=>Number(s.hizb||1)).filter(h=>h>=1&&h<=4))].sort((a,b)=>a-b);
-  const div=hizbNums.length>0?Math.max(...hizbNums):2;
-  const label=div===4?'الربع':div===1?'الجزء':'الحزب';
-  const map={};
-  sections.forEach(s=>{
-    if(!s||!s.partNumber)return;
-    const pn=Number(s.partNumber);if(!pn||pn<1||pn>30)return;
-    if(!map[pn]){map[pn]={};for(let i=1;i<=div;i++)map[pn][i]=null;}
-    const hz=Number(s.hizb);if(hz>=1&&hz<=div)map[pn][hz]=s;
-  });
-  const parts=Object.keys(map).sort((a,b)=>Number(a)-Number(b));
-  if(!parts.length)return'<p class="text-muted" style="padding:16px;text-align:center;">لا توجد مقاطع مسجَّلة</p>';
-  let thead='<thead><tr><th class="td-label" rowspan="2">المسمّع</th><th rowspan="2">الجزء</th>';
-  for(let i=1;i<=div;i++)thead+=`<th colspan="4" class="th-part">${escH(label)} ${i}</th>`;
-  thead+='</tr><tr>';
-  for(let i=1;i<=div;i++)thead+=`<th>خطأ</th><th>تنبيه</th><th>الدرجة</th><th>وجه</th>`;
-  thead+='</tr></thead>';
-  const rows=parts.map(pn=>{
-    const hizbsArr=[];for(let i=1;i<=div;i++)hizbsArr.push(map[pn][i]);
-    const teachers=[...new Set(hizbsArr.filter(Boolean).map(h=>h.teacherName?.trim()||'').filter(Boolean))];
-    const tD=teachers.length?teachers.join(' / '):'—';
-    let cells=hizbsArr.map(h=>{
-      if(!h)return'<td></td><td></td><td></td><td></td>';
-      const sc=Number(h.score);const scStr=isFinite(sc)?(Math.abs(sc-Math.round(sc))<1e-9?String(Math.round(sc)):String(Math.round(sc*10)/10)):'';
-      return`<td>${h.mistakes||0}</td><td>${h.warnings||0}</td><td style="font-weight:700;color:${h.isPassed?'var(--success)':'var(--danger)'}">${scStr}</td><td style="font-size:.65rem;">${!h.isPassed?escH(String(h.failFace||'')):''}</td>`;
-    }).join('');
-    return`<tr><td class="td-label">${escH(tD)}</td><td style="font-weight:700;">${pn}</td>${cells}</tr>`;
-  }).join('');
-  return`<div style="overflow-x:auto;"><table class="sard-mini-table">${thead}<tbody>${rows}</tbody></table></div>`;
+function detDiv(sections){
+if(!sections||!sections.length)return 2;
+var mx=0;sections.forEach(function(s){var h=Number(s.hizb||1);if(h>mx)mx=h;});
+return mx>=4?4:mx>=2?2:1;
 }
-
 function renderCard(r,idx){
-  const stu=r.student||{};const sum=r.summary||{};const sections=Array.isArray(r.sections)?r.sections:[];
-  const total=Number(sum.totalSections||sections.length||0);
-  const passed=Number(sum.passedSections||0);const failed=Number(sum.failedSections||0);
-  const totalScore=Number(sum.totalScore||0);
+var stu=r.student||{};var sum=r.summary||{};var sections=Array.isArray(r.sections)?r.sections:[];
+var total=Number(sum.totalSections||sections.length||0);
+var passed=Number(sum.passedSections||0);var failed=Number(sum.failedSections||0);
+var totalScore=Number(sum.totalScore||0);
+var div=detDiv(sections);
 
-  document.getElementById('out').innerHTML=`
-    <div class="card-sard animate-in">
-      <div class="d-flex justify-between align-center flex-wrap gap-2" style="margin-bottom:16px;">
-        <div>
-          <div class="text-muted" style="font-size:.8rem;margin-bottom:2px;">${stu.halaqa?'حلقة '+escH(stu.halaqa):''}</div>
-          <div style="font-size:1.4rem;font-weight:800;color:var(--primary);">${escH(stu.name||'طالب')}</div>
-          <div class="d-flex gap-2 flex-wrap mt-3">
-            ${stu.track?`<span class="badge-sard badge-gold"><i class="fas fa-route"></i>${escH(stu.track)}</span>`:''}
-            ${stu.partsCount!=null?`<span class="badge-sard badge-prim"><i class="fas fa-layer-group"></i>محفوظة: ${stu.partsCount}</span>`:''}
-            ${stu.id?`<span class="badge-sard" style="background:#f1f5f9;color:#475569;"><i class="fas fa-id-card"></i>ID: ${escH(stu.id)}</span>`:''}
-          </div>
-        </div>
-        <div class="d-flex gap-2 flex-wrap">
-          ${stu.guardianPhone?`<button class="btn-outline-sard" onclick="sendWA(${idx})"><i class="fab fa-whatsapp" style="color:#25d366;"></i>واتساب</button>`:''}
-          <button class="btn-primary-sard" onclick="makeCert(${idx})"><i class="fas fa-award"></i> شهادة</button>
-        </div>
-      </div>
-      <div class="grid-4" style="margin-bottom:16px;">
-        <div class="metric-card"><div class="metric-label">عدد المقاطع</div><div class="metric-val">${total}</div></div>
-        <div class="metric-card ok"><div class="metric-label">المجتاز</div><div class="metric-val ok">${passed}</div></div>
-        <div class="metric-card bad"><div class="metric-label">الرسوب</div><div class="metric-val bad">${failed}</div></div>
-        <div class="metric-card"><div class="metric-label">مجموع الدرجات</div><div class="metric-val">${fP(totalScore)}</div></div>
-      </div>
-      ${buildMiniTable(sections)}
-    </div>`;
+document.getElementById(‘out’).innerHTML=
+‘<div class="card-sard animate-in">’
++’<div class="d-flex justify-between align-center flex-wrap gap-2" style="margin-bottom:16px;">’
++’<div>’
++(stu.halaqa?’<div class="text-muted" style="font-size:.8rem;margin-bottom:2px;">حلقة ‘+escH(stu.halaqa)+’</div>’:’’)
++’<div style="font-size:1.4rem;font-weight:800;color:var(--primary);">’+escH(stu.name||‘طالب’)+’</div>’
++’<div class="d-flex gap-2 flex-wrap mt-2">’
++(stu.track?’<span class="badge-sard badge-gold"><i class="fas fa-route"></i>’+escH(stu.track)+’</span>’:’’)
++(stu.partsCount!=null?’<span class="badge-sard badge-prim"><i class="fas fa-layer-group"></i>محفوظة: ‘+escH(String(stu.partsCount))+’</span>’:’’)
++(stu.id?’<span class="badge-sard" style="background:#f1f5f9;color:#475569;"><i class="fas fa-id-card"></i>’+escH(stu.id)+’</span>’:’’)
++’</div></div>’
++’<div class="d-flex gap-2 flex-wrap">’
++(stu.guardianPhone?’<button class="btn-outline-sard" onclick="doWA('+idx+')"><i class="fab fa-whatsapp" style="color:#25d366;"></i>واتساب</button>’:’’)
++’<button class="btn-primary-sard" onclick="doCert('+idx+')"><i class="fas fa-award"></i>شهادة</button>’
++’</div></div>’
++’<div class="metric-grid">’
++’<div class="metric-card"><div class="metric-label">عدد المقاطع</div><div class="metric-val">’+total+’</div></div>’
++’<div class="metric-card ok"><div class="metric-label">المجتاز</div><div class="metric-val ok">’+passed+’</div></div>’
++’<div class="metric-card bad"><div class="metric-label">الرسوب</div><div class="metric-val bad">’+failed+’</div></div>’
++’<div class="metric-card"><div class="metric-label">مجموع الدرجات</div><div class="metric-val">’+fP(totalScore)+’</div></div>’
++’</div>’
++buildMiniTable(sections,div)
++’</div>’;
 }
-
-function sendWA(idx){
-  const r=(window.__res||[])[idx]||(window.__res?.[0]);if(!r)return;
-  const stu=r.student||{};const sum=r.summary||{};
-  const phone=normalizePhone(stu.guardianPhone);if(!phone){alert('لا يوجد رقم ولي أمر');return;}
-  const msg=`السلام عليكم ورحمة الله وبركاته\n\nولي أمر الطالب: ${stu.name||''}\n\nنتيجة عرض السرد:\nعدد المقاطع: ${sum.totalSections||0}\nالمجتاز: ${sum.passedSections||0}\nالرسوب: ${sum.failedSections||0}\nmجموع الدرجات: ${fP(sum.totalScore||0)}\n\nبارك الله في الجهود.`;
-  window.open('https://wa.me/'+phone+'?text='+encodeURIComponent(msg),'_blank');
+function normalizePhone(p){if(!p)return’’;var d=String(p).replace(/\D/g,’’);if(d.startsWith(‘00’))d=d.slice(2);if(d.startsWith(‘966’))return d;if(d.startsWith(‘0’))return’966’+d.slice(1);return d;}
+function doWA(idx){
+var r=(window.__res||[])[idx];if(!r)return;
+var stu=r.student||{};var sum=r.summary||{};
+var phone=normalizePhone(stu.guardianPhone);if(!phone){alert(‘لا يوجد رقم ولي أمر’);return;}
+var msg=‘السلام عليكم ورحمة الله وبركاته\n\nولي أمر الطالب: ‘+(stu.name||’’)
++’\n\nنتيجة عرض السرد:\nعدد المقاطع: ‘+(sum.totalSections||0)
++’\nالمجتاز: ‘+(sum.passedSections||0)
++’\nالرسوب: ‘+(sum.failedSections||0)
++’\nمجموع الدرجات: ‘+fP(sum.totalScore||0)
++’\n\nبارك الله في الجهود.’;
+window.open(‘https://wa.me/’+phone+’?text=’+encodeURIComponent(msg),’_blank’);
 }
-
-function normalizePhone(p){if(!p)return'';let d=String(p).replace(/\D/g,'');if(d.startsWith('00'))d=d.slice(2);if(d.startsWith('966'))return d;if(d.startsWith('0'))return'966'+d.slice(1);return d;}
-
-function makeCert(idx){
-  const r=(window.__res||[])[idx]||(window.__res?.[0]);if(!r)return;
-  const stu=r.student||{};const sum=r.summary||{};
-  const payload={complexName:'',managerName:'',studentName:stu.name||'',halaqaName:stu.halaqa||'',track:stu.track||'',partsSaved:Number(stu.partsCount||0),totalSections:Number(sum.totalSections||0),passed:Number(sum.passedSections||0),failed:Number(sum.failedSections||0),totalScore:Number(sum.totalScore||0),issueDate:new Date().toLocaleDateString('ar-SA')};
-  jsonp('getData').then(d=>{if(d?.complex?.complexName)payload.complexName=d.complex.complexName;if(d?.complex?.managerName)payload.managerName=d.complex.managerName;exportCert(payload);}).catch(()=>exportCert(payload));
+function doCert(idx){
+var r=(window.__res||[])[idx];if(!r)return;
+var stu=r.student||{};var sum=r.summary||{};
+var payload={complexName:’’,managerName:’’,studentName:stu.name||’’,halaqaName:stu.halaqa||’’,
+track:stu.track||’’,partsSaved:Number(stu.partsCount||0),totalSections:Number(sum.totalSections||0),
+passed:Number(sum.passedSections||0),failed:Number(sum.failedSections||0),totalScore:Number(sum.totalScore||0),
+issueDate:new Date().toLocaleDateString(‘ar-SA’)};
+jsonp(‘getData’).then(function(d){
+if(d&&d.complex&&d.complex.complexName)payload.complexName=d.complex.complexName;
+if(d&&d.complex&&d.complex.managerName)payload.managerName=d.complex.managerName;
+exportCert(payload);
+}).catch(function(){exportCert(payload);});
 }
-
-function renderEmpty(msg){document.getElementById('out').innerHTML=`<div class="card-sard text-muted" style="text-align:center;padding:32px;">${escH(msg)}</div>`;}
-function renderError(msg){document.getElementById('out').innerHTML=`<div class="card-sard" style="text-align:center;padding:32px;color:var(--danger);">${escH(msg)}</div>`;}
+function showEmpty(m){document.getElementById(‘out’).innerHTML=’<div class="card-sard text-muted" style="text-align:center;padding:32px;">’+escH(m)+’</div>’;}
+function showError(m){document.getElementById(‘out’).innerHTML=’<div class="card-sard" style="text-align:center;padding:32px;color:var(--danger);">’+escH(m)+’</div>’;}
 </script>
 
 </body></html>
