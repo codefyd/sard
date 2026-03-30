@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>استعلام نتيجة الطالب</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    body{font-family:'Tajawal',sans-serif;background:#f9f4ee;min-height:100vh;}
+    .card-soft{background:#fff;border-radius:18px;border:1px solid rgba(1,73,121,.10);box-shadow:0 8px 24px rgba(0,0,0,.04);}
+    .btn-main{background:#014979;color:#fff;}
+    .btn-main:hover{background:#02385c;}
+    .chip{background:rgba(1,73,121,.06);border:1px solid rgba(1,73,121,.10);color:#014979;border-radius:999px;padding:6px 12px;font-weight:800;font-size:12px;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;}
+    .tabbtn{border-radius:999px;padding:10px 14px;border:1px solid rgba(2,56,92,.16);background:#fff;color:#014979;font-weight:900;white-space:nowrap;}
+    .tabbtn.active{background:#014979;color:#fff;border-color:#014979;}
+    .tiny{font-size:12px;color:#64748b;font-weight:700;}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;direction:ltr;}
+    .sard-mini-table{width:100%;border-collapse:collapse;table-layout:auto;}
+    .sard-mini-table th,.sard-mini-table td{border:1px solid #cbd5e1;padding:.3rem .2rem;font-size:.7rem;text-align:center;vertical-align:middle;white-space:nowrap;}
+    .sard-mini-table th:first-child,.sard-mini-table td:first-child{width:16%;}
+    .sard-mini-table th.teacher-name-header{white-space:normal;line-height:1.1;}
+    .sard-mini-table td.fail-face-cell{font-size:.55rem;line-height:1.1;}
+    .sard-mini-table thead th{background:#e5edf6;color:#014979;font-weight:800;}
+    .sard-mini-table tbody tr:nth-child(even){background:#f9fafb;}
+    .sard-mini-table tbody tr:nth-child(odd){background:#fff;}
+    @media(max-width:768px){.sard-mini-table th,.sard-mini-table td{padding:.2rem .15rem;font-size:.6rem;}.sard-mini-table td.fail-face-cell{font-size:.5rem;}}
+  </style>
+</head>
+<body>
+  <div class="w-full max-w-3xl mx-auto px-3 sm:px-4 pb-14">
+
+    <!-- Header -->
+    <div class="card-soft p-4 mt-4 mb-4">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <a href="../برنامج_السرد.html" class="text-xs text-[#014979] hover:underline flex items-center gap-1">
+              <i class="fas fa-arrow-right"></i> العودة للبرنامج
+            </a>
+          </div>
+          <div class="text-sm text-slate-500 font-extrabold">برنامج السرد</div>
+          <h1 class="text-xl md:text-2xl font-black text-[#014979] mt-1">الاستعلام عن نتيجة الطالب</h1>
+          <p class="text-sm text-slate-500 mt-1 font-bold">
+            البحث عبر: <span class="font-black text-slate-700">جوال ولي الأمر</span> أو <span class="font-black text-slate-700">ID الهوية</span>
+          </p>
+        </div>
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center" style="background:rgba(1,73,121,0.08);border:1px solid rgba(1,73,121,0.12);">
+          <i class="fa-solid fa-magnifying-glass text-[#014979] text-xl"></i>
+        </div>
+      </div>
+
+      <div class="mt-4 flex flex-col sm:flex-row gap-2 items-stretch">
+        <input id="q" type="text"
+               class="flex-1 h-12 px-4 rounded-2xl border border-slate-200 bg-white outline-none focus:ring-2 focus:ring-[#014979]/15"
+               placeholder="اكتب جوال ولي الأمر أو ID الهوية"
+               autocomplete="off"/>
+        <button id="btn" class="btn-main h-12 px-5 rounded-2xl font-extrabold inline-flex items-center justify-center gap-2">
+          <span id="sp" class="hidden w-4 h-4 rounded-full border-2 border-white/60 border-t-white animate-spin"></span>
+          بحث
+        </button>
+      </div>
+
+      <div class="mt-3 flex flex-wrap gap-2">
+        <span class="chip"><i class="fa-solid fa-phone"></i>جوال ولي الأمر</span>
+        <span class="chip"><i class="fa-solid fa-id-card"></i>ID الهوية</span>
+      </div>
+    </div>
+
+    <div id="tabsWrap" class="hidden card-soft p-3 mb-3 overflow-x-auto">
+      <div id="tabs" class="flex gap-2 w-max"></div>
+    </div>
+
+    <div id="out" class="space-y-3"></div>
+
+    <div class="text-center text-xs text-slate-400 mt-6 font-bold">
+      إذا لم تظهر النتيجة: تأكد من الرقم أو الـ ID.
+    </div>
+  </div>
+
+<script>
+  const API = "https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec";
+
+  function jsonp(action, params) {
+    return new Promise((resolve, reject) => {
+      const cb = 'jcb_' + Date.now() + '_' + Math.floor(Math.random() * 1e5);
+      const url = new URL(API);
+      url.searchParams.set('action', action);
+      if (params) Object.keys(params).forEach(k => url.searchParams.set(k, String(params[k])));
+      url.searchParams.set('prefix', cb);
+      let done = false;
+      const cleanup = () => { try{delete window[cb];}catch(e){} const s=document.getElementById(cb); if(s)s.remove(); };
+      window[cb] = d => { if(done)return; done=true; cleanup(); d&&d.error?reject(new Error(d.error)):resolve(d); };
+      const s = document.createElement('script');
+      s.id = cb;
+      s.onerror = () => { if(done)return; done=true; cleanup(); reject(new Error('فشل الاتصال')); };
+      s.src = url.toString();
+      document.body.appendChild(s);
+    });
+  }
+
+  const q   = document.getElementById('q');
+  const btn = document.getElementById('btn');
+  const sp  = document.getElementById('sp');
+  const out = document.getElementById('out');
+  const tabsWrap = document.getElementById('tabsWrap');
+  const tabs     = document.getElementById('tabs');
+
+  btn.addEventListener('click', run);
+  q.addEventListener('keydown', e => { if(e.key==='Enter') run(); });
+
+  function setLoading(on) {
+    sp.classList.toggle('hidden', !on);
+    btn.disabled = on;
+    btn.classList.toggle('opacity-80', on);
+  }
+
+  function run() {
+    const raw = (q.value||'').trim();
+    if(!raw){ renderEmpty('فضلاً أدخل جوال ولي الأمر أو ID الهوية.'); return; }
+    tabsWrap.classList.add('hidden'); tabs.innerHTML=''; out.innerHTML='';
+    setLoading(true);
+    jsonp('lookupStudent', {query: raw})
+      .then(handleResponse)
+      .catch(err => {
+        setLoading(false);
+        renderError('حدث خطأ: ' + (err?.message || String(err || 'خطأ غير معروف')));
+      });
+  }
+
+  function handleResponse(resp) {
+    setLoading(false);
+    if(!resp||!resp.ok||!Array.isArray(resp.results)||resp.results.length===0){
+      renderEmpty('لم يتم العثور على نتيجة. تأكد من الرقم/الـ ID المدخل.'); return;
+    }
+    if(resp.results.length>1){
+      tabsWrap.classList.remove('hidden');
+      renderTabs(resp.results);
+      setActiveTab(0);
+    } else {
+      tabsWrap.classList.add('hidden');
+    }
+    renderStudentCard(resp.results[0], 0, resp.results);
+  }
+
+  function renderTabs(results) {
+    window.__lastResults = results;
+    tabs.innerHTML = results.map((r,i)=>{
+      const name=r?.student?.name||('طالب '+(i+1));
+      const halaqa=r?.student?.halaqa?' • '+r.student.halaqa:'';
+      return `<button class="tabbtn" data-i="${i}">${escH(name)}${halaqa?`<span class="tiny"> ${escH(halaqa)}</span>`:''}</button>`;
+    }).join('');
+    tabs.querySelectorAll('button.tabbtn').forEach(b=>{
+      b.addEventListener('click',()=>{
+        const i=Number(b.getAttribute('data-i'));
+        setActiveTab(i);
+        renderStudentCard((window.__lastResults||[])[i],i,window.__lastResults||[]);
+      });
+    });
+  }
+
+  function setActiveTab(i) {
+    tabs.querySelectorAll('button.tabbtn').forEach(b=>b.classList.toggle('active',Number(b.getAttribute('data-i'))===i));
+  }
+
+  function renderStudentCard(r, idx, allResults) {
+    window.__lastResults = allResults||[];
+    const stu = r.student||{};
+    const sum = r.summary||{};
+    const sections = Array.isArray(r.sections)?r.sections:[];
+    const grouped = groupByPart(sections);
+
+    const totalSections = Number(sum.totalSections||sections.length||0);
+    const passed = Number(sum.passedSections||0);
+    const failed = Number(sum.failedSections||0);
+    const totalScore = String(sum.totalScore||'0');
+
+    const chips = [
+      stu.halaqa?`<span class="chip"><i class="fa-solid fa-people-group"></i>${escH(stu.halaqa)}</span>`:'',
+      stu.track?`<span class="chip"><i class="fa-solid fa-route"></i>${escH(stu.track)}</span>`:'',
+      stu.partsCount!=null?`<span class="chip"><i class="fa-solid fa-layer-group"></i>أجزاء محفوظة: ${escH(String(stu.partsCount))}</span>`:''
+    ].filter(Boolean).join('');
+
+    const summaryGrid=`
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+        ${metricCard('عدد المقاطع',String(totalSections),'fa-solid fa-list-check')}
+        ${metricCard('المجتاز',String(passed),'fa-solid fa-circle-check','ok')}
+        ${metricCard('الرسوب',String(failed),'fa-solid fa-circle-xmark','bad')}
+        ${metricCard('مجموع الدرجات',String(totalScore),'fa-solid fa-chart-line')}
+        ${metricCard('الهوية',`<span class="mono">${escH(stu.id||'')}</span>`,'fa-solid fa-id-card')}
+        ${metricCard('جوال ولي الأمر',`<span class="mono">${escH(stu.guardianPhone||'')}</span>`,'fa-solid fa-phone')}
+      </div>`;
+
+    out.innerHTML=`
+      <div class="card-soft p-4">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="text-sm text-slate-500 font-extrabold">${stu.halaqa?'حلقة '+escH(stu.halaqa):'الحلقة'}</div>
+            <div class="text-2xl font-black mt-1 text-slate-900">${escH(stu.name||'طالب')}</div>
+            <div class="mt-2 flex flex-wrap gap-2">${chips}</div>
+          </div>
+          <div class="text-left"><div class="tiny">ID</div><div class="mono font-black text-slate-800">${escH(stu.id||'')}</div></div>
+        </div>
+        <div class="mt-4">${summaryGrid}</div>
+        <div class="mt-3 flex flex-wrap justify-between items-center gap-2">
+          <button id="btnWA" class="btn-main h-11 px-5 rounded-2xl font-extrabold inline-flex items-center gap-2">
+            <i class="fab fa-whatsapp"></i>إرسال لولي الأمر
+          </button>
+          <button id="btnCert" class="h-11 px-5 rounded-2xl font-extrabold inline-flex items-center gap-2 border border-[#014979] text-[#014979] bg-white hover:bg-[#014979] hover:text-white transition-colors">
+            <i class="fa-solid fa-award"></i>طباعة شهادة
+          </button>
+        </div>
+        <div class="mt-4"><div class="rounded-2xl border border-slate-200 overflow-auto">
+          ${grouped.length?renderMiniTable(grouped):`<div class="p-4 text-center text-sm text-slate-500 font-bold">لا توجد مقاطع مسجَّلة لهذا الطالب حتى الآن.</div>`}
+        </div></div>
+      </div>`;
+
+    // واتساب
+    document.getElementById('btnWA')?.addEventListener('click',()=>{
+      const phone = normalizePhone(stu.guardianPhone);
+      if(!phone){alert('لا يوجد رقم ولي أمر مسجّل');return;}
+      const msg=`السلام عليكم ورحمة الله وبركاته\n\nولي أمر الطالب: ${stu.name||''}\n\nنتيجة عرض السرد:\nعدد المقاطع: ${totalSections}\nالمجتاز: ${passed}\nالرسوب: ${failed}\nmجموع الدرجات: ${totalScore}\n\nبارك الله في الجهود.`;
+      window.open('https://wa.me/'+phone+'?text='+encodeURIComponent(msg),'_blank');
+    });
+
+    // شهادة
+    document.getElementById('btnCert')?.addEventListener('click',()=>{
+      const payload={complexName:'',managerName:'',studentName:stu.name||'',halaqaName:stu.halaqa||'',track:stu.track||'',partsSaved:Number(stu.partsCount||0),totalSections:totalSections,passed:passed,failed:failed,totalScore:Number(sum.totalScore||0),issueDate:new Date().toLocaleDateString('ar-SA')};
+      // محاولة جلب اسم المجمع — اختياري
+      jsonp('getData').then(d=>{
+        if(d?.complex?.complexName) payload.complexName=d.complex.complexName;
+        if(d?.complex?.managerName) payload.managerName=d.complex.managerName;
+        exportCert(payload);
+      }).catch(()=>exportCert(payload));
+    });
+
+    if(tabsWrap&&!tabsWrap.classList.contains('hidden'))setActiveTab(idx);
+  }
+
+  function metricCard(title,value,icon,tone){
+    const tc=tone==='ok'?'bg-emerald-50 border-emerald-200 text-emerald-900':tone==='bad'?'bg-rose-50 border-rose-200 text-rose-900':'bg-slate-50 border-slate-200 text-slate-900';
+    return `<div class="rounded-2xl border ${tc} p-3"><div class="flex items-center justify-between gap-2"><div class="tiny">${escH(title)}</div><i class="${icon} opacity-80"></i></div><div class="text-lg md:text-xl font-black mt-1">${value}</div></div>`;
+  }
+
+  function groupByPart(sections){
+    const m={};
+    (sections||[]).forEach(s=>{
+      if(!s||!s.partNumber)return;
+      const pn=Number(s.partNumber); if(!pn||pn<1||pn>30)return;
+      if(!m[pn])m[pn]={partNumber:pn,hizb1:null,hizb2:null};
+      const hz=Number(s.hizb); if(hz===1)m[pn].hizb1=s; if(hz===2)m[pn].hizb2=s;
+    });
+    return Object.values(m).sort((a,b)=>a.partNumber-b.partNumber);
+  }
+
+  function renderMiniTable(rows){
+    const body=rows.map(row=>{
+      const h1=row.hizb1,h2=row.hizb2;
+      const t1=h1?.teacherName?.trim()||'',t2=h2?.teacherName?.trim()||'';
+      const tD=t1&&t2?(t1===t2?t1:t1+' / '+t2):t1||t2||'غير محدد';
+      return `<tr>
+        <td>${escH(tD)}</td><td>${escH(String(row.partNumber))}</td>
+        <td>${h1?escH(String(h1.mistakes||0)):''}</td><td>${h1?escH(String(h1.warnings||0)):''}</td>
+        <td class="${h1?(h1.isPassed?'text-emerald-700 font-bold':'text-red-700 font-bold'):''}">${h1?escH(fmtScore(h1.score)):''}</td>
+        <td class="fail-face-cell">${h1&&!h1.isPassed?escH(String(h1.failFace||'')):''}</td>
+        <td>${h2?escH(String(h2.mistakes||0)):''}</td><td>${h2?escH(String(h2.warnings||0)):''}</td>
+        <td class="${h2?(h2.isPassed?'text-emerald-700 font-bold':'text-red-700 font-bold'):''}">${h2?escH(fmtScore(h2.score)):''}</td>
+        <td class="fail-face-cell">${h2&&!h2.isPassed?escH(String(h2.failFace||'')):''}</td>
+      </tr>`;
+    }).join('');
+    return `<table class="sard-mini-table"><thead><tr>
+      <th rowspan="2" class="teacher-name-header"><span>اسم<br/>المسمّع</span></th>
+      <th rowspan="2">الجزء</th>
+      <th colspan="4">الحزب الأول</th><th colspan="4">الحزب الثاني</th>
+    </tr><tr>
+      <th>خطأ</th><th>تنبيه</th><th>الدرجة</th><th>وجه الرسوب</th>
+      <th>خطأ</th><th>تنبيه</th><th>الدرجة</th><th>وجه الرسوب</th>
+    </tr></thead><tbody>${body}</tbody></table>`;
+  }
+
+  function exportCert(data){
+    const W=1920,H=1080;
+    const canvas=document.createElement('canvas'); canvas.width=W; canvas.height=H;
+    const ctx=canvas.getContext('2d');
+    const bg=ctx.createLinearGradient(0,0,W,H); bg.addColorStop(0,'#FBF8F1'); bg.addColorStop(1,'#EFE8D8');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    ctx.globalAlpha=.15;
+    const glow=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.5); glow.addColorStop(0,'#B8860B'); glow.addColorStop(1,'transparent');
+    ctx.fillStyle=glow; ctx.fillRect(0,0,W,H); ctx.globalAlpha=1;
+    ctx.lineWidth=12; ctx.strokeStyle='#B8860B'; rrect(ctx,50,50,W-100,H-100,36); ctx.stroke();
+    ctx.lineWidth=4; ctx.strokeStyle='#014979'; rrect(ctx,70,70,W-140,H-140,28); ctx.stroke();
+    ctx.textAlign='center';
+    ctx.fillStyle='#014979'; ctx.font='900 48px Tajawal'; ctx.fillText(data.complexName||'اسم المجمع',W/2,190);
+    ctx.fillStyle='#B8860B'; ctx.font='900 84px Tajawal'; ctx.fillText('شهادة إنجاز',W/2,290);
+    ctx.fillStyle='#475569'; ctx.font='700 32px Tajawal'; ctx.fillText('تُمنح هذه الشهادة للطالب تقديرًا لنتائجه في برنامج السرد',W/2,350);
+    ctx.fillStyle='#1C2833'; ctx.font='900 80px Tajawal'; ctx.fillText(data.studentName||'اسم الطالب',W/2,470);
+    ctx.fillStyle='#014979'; ctx.font='800 36px Tajawal';
+    const extra=[data.halaqaName?`حلقة: ${data.halaqaName}`:'',data.track?`المسار: ${data.track}`:''].filter(Boolean).join('  •  ');
+    if(extra)ctx.fillText(extra,W/2,530);
+    const cards=[{t:'الأجزاء المحفوظة',v:String(data.partsSaved)},{t:'عدد المقاطع',v:String(data.totalSections)},{t:'المجتاز',v:String(data.passed)},{t:'الرسوب',v:String(data.failed)},{t:'مجموع الدرجات',v:String(Math.round(data.totalScore*100)/100)}].reverse();
+    const sx=160,sy=610,gap=24,cW=(W-sx*2-gap*4)/5,cH=170;
+    cards.forEach((c,i)=>{
+      const x=sx+i*(cW+gap),y=sy;
+      ctx.fillStyle='rgba(255,255,255,.95)'; ctx.strokeStyle='rgba(1,73,121,.1)'; ctx.lineWidth=2;
+      rrect(ctx,x,y,cW,cH,22); ctx.fill(); ctx.stroke();
+      ctx.fillStyle='#64748b'; ctx.font='800 24px Tajawal'; ctx.textAlign='center'; ctx.fillText(c.t,x+cW/2,y+52);
+      ctx.fillStyle='#014979'; ctx.font='900 60px Tajawal'; ctx.fillText(c.v,x+cW/2,y+125);
+    });
+    ctx.textAlign='right'; ctx.fillStyle='#1C2833'; ctx.font='800 30px Tajawal'; ctx.fillText(`مدير المجمع: ${data.managerName||'—'}`,W-140,H-170);
+    ctx.textAlign='left'; ctx.fillStyle='#475569'; ctx.font='800 28px Tajawal'; ctx.fillText(`تاريخ الإصدار: ${data.issueDate}`,140,H-170);
+    const url=canvas.toDataURL('image/png');
+    const a=document.createElement('a'); a.href=url;
+    const sn=(data.studentName||'certificate').replace(/[^\u0600-\u06FFa-zA-Z0-9\s_-]/g,'').trim();
+    a.download=`شهادة_${sn||'طالب'}.png`; a.click();
+  }
+
+  function rrect(ctx,x,y,w,h,r){
+    const rr=Math.min(r,w/2,h/2);
+    ctx.beginPath(); ctx.moveTo(x+rr,y);
+    ctx.arcTo(x+w,y,x+w,y+h,rr); ctx.arcTo(x+w,y+h,x,y+h,rr);
+    ctx.arcTo(x,y+h,x,y,rr); ctx.arcTo(x,y,x+w,y,rr); ctx.closePath();
+  }
+
+  function normalizePhone(p){
+    if(!p)return '';
+    let d=String(p).replace(/\D/g,'');
+    if(d.startsWith('00'))d=d.slice(2);
+    if(d.startsWith('966'))return d;
+    if(d.startsWith('0'))return '966'+d.slice(1);
+    return d;
+  }
+
+  function fmtScore(v){ const n=Number(v); if(!isFinite(n))return ''; return Math.abs(n-Math.round(n))<1e-9?String(Math.round(n)):String(Math.round(n*10)/10); }
+
+  function renderEmpty(msg){ tabsWrap.classList.add('hidden'); tabs.innerHTML=''; out.innerHTML=`<div class="card-soft p-4 text-center"><div class="text-slate-600 font-extrabold">${escH(msg)}</div></div>`; }
+  function renderError(msg){ tabsWrap.classList.add('hidden'); tabs.innerHTML=''; out.innerHTML=`<div class="card-soft p-4 text-center"><div class="text-red-700 font-black">${escH(msg)}</div></div>`; }
+
+  function escH(s){ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+</script>
+</body>
+</html>
