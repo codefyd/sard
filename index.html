@@ -1077,7 +1077,6 @@ const STATE = {
   evalRecord: null,
   attHalaqa: null,
   attStatuses: {},
-  attendanceToday: {},
   settingsUnlocked: false,
   attUnlocked: false
 };
@@ -1114,18 +1113,6 @@ function loadData() {
       STATE.students     = data.students || [];
       STATE.records      = data.records || [];
       STATE.complex      = data.complex || {};
-
-function loadData() {
-  showSpinner();
-  google.script.run
-    .withSuccessHandler(data => {
-      STATE.settings        = data.settings || {};
-      STATE.trackConfigs    = data.trackConfigs || [];
-      STATE.halaqas         = data.halaqas || [];
-      STATE.students        = data.students || [];
-      STATE.records         = data.records || [];
-      STATE.complex         = data.complex || {};
-      STATE.attendanceToday = data.attendanceToday || {};
 
       const cn = STATE.complex.complexName || '';
       if (cn) document.getElementById('navComplexName').textContent = '— ' + cn;
@@ -1911,20 +1898,6 @@ function loadAttendanceHalaqas() {
     }
   }
 
-function loadAttendanceHalaqas() {
-  const s = STATE.settings;
-  const useTracksOnly = !!s.hideHalaqasAndUseTracksOnly;
-
-  let items = [];
-  if (useTracksOnly) {
-    items = STATE.trackConfigs.filter(t => t.name).map(t => ({ id:'track:' + t.name, name:'مسار ' + t.name }));
-  } else {
-    items = [...STATE.halaqas];
-    if (s.activeTrackForSelection) {
-      items.push({ id:'track:' + s.activeTrackForSelection, name:'مسار ' + s.activeTrackForSelection });
-    }
-  }
-
   const grid = document.getElementById('attHalaqaGrid');
   grid.innerHTML = '';
 
@@ -1937,13 +1910,13 @@ function loadAttendanceHalaqas() {
   });
 
   STATE.attHalaqa = null;
-  STATE.attStatuses = { ...STATE.attendanceToday };
+  STATE.attStatuses = {};
   document.getElementById('attStudentsCard').style.display = 'none';
 }
 
 function selectAttHalaqa(id, name, btn) {
   STATE.attHalaqa = { id, name };
-  STATE.attStatuses = { ...STATE.attendanceToday };
+  STATE.attStatuses = {};
   document.querySelectorAll('#attHalaqaGrid .sel-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderAttStudents();
@@ -1976,9 +1949,7 @@ function renderAttStudents() {
     const row = document.createElement('div');
     row.className = 'att-row';
 
-    if (!STATE.attStatuses[s.id]) {
-      STATE.attStatuses[s.id] = STATE.attendanceToday[s.id] || 'present';
-    }
+    if (!STATE.attStatuses[s.id]) STATE.attStatuses[s.id] = 'present';
 
     const btns = statuses.map(st => `
       <button class="att-status-btn ${STATE.attStatuses[s.id] === st.id ? st.cls : ''}"
@@ -2047,9 +2018,6 @@ function doSaveAttendance() {
 
   google.script.run
     .withSuccessHandler(() => {
-      filtered.forEach(s => {
-  STATE.attendanceToday[s.id] = STATE.attStatuses[s.id] || 'present';
-});
       saveBtn.disabled = false;
       Swal.fire({
         icon:'success',
