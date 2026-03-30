@@ -1,344 +1,156 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>تقرير المجمع والحلق</title>
-
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap"/>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Tajawal',sans-serif;background:#f9f4ee;min-height:100vh;}
-    .gradient-header{background:linear-gradient(135deg,#014979 0%,#02385c 60%,#014979 100%);box-shadow:0 4px 20px rgba(1,73,121,.35);}
-    .card-modern{background:linear-gradient(145deg,#fff 0%,#fdf9f3 100%);border-radius:1.25rem;box-shadow:0 4px 6px -1px rgba(0,0,0,.04),0 10px 25px -5px rgba(0,0,0,.06);border:1px solid rgba(1,73,121,.08);transition:all .3s;position:relative;overflow:hidden;}
-    .card-modern::before{content:'';position:absolute;top:0;right:0;width:100%;height:4px;background:linear-gradient(90deg,#b19738 0%,#e3c777 50%,#b19738 100%);opacity:0;transition:opacity .3s;}
-    .card-modern:hover{transform:translateY(-4px);}
-    .card-modern:hover::before{opacity:1;}
-    .stat-card{background:#fff;border-radius:1.25rem;padding:1.5rem;position:relative;overflow:hidden;transition:all .3s;border:1px solid rgba(1,73,121,.08);box-shadow:0 8px 20px rgba(0,0,0,.04);}
-    .stat-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 12px 24px -4px rgba(1,73,121,.18);}
-    .stat-card.gold-accent{border-top:3px solid #b19738;}
-    .stat-card.blue-accent{border-top:3px solid #014979;}
-    .stat-card.green-accent{border-top:3px solid #059669;}
-    .stat-card.purple-accent{border-top:3px solid #7c3aed;}
-    .icon-circle{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;}
-    .icon-circle.gold{background:linear-gradient(135deg,#f8ecd1,#f1d7a2);color:#8a6b20;box-shadow:0 4px 12px rgba(177,151,56,.35);}
-    .icon-circle.blue{background:linear-gradient(135deg,#d4e6f1,#b4d3e7);color:#014979;box-shadow:0 4px 12px rgba(1,73,121,.3);}
-    .icon-circle.green{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857;box-shadow:0 4px 12px rgba(5,150,105,.2);}
-    .icon-circle.purple{background:linear-gradient(135deg,#ede9fe,#ddd6fe);color:#6d28d9;box-shadow:0 4px 12px rgba(124,58,237,.2);}
-    .btn-primary{background:linear-gradient(135deg,#014979,#02385c);color:#fff;border:none;padding:.625rem 1.25rem;border-radius:.75rem;font-weight:600;cursor:pointer;transition:all .3s;box-shadow:0 4px 12px rgba(1,73,121,.35);display:inline-flex;align-items:center;gap:.5rem;}
-    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(1,56,94,.45);}
-    .table-modern{width:100%;border-collapse:separate;border-spacing:0;}
-    .table-modern thead{background:#f3f4f6;}
-    .table-modern thead th{color:#014979;font-weight:600;padding:1rem .75rem;text-align:right;font-size:.8rem;white-space:nowrap;}
-    .table-modern tbody tr{transition:all .2s;background:#fff;}
-    .table-modern tbody tr:nth-child(even){background:#fbf7f1;}
-    .table-modern tbody tr:hover{background:#f5efe5;}
-    .table-modern tbody td{padding:.875rem .75rem;border-bottom:1px solid #e2e8f0;font-size:.85rem;vertical-align:middle;}
-    .table-modern tbody tr:last-child td{border-bottom:none;}
-    .badge-modern{display:inline-flex;align-items:center;gap:.25rem;padding:.35rem .75rem;border-radius:9999px;font-size:.7rem;font-weight:600;}
-    .badge-modern.success{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857;}
-    .badge-modern.warning{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#b45309;}
-    .badge-modern.info{background:linear-gradient(135deg,#e0f2fe,#bfdbfe);color:#0369a1;}
-    .badge-modern.danger{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#b91c1c;}
-    .badge-modern.primary{background:linear-gradient(135deg,#014979,#02385c);color:#fff;}
-    .select-modern{appearance:none;background:#fff;border:1px solid rgba(1,73,121,.2);border-radius:.75rem;padding:.625rem 2.5rem .625rem 1rem;font-size:.875rem;font-weight:500;color:#014979;cursor:pointer;transition:all .3s;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23014979' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:left .75rem center;background-repeat:no-repeat;background-size:1.25em;}
-    .section-title{display:flex;align-items:center;gap:.75rem;font-size:1.125rem;font-weight:700;color:#014979;margin-bottom:1rem;}
-    .section-title .icon-wrapper{width:36px;height:36px;border-radius:.625rem;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
-    .icon-wrapper.gold-bg{background:linear-gradient(135deg,#f8ecd1,#f1d7a2);color:#8a6b20;}
-    .icon-wrapper.blue-bg{background:linear-gradient(135deg,#d4e6f1,#b4d3e7);color:#014979;}
-    .icon-wrapper.green-bg{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857;}
-    .loading-spinner{display:inline-block;width:48px;height:48px;border:4px solid rgba(1,73,121,.12);border-radius:50%;border-top-color:#014979;animation:spin 1s ease-in-out infinite;}
+    :root{--primary:#014979;--primary-dk:#013560;--primary-lt:#e8f2fb;--gold:#b19738;--gold-lt:#faf3e0;--success:#1a7a4a;--danger:#c0392b;--warning:#d97706;--bg:#f4f6f9;--card-bg:#ffffff;--text:#1e293b;--text-muted:#64748b;--border:rgba(1,73,121,0.10);--shadow-sm:0 2px 8px rgba(1,73,121,0.07);--shadow-md:0 6px 24px rgba(1,73,121,0.10);--shadow-lg:0 12px 40px rgba(1,73,121,0.14);--radius:14px;--radius-sm:8px;}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+    .navbar-sard{background:var(--primary);padding:0 16px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1000;box-shadow:0 2px 12px rgba(0,0,0,0.18);}
+    .navbar-brand{color:#fff;font-size:1.2rem;font-weight:800;display:flex;align-items:center;gap:8px;}
+    .navbar-brand i{color:var(--gold);font-size:1.3rem;}
+    .nav-back{padding:6px 14px;border-radius:20px;border:none;background:rgba(255,255,255,0.12);color:rgba(255,255,255,.85);font-family:'Tajawal',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;text-decoration:none;transition:background .2s;}
+    .nav-back:hover{background:rgba(255,255,255,0.22);}
+    .page-wrap{padding:20px;max-width:1100px;margin:auto;padding-bottom:40px;}
+    .card-sard{background:var(--card-bg);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow-sm);padding:20px;margin-bottom:16px;}
+    .card-title{font-size:1rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+    .kpi-card{background:var(--card-bg);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow-sm);padding:20px;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s;}
+    .kpi-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+    .kpi-card .bg-icon{position:absolute;left:-10px;bottom:-10px;font-size:5rem;opacity:.07;pointer-events:none;}
+    .kpi-label{font-size:.8rem;color:var(--text-muted);font-weight:500;margin-bottom:4px;}
+    .kpi-value{font-size:2rem;font-weight:800;color:var(--primary);line-height:1;}
+    .kpi-value.green{color:var(--success);}.kpi-value.red{color:var(--danger);}.kpi-value.gold{color:var(--gold);}
+    .badge-sard{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
+    .badge-pass{background:#d1fae5;color:#065f46;}.badge-fail{background:#fee2e2;color:#991b1b;}
+    .badge-prim{background:var(--primary-lt);color:var(--primary);}.badge-gold{background:var(--gold-lt);color:#7c6620;}
+    .badge-warn{background:#fef3c7;color:#92400e;}.badge-info{background:#dbeafe;color:#1e40af;}
+    .rank-badge{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-weight:800;font-size:.8rem;}
+    .rank-1{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;box-shadow:0 3px 8px rgba(245,158,11,.4);}
+    .rank-2{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff;}
+    .rank-3{background:linear-gradient(135deg,#d97706,#b45309);color:#fff;}
+    .rank-n{background:#e2e8f0;color:#475569;}
+    .prog-bar{width:100%;height:6px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:6px;}
+    .prog-fill{height:100%;border-radius:99px;transition:width .5s;}
+    .prog-green{background:linear-gradient(90deg,#10b981,#34d399);}
+    .prog-blue{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
+    .prog-amber{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+    .prog-red{background:linear-gradient(90deg,#ef4444,#f87171);}
+    .tbl-wrap{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow-sm);}
+    .sard-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+    .sard-table thead th{background:var(--primary-lt);color:var(--primary);font-weight:700;padding:10px 12px;text-align:right;border-bottom:2px solid var(--primary);white-space:nowrap;}
+    .sard-table tbody tr{background:#fff;transition:background .15s;}
+    .sard-table tbody tr:nth-child(even){background:#fafbfd;}
+    .sard-table tbody tr:hover{background:var(--primary-lt);}
+    .sard-table tbody tr.row-sel{background:var(--primary-lt);outline:2px solid var(--primary);}
+    .sard-table tbody td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+    .sard-select{appearance:none;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 32px 8px 12px;font-size:.9rem;font-weight:500;color:var(--primary);cursor:pointer;font-family:'Tajawal',sans-serif;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23014979' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:left 8px center;background-repeat:no-repeat;background-size:1.2em;}
+    .sard-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(1,73,121,.10);}
+    .btn-primary-sard{background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);padding:9px 20px;font-family:'Tajawal',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s,transform .15s;display:inline-flex;align-items:center;gap:7px;}
+    .btn-primary-sard:hover{background:var(--primary-dk);transform:translateY(-1px);}
+    .btn-outline-sard{background:transparent;color:var(--primary);border:1.5px solid var(--primary);border-radius:var(--radius-sm);padding:8px 18px;font-family:'Tajawal',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+    .btn-outline-sard:hover{background:var(--primary);color:#fff;}
+    .sel-chip{padding:8px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:#fff;cursor:pointer;transition:all .2s;font-family:'Tajawal',sans-serif;font-size:.88rem;}
+    .sel-chip:hover{border-color:var(--primary);background:var(--primary-lt);}
+    .sel-chip.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+    .grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+    @media(max-width:900px){.grid-5{grid-template-columns:repeat(3,1fr);}.grid-4{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:640px){.grid-3,.grid-4,.grid-5{grid-template-columns:1fr 1fr;}.grid-2{grid-template-columns:1fr;}}
+    .spinner-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px;}
+    .spinner{width:44px;height:44px;border:4px solid var(--primary-lt);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg);}}
-    .progress-bar{width:100%;height:8px;background:#e2e8f0;border-radius:9999px;overflow:hidden;}
-    .progress-fill{height:100%;border-radius:9999px;transition:width .5s;}
-    .progress-fill.green{background:linear-gradient(90deg,#10b981,#34d399);}
-    .progress-fill.blue{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
-    .progress-fill.amber{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
-    .progress-fill.red{background:linear-gradient(90deg,#ef4444,#f87171);}
-    .rank-badge{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;font-weight:700;font-size:.8rem;}
-    .rank-badge.gold{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;box-shadow:0 4px 12px rgba(245,158,11,.4);}
-    .rank-badge.silver{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff;}
-    .rank-badge.bronze{background:linear-gradient(135deg,#d97706,#b45309);color:#fff;}
-    .rank-badge.normal{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);color:#475569;}
-    .glow-text{text-shadow:0 0 20px rgba(177,151,56,.4);}
-    .fade-in{animation:fadeIn .5s ease;}
-    .slide-up{animation:slideUp .4s ease;}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-    @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-    .table-container{border-radius:1rem;overflow:hidden;box-shadow:0 4px 6px -1px rgba(0,0,0,.05),0 10px 25px -5px rgba(0,0,0,.08);}
-    @media(max-width:768px){.stat-card{padding:1rem;}.table-modern thead th,.table-modern tbody td{padding:.625rem .5rem;font-size:.75rem;}}
-  </style>
+    .d-flex{display:flex;}.align-center{align-items:center;}.justify-between{justify-content:space-between;}
+    .gap-2{gap:8px;}.gap-3{gap:12px;}.fw-bold{font-weight:700;}.mt-3{margin-top:12px;}.flex-wrap{flex-wrap:wrap;}
+    .text-muted{color:var(--text-muted);font-size:.85rem;}
+    .animate-in{animation:fadeUp .35s ease;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+    /* sard-mini-table - dynamic cols */
+    .sard-mini-table{width:100%;border-collapse:collapse;}
+    .sard-mini-table th,.sard-mini-table td{border:1px solid var(--border);padding:5px 8px;font-size:.78rem;text-align:center;vertical-align:middle;white-space:nowrap;}
+    .sard-mini-table th{background:var(--primary-lt);color:var(--primary);font-weight:700;}
+    .sard-mini-table th.th-part{background:var(--primary);color:#fff;}
+    .sard-mini-table td.td-label{background:var(--primary-lt);color:var(--primary);font-weight:700;text-align:right;min-width:80px;}
+    .sard-mini-table tbody tr:nth-child(even) td:not(.td-label){background:#fafbfd;}
+    .mc-pass{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:5px;background:#d1fae5;color:#065f46;font-weight:800;font-size:.78rem;}
+    .mc-fail{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:5px;background:#fee2e2;color:#991b1b;font-weight:800;font-size:.78rem;}
+    .mc-score{font-size:.62rem;color:var(--primary-dk);font-weight:700;margin-top:1px;}
+    .mc-empty{color:#d1d5db;font-size:.85rem;}
+</style>
 </head>
 <body>
-  <div id="root"></div>
+<nav class="navbar-sard">
+  <div class="navbar-brand"><i class="fas fa-quran"></i><span>تقرير المجمع والحلق</span></div>
+  <div class="d-flex align-center gap-2">
+    <button onclick="loadData()" class="btn-primary-sard" style="padding:7px 16px;font-size:.85rem;"><i class="fas fa-rotate"></i> تحديث</button>
+    <a href="../برنامج_السرد.html" class="nav-back"><i class="fas fa-arrow-right"></i> العودة</a>
+  </div>
+</nav>
+<div class="page-wrap" id="app">
+  <div class="spinner-wrap animate-in"><div class="spinner"></div><span class="text-muted">جاري تحميل التقرير...</span></div>
+</div>
+<script>
 
-  <script type="text/babel">
-    const { useState, useEffect } = React;
-    const API = "../index.html".includes("index")
-      ? "https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec"
-      : "https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec";
+const API = ‘https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec’;
+function jsonp(action,params){return new Promise((res,rej)=>{const cb=‘jcb_’+Date.now()+’_’+Math.random().toString(36).slice(2);const url=new URL(API);url.searchParams.set(‘action’,action);if(params)Object.keys(params).forEach(k=>url.searchParams.set(k,String(params[k])));url.searchParams.set(‘prefix’,cb);let done=false;const cleanup=()=>{try{delete window[cb];}catch(e){}const s=document.getElementById(cb);if(s)s.remove();};window[cb]=d=>{if(done)return;done=true;cleanup();d&&d.error?rej(new Error(d.error)):res(d);};const s=document.createElement(‘script’);s.id=cb;s.onerror=()=>{if(done)return;done=true;cleanup();rej(new Error(‘فشل الاتصال’));};s.src=url.toString();document.body.appendChild(s);});}
+const fN=v=>Number(v||0).toLocaleString(‘en-US’);
+const fP=v=>Number(v||0).toLocaleString(‘en-US’,{maximumFractionDigits:1});
+const escH=s=>String(s??’’).replace(/[&<>”’]/g,c=>({’&’:’&’,’<’:’<’,’>’:’>’,’”’:’"’,”’”:’'’}[c]));
+const rankCls=r=>r===1?‘rank-1’:r===2?‘rank-2’:r===3?‘rank-3’:‘rank-n’;
+const progCls=p=>p>=80?‘prog-green’:p>=60?‘prog-blue’:p>=40?‘prog-amber’:‘prog-red’;
+function kpiCard(label,value,icon,colorCls=’’,sub=’’){return`<div class="kpi-card animate-in"><div class="kpi-label">${escH(label)}</div><div class="kpi-value ${colorCls}">${escH(String(value))}</div>${sub?`<div class="text-muted" style="margin-top:4px;font-size:.75rem;">${sub}</div>`:''}<i class="fas ${escH(icon)} bg-icon"></i></div>`;}
+function kpiCardBar(label,value,icon){const pct=Math.min(Number(value)||0,100);return`<div class="kpi-card animate-in"><div class="kpi-label">${escH(label)}</div><div class="kpi-value">${escH(fP(value))}%</div><div class="prog-bar"><div class="prog-fill ${progCls(pct)}" style="width:${pct}%"></div></div><i class="fas ${escH(icon)} bg-icon"></i></div>`;}
+function setSpinner(id){document.getElementById(id).innerHTML=’<div class="spinner-wrap animate-in"><div class="spinner"></div><span class="text-muted">جاري التحميل…</span></div>’;}
 
-    function jsonp(action, params = {}) {
-      return new Promise((resolve, reject) => {
-        const cb = 'jcb_' + Date.now() + '_' + Math.floor(Math.random() * 1e5);
-        const url = new URL(API);
-        url.searchParams.set('action', action);
-        Object.keys(params).forEach(k => url.searchParams.set(k, String(params[k])));
-        url.searchParams.set('prefix', cb);
-        let done = false;
-        const cleanup = () => { try { delete window[cb]; } catch(e){} const s = document.getElementById(cb); if(s) s.remove(); };
-        window[cb] = d => { if(done) return; done=true; cleanup(); d && d.error ? reject(new Error(d.error)) : resolve(d); };
-        const s = document.createElement('script');
-        s.id = cb;
-        s.onerror = () => { if(done) return; done=true; cleanup(); reject(new Error('فشل الاتصال')); };
-        s.src = url.toString();
-        document.body.appendChild(s);
-      });
-    }
+let _data=null,_sel=’’;
+function loadData(){
+setSpinner(‘app’);
+jsonp(‘getDailySummary’).then(d=>{_data=d;render();}).catch(e=>{
+document.getElementById(‘app’).innerHTML=`<div class="spinner-wrap"><span style="color:var(--danger)">خطأ: ${escH(e.message||String(e))}</span></div>`;
+});
+}
+function render(){
+if(!_data)return;
+const{center,halaqas}=_data;
+if(!_sel&&halaqas?.length)_sel=halaqas[0].name;
+const students=(_data.studentsByHalaqa&&_sel)?(_data.studentsByHalaqa[_sel]||[]):[];
+const app=document.getElementById(‘app’);
+app.innerHTML=` <div class="card-sard animate-in"> <div class="card-title"><i class="fas fa-building-columns" style="color:var(--gold);"></i> تقرير المجمع العام</div> <div class="grid-5" style="margin-bottom:12px;"> ${kpiCard('عدد الحلقات',fN(center.halaqaCount),'fa-layer-group')} ${kpiCard('حاضر / متأخر',fN(center.present)+' / '+fN(center.late),'fa-users')} ${kpiCard('الأجزاء المفترضة',fN(center.expectedParts),'fa-list-ol')} ${kpiCard('الأجزاء المعروضة',fN(center.displayedParts),'fa-book-open')} ${kpiCard('الأجزاء المجتازة',fN(center.passedParts),'fa-check-circle','green')} </div> <div class="grid-4"> ${kpiCard('أجزاء الرسوب',fN(center.failedParts),'fa-times-circle','red')} ${kpiCard('الأجزاء المتبقية',fN(center.remainingParts),'fa-hourglass-half','gold')} ${kpiCardBar('نسبة العرض',center.coveragePercent,'fa-chart-line')} ${kpiCardBar('نسبة الاجتياز',center.globalPercent,'fa-trophy')} </div> </div> <div class="card-sard animate-in"> <div class="card-title"><i class="fas fa-table-list" style="color:var(--gold);"></i> تقرير الحلقات</div> <div class="tbl-wrap"> <table class="sard-table"> <thead><tr><th>#</th><th>اسم الحلقة</th><th>حاضر</th><th>متأخر</th><th>معتذر</th><th>غائب</th> <th>المفترض</th><th>المعروضة</th><th>المجتازة</th><th>نسبة العرض</th> <th>المتبقية</th><th>الرسوب</th><th>نسبة الرسوب</th><th>النسبة العامة</th><th>الترتيب</th></tr></thead> <tbody> ${(halaqas||[]).map((h,i)=>`
+<tr onclick="selHalaqa('${escH(h.name)}')" style="cursor:pointer;" class="${_sel===h.name?'row-sel':''}">
+<td class="text-muted">${i+1}</td>
+<td><b>${escH(h.name)}</b>${_sel===h.name?’<span class="badge-sard badge-prim" style="margin-right:6px;font-size:.7rem;">مُختارة</span>’:’’}</td>
+<td><span class="badge-sard badge-pass">${fN(h.present)}</span></td>
+<td><span class="badge-sard badge-warn">${fN(h.late)}</span></td>
+<td><span class="badge-sard badge-info">${fN(h.excused)}</span></td>
+<td><span class="badge-sard badge-fail">${fN(h.absent)}</span></td>
+<td>${fN(h.expectedParts)}</td><td>${fN(h.displayedParts)}</td>
+<td style="color:var(--success);font-weight:700;">${fN(h.passedParts)}</td>
+<td>${fP(h.coveragePercent)}%</td>
+<td style="color:var(--warning);">${fN(h.remainingParts)}</td>
+<td style="color:var(--danger);">${fN(h.failedParts)}</td>
+<td style="color:var(--danger);">${fP(h.failPercent)}%</td>
+<td style="color:var(--primary);font-weight:800;">${fP(h.globalPercent)}%</td>
+<td><span class="rank-badge ${rankCls(h.rank)}">${h.rank}</span></td>
+</tr>`).join('')} </tbody> </table> </div> </div> <div class="card-sard animate-in"> <div class="d-flex justify-between align-center flex-wrap gap-2" style="margin-bottom:16px;"> <div class="card-title" style="margin-bottom:0;"><i class="fas fa-user-graduate" style="color:var(--gold);"></i> تقرير الحلقة التفصيلي</div> <div class="d-flex align-center gap-2"> <span class="text-muted fw-bold" style="font-size:.85rem;">اختر الحلقة:</span> <select class="sard-select" id="hSel" onchange="selHalaqa(this.value)"> ${(halaqas||[]).map(h=>`<option value=”${escH(h.name)}” ${_sel===h.name?‘selected’:’’}>${escH(h.name)}</option>`).join('')} </select> </div> </div> <div class="tbl-wrap"> <table class="sard-table"> <thead><tr><th>#</th><th>اسم الطالب</th><th>الحضور</th><th>المفترض</th><th>المعروضة</th> <th>المجتازة</th><th>نسبة العرض</th><th>نسبة الاجتياز</th><th>الرسوب</th><th>نسبة الرسوب</th><th>نسبة الطالب</th><th>الترتيب</th></tr></thead> <tbody> ${students.length===0?`<tr><td colspan="12" style="text-align:center;padding:24px;color:var(--text-muted);">لا توجد بيانات لهذه الحلقة</td></tr>`:''} ${students.map((st,i)=>{ const sL=st.status==='present'?'حاضر':st.status==='late'?'متأخر':st.status==='excused'?'معتذر':st.status==='absent'?'غائب':'—'; const sC=st.status==='present'?'badge-pass':st.status==='late'?'badge-warn':st.status==='excused'?'badge-info':st.status==='absent'?'badge-fail':'badge-prim'; return`<tr>
+<td class="text-muted">${i+1}</td><td><b>${escH(st.name)}</b></td>
+<td><span class="badge-sard ${sC}">${sL}</span></td>
+<td>${fN(st.expectedParts||0)}</td><td>${fN(st.displayedParts||0)}</td>
+<td style="color:var(--success);font-weight:700;">${fN(st.passedParts||0)}</td>
+<td>${fP(st.coveragePercent||0)}%</td>
+<td style="color:#1d4ed8;">${fP(st.passFromExpectedPercent||0)}%</td>
+<td style="color:var(--danger);">${fN(st.failedParts||0)}</td>
+<td style="color:var(--danger);">${fP(st.failPercent||0)}%</td>
+<td style="color:var(--success);font-weight:800;">${fP(st.studentPercent||0)}%</td>
+<td><span class="rank-badge ${rankCls(st.rank)}">${st.rank}</span></td>
+</tr>`; }).join('')} </tbody> </table> </div> </div>`;
+}
+function selHalaqa(n){_sel=n;render();setTimeout(()=>document.getElementById(‘hSel’)?.scrollIntoView({behavior:‘smooth’,block:‘center’}),80);}
+loadData();
+</script>
 
-    const fmt = v => Number(v||0).toLocaleString('en-US', {maximumFractionDigits:1});
-    const fmtN = v => Number(v||0).toLocaleString('en-US');
-    const rankCls = r => r===1?'gold':r===2?'silver':r===3?'bronze':'normal';
-    const progCls = p => p>=80?'green':p>=60?'blue':p>=40?'amber':'red';
-
-    function App() {
-      const [loading, setLoading] = useState(true);
-      const [data, setData] = useState(null);
-      const [sel, setSel] = useState('');
-
-      const load = () => {
-        setLoading(true);
-        jsonp('getDailySummary').then(res => {
-          setData(res || null);
-          if (res?.halaqas?.length > 0) setSel(s => s && res.halaqas.some(h=>h.name===s) ? s : res.halaqas[0].name);
-          setLoading(false);
-        }).catch(() => setLoading(false));
-      };
-
-      useEffect(() => load(), []);
-
-      const halaqas = data?.halaqas || [];
-      const students = data && data.studentsByHalaqa && sel ? (data.studentsByHalaqa[sel] || []) : [];
-
-      return (
-        <div className="min-h-screen">
-          <nav className="gradient-header sticky top-0 z-50 h-20 flex items-center px-6">
-            <div className="container mx-auto max-w-7xl flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#b19738] to-[#d1b860] flex items-center justify-center shadow-lg">
-                  <i className="fas fa-quran text-white text-xl"></i>
-                </div>
-                <div>
-                  <h1 className="font-bold text-xl text-white glow-text">تقرير المجمع والحلق</h1>
-                  <p className="text-xs text-blue-100 opacity-90">تقرير شامل لجميع الحلقات</p>
-                </div>
-                <a href="../برنامج_السرد.html" className="hidden md:inline-flex items-center gap-2 text-xs text-blue-100 hover:text-white bg-white/10 px-3 py-2 rounded-lg hover:bg-white/20">
-                  <i className="fas fa-arrow-right"></i> العودة للبرنامج
-                </a>
-              </div>
-              <button onClick={load} className="btn-primary">
-                <i className="fas fa-rotate"></i>
-                <span className="hidden sm:inline">تحديث</span>
-              </button>
-            </div>
-          </nav>
-
-          <div className="container mx-auto px-4 py-8 space-y-8 max-w-7xl">
-            {loading && (
-              <div className="flex flex-col items-center justify-center py-20 gap-4 fade-in">
-                <div className="loading-spinner"></div>
-                <p className="text-gray-500">جاري تحميل التقرير...</p>
-              </div>
-            )}
-
-            {!loading && data && (
-              <>
-                {/* تقرير المجمع العام */}
-                <section className="space-y-4 slide-up">
-                  <div className="section-title">
-                    <span className="icon-wrapper gold-bg"><i className="fas fa-building-columns"></i></span>
-                    تقرير المجمع العام
-                  </div>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="stat-card gold-accent">
-                      <div className="flex items-start justify-between">
-                        <div><p className="text-sm text-gray-500 mb-2">عدد الحلقات</p><p className="text-3xl font-bold text-[#014979]">{fmtN(data.center.halaqaCount)}</p></div>
-                        <div className="icon-circle gold"><i className="fas fa-layer-group"></i></div>
-                      </div>
-                    </div>
-                    <div className="stat-card blue-accent">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="text-sm text-gray-500 mb-2">الحضور والتأخر</p>
-                          <div className="flex items-baseline gap-3">
-                            <div><span className="text-2xl font-bold text-emerald-700">{fmtN(data.center.present)}</span><span className="text-xs text-gray-400 mr-1">حاضر</span></div>
-                            <div><span className="text-xl font-bold text-amber-700">{fmtN(data.center.late)}</span><span className="text-xs text-gray-400 mr-1">متأخر</span></div>
-                          </div>
-                        </div>
-                        <div className="icon-circle blue"><i className="fas fa-users"></i></div>
-                      </div>
-                    </div>
-                    {[
-                      {l:'الأجزاء المفترضة', v:data.center.expectedParts, ic:'blue', i:'fas fa-list-ol'},
-                      {l:'الأجزاء المعروضة', v:data.center.displayedParts, ic:'blue', i:'fas fa-book-open'},
-                      {l:'الأجزاء المجتازة', v:data.center.passedParts, ic:'green', i:'fas fa-check-circle', green:true},
-                      {l:'أجزاء الرسوب', v:data.center.failedParts, ic:'purple', i:'fas fa-times-circle', red:true},
-                      {l:'الأجزاء المتبقية', v:data.center.remainingParts, ic:'gold', i:'fas fa-hourglass-half', amber:true},
-                    ].map((c,i) => (
-                      <div key={i} className="stat-card">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <p className="text-sm text-gray-500 mb-2">{c.l}</p>
-                            <p className={`text-2xl font-bold ${c.green?'text-emerald-700':c.red?'text-red-600':c.amber?'text-amber-700':'text-[#014979]'}`}>{fmtN(c.v)}</p>
-                          </div>
-                          <div className={`icon-circle ${c.ic}`}><i className={c.i}></i></div>
-                        </div>
-                      </div>
-                    ))}
-                    <div className="stat-card green-accent">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <p className="text-sm text-gray-500 mb-2">نسبة العرض العامة</p>
-                          <p className="text-3xl font-bold text-[#014979]">{fmt(data.center.coveragePercent)}%</p>
-                          <div className="progress-bar mt-2"><div className={`progress-fill ${progCls(data.center.coveragePercent)}`} style={{width:`${Math.min(data.center.coveragePercent,100)}%`}}></div></div>
-                        </div>
-                        <div className="icon-circle green"><i className="fas fa-chart-line"></i></div>
-                      </div>
-                    </div>
-                    <div className="stat-card purple-accent">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <p className="text-sm text-gray-500 mb-2">النسبة العامة للاجتياز</p>
-                          <p className="text-3xl font-bold text-[#014979]">{fmt(data.center.globalPercent)}%</p>
-                          <div className="progress-bar mt-2"><div className={`progress-fill ${progCls(data.center.globalPercent)}`} style={{width:`${Math.min(data.center.globalPercent,100)}%`}}></div></div>
-                        </div>
-                        <div className="icon-circle purple"><i className="fas fa-trophy"></i></div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* جدول الحلقات */}
-                <section className="space-y-4 slide-up">
-                  <div className="section-title">
-                    <span className="icon-wrapper blue-bg"><i className="fas fa-table-list"></i></span>
-                    تقرير المجمع حسب الحلقات
-                  </div>
-                  <div className="card-modern overflow-hidden">
-                    <div className="overflow-x-auto">
-                      <table className="table-modern">
-                        <thead>
-                          <tr>
-                            {['#','اسم الحلقة','حاضر','متأخر','معتذر','غائب','المفترض','المعروضة','المجتازة','نسبة العرض','المتبقية','الرسوب','نسبة الرسوب','النسبة العامة','الترتيب'].map((h,i)=><th key={i}>{h}</th>)}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {halaqas.length === 0 && <tr><td colSpan="15" className="text-center py-8 text-gray-400">لا توجد بيانات</td></tr>}
-                          {halaqas.map((h,i) => (
-                            <tr key={h.name} className="cursor-pointer" onClick={()=>setSel(h.name)}>
-                              <td className="text-gray-400">{i+1}</td>
-                              <td className="font-bold text-gray-800">
-                                <div className="flex items-center gap-2">
-                                  {h.name}
-                                  {sel===h.name && <span className="badge-modern primary"><i className="fas fa-eye text-[10px]"></i>مُختارة</span>}
-                                </div>
-                              </td>
-                              <td><span className="badge-modern success">{fmtN(h.present)}</span></td>
-                              <td><span className="badge-modern warning">{fmtN(h.late)}</span></td>
-                              <td><span className="badge-modern info">{fmtN(h.excused)}</span></td>
-                              <td><span className="badge-modern danger">{fmtN(h.absent)}</span></td>
-                              <td>{fmtN(h.expectedParts)}</td>
-                              <td>{fmtN(h.displayedParts)}</td>
-                              <td className="text-emerald-600 font-medium">{fmtN(h.passedParts)}</td>
-                              <td>{fmt(h.coveragePercent)}%</td>
-                              <td className="text-amber-600">{fmtN(h.remainingParts)}</td>
-                              <td className="text-red-500">{fmtN(h.failedParts)}</td>
-                              <td className="text-red-500">{fmt(h.failPercent)}%</td>
-                              <td className="font-bold text-[#014979]">{fmt(h.globalPercent)}%</td>
-                              <td><span className={`rank-badge ${rankCls(h.rank)}`}>{h.rank}</span></td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </section>
-
-                {/* تقرير الحلقة التفصيلي */}
-                <section className="space-y-4 slide-up">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div className="section-title mb-0">
-                      <span className="icon-wrapper green-bg"><i className="fas fa-user-graduate"></i></span>
-                      تقرير الحلقة التفصيلي
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <label className="text-sm text-gray-500 font-medium">اختر الحلقة:</label>
-                      <select className="select-modern" value={sel} onChange={e=>setSel(e.target.value)}>
-                        {halaqas.map(h=><option key={h.name} value={h.name}>{h.name}</option>)}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="card-modern overflow-hidden">
-                    <div className="overflow-x-auto">
-                      <table className="table-modern">
-                        <thead>
-                          <tr>
-                            {['#','اسم الطالب','الحضور','المفترض','المعروضة','المجتازة','نسبة العرض','نسبة الاجتياز','الرسوب','نسبة الرسوب','نسبة الطالب','الترتيب'].map((h,i)=><th key={i}>{h}</th>)}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {students.length===0 && <tr><td colSpan="12" className="text-center py-8 text-gray-400">لا توجد بيانات</td></tr>}
-                          {students.map((st,i)=>{
-                            const sLabel = st.status==='present'?'حاضر':st.status==='late'?'متأخر':st.status==='excused'?'معتذر':st.status==='absent'?'غائب':'—';
-                            const sCls = st.status==='present'?'success':st.status==='late'?'warning':st.status==='excused'?'info':st.status==='absent'?'danger':'info';
-                            return (
-                              <tr key={st.id||i}>
-                                <td className="text-gray-400">{i+1}</td>
-                                <td className="font-bold text-gray-800">{st.name}</td>
-                                <td><span className={`badge-modern ${sCls}`}>{sLabel}</span></td>
-                                <td>{fmtN(st.expectedParts||0)}</td>
-                                <td>{fmtN(st.displayedParts||0)}</td>
-                                <td className="text-emerald-600 font-medium">{fmtN(st.passedParts||0)}</td>
-                                <td>{fmt(st.coveragePercent||0)}%</td>
-                                <td className="text-blue-600">{fmt(st.passFromExpectedPercent||0)}%</td>
-                                <td className="text-red-500">{fmtN(st.failedParts||0)}</td>
-                                <td className="text-red-500">{fmt(st.failPercent||0)}%</td>
-                                <td className="font-bold text-emerald-600">{fmt(st.studentPercent||0)}%</td>
-                                <td><span className={`rank-badge ${rankCls(st.rank)}`}>{st.rank}</span></td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </section>
-              </>
-            )}
-
-            {!loading && !data && (
-              <div className="flex flex-col items-center justify-center py-20 gap-4 text-gray-500 fade-in">
-                <i className="fas fa-database text-5xl text-gray-300"></i>
-                <p className="text-lg font-medium">لا توجد بيانات</p>
-                <button onClick={load} className="btn-primary mt-2"><i className="fas fa-rotate"></i> إعادة المحاولة</button>
-              </div>
-            )}
-          </div>
-
-          <footer className="bg-white border-t border-gray-100 py-4 mt-8 text-center text-sm text-gray-400">
-            <i className="fas fa-code ml-1"></i> تقرير برنامج السرد القرآني
-          </footer>
-        </div>
-      );
-    }
-
-    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
-  </script>
-</body>
-</html>
+</body></html>
