@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تقرير المجمع والحلق</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Tajawal',sans-serif;background:#f9f4ee;min-height:100vh;}
+    .gradient-header{background:linear-gradient(135deg,#014979 0%,#02385c 60%,#014979 100%);box-shadow:0 4px 20px rgba(1,73,121,.35);}
+    .card-modern{background:linear-gradient(145deg,#fff 0%,#fdf9f3 100%);border-radius:1.25rem;box-shadow:0 4px 6px -1px rgba(0,0,0,.04),0 10px 25px -5px rgba(0,0,0,.06);border:1px solid rgba(1,73,121,.08);transition:all .3s;position:relative;overflow:hidden;}
+    .card-modern::before{content:'';position:absolute;top:0;right:0;width:100%;height:4px;background:linear-gradient(90deg,#b19738 0%,#e3c777 50%,#b19738 100%);opacity:0;transition:opacity .3s;}
+    .card-modern:hover{transform:translateY(-4px);}
+    .card-modern:hover::before{opacity:1;}
+    .stat-card{background:#fff;border-radius:1.25rem;padding:1.5rem;position:relative;overflow:hidden;transition:all .3s;border:1px solid rgba(1,73,121,.08);box-shadow:0 8px 20px rgba(0,0,0,.04);}
+    .stat-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 12px 24px -4px rgba(1,73,121,.18);}
+    .stat-card.gold-accent{border-top:3px solid #b19738;}
+    .stat-card.blue-accent{border-top:3px solid #014979;}
+    .stat-card.green-accent{border-top:3px solid #059669;}
+    .stat-card.purple-accent{border-top:3px solid #7c3aed;}
+    .icon-circle{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;}
+    .icon-circle.gold{background:linear-gradient(135deg,#f8ecd1,#f1d7a2);color:#8a6b20;box-shadow:0 4px 12px rgba(177,151,56,.35);}
+    .icon-circle.blue{background:linear-gradient(135deg,#d4e6f1,#b4d3e7);color:#014979;box-shadow:0 4px 12px rgba(1,73,121,.3);}
+    .icon-circle.green{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857;box-shadow:0 4px 12px rgba(5,150,105,.2);}
+    .icon-circle.purple{background:linear-gradient(135deg,#ede9fe,#ddd6fe);color:#6d28d9;box-shadow:0 4px 12px rgba(124,58,237,.2);}
+    .btn-primary{background:linear-gradient(135deg,#014979,#02385c);color:#fff;border:none;padding:.625rem 1.25rem;border-radius:.75rem;font-weight:600;cursor:pointer;transition:all .3s;box-shadow:0 4px 12px rgba(1,73,121,.35);display:inline-flex;align-items:center;gap:.5rem;}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(1,56,94,.45);}
+    .table-modern{width:100%;border-collapse:separate;border-spacing:0;}
+    .table-modern thead{background:#f3f4f6;}
+    .table-modern thead th{color:#014979;font-weight:600;padding:1rem .75rem;text-align:right;font-size:.8rem;white-space:nowrap;}
+    .table-modern tbody tr{transition:all .2s;background:#fff;}
+    .table-modern tbody tr:nth-child(even){background:#fbf7f1;}
+    .table-modern tbody tr:hover{background:#f5efe5;}
+    .table-modern tbody td{padding:.875rem .75rem;border-bottom:1px solid #e2e8f0;font-size:.85rem;vertical-align:middle;}
+    .table-modern tbody tr:last-child td{border-bottom:none;}
+    .badge-modern{display:inline-flex;align-items:center;gap:.25rem;padding:.35rem .75rem;border-radius:9999px;font-size:.7rem;font-weight:600;}
+    .badge-modern.success{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857;}
+    .badge-modern.warning{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#b45309;}
+    .badge-modern.info{background:linear-gradient(135deg,#e0f2fe,#bfdbfe);color:#0369a1;}
+    .badge-modern.danger{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#b91c1c;}
+    .badge-modern.primary{background:linear-gradient(135deg,#014979,#02385c);color:#fff;}
+    .select-modern{appearance:none;background:#fff;border:1px solid rgba(1,73,121,.2);border-radius:.75rem;padding:.625rem 2.5rem .625rem 1rem;font-size:.875rem;font-weight:500;color:#014979;cursor:pointer;transition:all .3s;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23014979' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:left .75rem center;background-repeat:no-repeat;background-size:1.25em;}
+    .section-title{display:flex;align-items:center;gap:.75rem;font-size:1.125rem;font-weight:700;color:#014979;margin-bottom:1rem;}
+    .section-title .icon-wrapper{width:36px;height:36px;border-radius:.625rem;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+    .icon-wrapper.gold-bg{background:linear-gradient(135deg,#f8ecd1,#f1d7a2);color:#8a6b20;}
+    .icon-wrapper.blue-bg{background:linear-gradient(135deg,#d4e6f1,#b4d3e7);color:#014979;}
+    .icon-wrapper.green-bg{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#047857;}
+    .loading-spinner{display:inline-block;width:48px;height:48px;border:4px solid rgba(1,73,121,.12);border-radius:50%;border-top-color:#014979;animation:spin 1s ease-in-out infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .progress-bar{width:100%;height:8px;background:#e2e8f0;border-radius:9999px;overflow:hidden;}
+    .progress-fill{height:100%;border-radius:9999px;transition:width .5s;}
+    .progress-fill.green{background:linear-gradient(90deg,#10b981,#34d399);}
+    .progress-fill.blue{background:linear-gradient(90deg,#3b82f6,#60a5fa);}
+    .progress-fill.amber{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+    .progress-fill.red{background:linear-gradient(90deg,#ef4444,#f87171);}
+    .rank-badge{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;font-weight:700;font-size:.8rem;}
+    .rank-badge.gold{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;box-shadow:0 4px 12px rgba(245,158,11,.4);}
+    .rank-badge.silver{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff;}
+    .rank-badge.bronze{background:linear-gradient(135deg,#d97706,#b45309);color:#fff;}
+    .rank-badge.normal{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);color:#475569;}
+    .glow-text{text-shadow:0 0 20px rgba(177,151,56,.4);}
+    .fade-in{animation:fadeIn .5s ease;}
+    .slide-up{animation:slideUp .4s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+    @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    .table-container{border-radius:1rem;overflow:hidden;box-shadow:0 4px 6px -1px rgba(0,0,0,.05),0 10px 25px -5px rgba(0,0,0,.08);}
+    @media(max-width:768px){.stat-card{padding:1rem;}.table-modern thead th,.table-modern tbody td{padding:.625rem .5rem;font-size:.75rem;}}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    const API = "../index.html".includes("index")
+      ? "https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec"
+      : "https://script.google.com/macros/s/AKfycbxfvdCcCCZ2eh8LSMKqlllcCKcn0e6HunPkfc3Ue_IXP6rWdeHxrEaYafN60-sVVpcT/exec";
+
+    function jsonp(action, params = {}) {
+      return new Promise((resolve, reject) => {
+        const cb = 'jcb_' + Date.now() + '_' + Math.floor(Math.random() * 1e5);
+        const url = new URL(API);
+        url.searchParams.set('action', action);
+        Object.keys(params).forEach(k => url.searchParams.set(k, String(params[k])));
+        url.searchParams.set('prefix', cb);
+        let done = false;
+        const cleanup = () => { try { delete window[cb]; } catch(e){} const s = document.getElementById(cb); if(s) s.remove(); };
+        window[cb] = d => { if(done) return; done=true; cleanup(); d && d.error ? reject(new Error(d.error)) : resolve(d); };
+        const s = document.createElement('script');
+        s.id = cb;
+        s.onerror = () => { if(done) return; done=true; cleanup(); reject(new Error('فشل الاتصال')); };
+        s.src = url.toString();
+        document.body.appendChild(s);
+      });
+    }
+
+    const fmt = v => Number(v||0).toLocaleString('en-US', {maximumFractionDigits:1});
+    const fmtN = v => Number(v||0).toLocaleString('en-US');
+    const rankCls = r => r===1?'gold':r===2?'silver':r===3?'bronze':'normal';
+    const progCls = p => p>=80?'green':p>=60?'blue':p>=40?'amber':'red';
+
+    function App() {
+      const [loading, setLoading] = useState(true);
+      const [data, setData] = useState(null);
+      const [sel, setSel] = useState('');
+
+      const load = () => {
+        setLoading(true);
+        jsonp('getDailySummary').then(res => {
+          setData(res || null);
+          if (res?.halaqas?.length > 0) setSel(s => s && res.halaqas.some(h=>h.name===s) ? s : res.halaqas[0].name);
+          setLoading(false);
+        }).catch(() => setLoading(false));
+      };
+
+      useEffect(() => load(), []);
+
+      const halaqas = data?.halaqas || [];
+      const students = data && data.studentsByHalaqa && sel ? (data.studentsByHalaqa[sel] || []) : [];
+
+      return (
+        <div className="min-h-screen">
+          <nav className="gradient-header sticky top-0 z-50 h-20 flex items-center px-6">
+            <div className="container mx-auto max-w-7xl flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#b19738] to-[#d1b860] flex items-center justify-center shadow-lg">
+                  <i className="fas fa-quran text-white text-xl"></i>
+                </div>
+                <div>
+                  <h1 className="font-bold text-xl text-white glow-text">تقرير المجمع والحلق</h1>
+                  <p className="text-xs text-blue-100 opacity-90">تقرير شامل لجميع الحلقات</p>
+                </div>
+                <a href="../برنامج_السرد.html" className="hidden md:inline-flex items-center gap-2 text-xs text-blue-100 hover:text-white bg-white/10 px-3 py-2 rounded-lg hover:bg-white/20">
+                  <i className="fas fa-arrow-right"></i> العودة للبرنامج
+                </a>
+              </div>
+              <button onClick={load} className="btn-primary">
+                <i className="fas fa-rotate"></i>
+                <span className="hidden sm:inline">تحديث</span>
+              </button>
+            </div>
+          </nav>
+
+          <div className="container mx-auto px-4 py-8 space-y-8 max-w-7xl">
+            {loading && (
+              <div className="flex flex-col items-center justify-center py-20 gap-4 fade-in">
+                <div className="loading-spinner"></div>
+                <p className="text-gray-500">جاري تحميل التقرير...</p>
+              </div>
+            )}
+
+            {!loading && data && (
+              <>
+                {/* تقرير المجمع العام */}
+                <section className="space-y-4 slide-up">
+                  <div className="section-title">
+                    <span className="icon-wrapper gold-bg"><i className="fas fa-building-columns"></i></span>
+                    تقرير المجمع العام
+                  </div>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="stat-card gold-accent">
+                      <div className="flex items-start justify-between">
+                        <div><p className="text-sm text-gray-500 mb-2">عدد الحلقات</p><p className="text-3xl font-bold text-[#014979]">{fmtN(data.center.halaqaCount)}</p></div>
+                        <div className="icon-circle gold"><i className="fas fa-layer-group"></i></div>
+                      </div>
+                    </div>
+                    <div className="stat-card blue-accent">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="text-sm text-gray-500 mb-2">الحضور والتأخر</p>
+                          <div className="flex items-baseline gap-3">
+                            <div><span className="text-2xl font-bold text-emerald-700">{fmtN(data.center.present)}</span><span className="text-xs text-gray-400 mr-1">حاضر</span></div>
+                            <div><span className="text-xl font-bold text-amber-700">{fmtN(data.center.late)}</span><span className="text-xs text-gray-400 mr-1">متأخر</span></div>
+                          </div>
+                        </div>
+                        <div className="icon-circle blue"><i className="fas fa-users"></i></div>
+                      </div>
+                    </div>
+                    {[
+                      {l:'الأجزاء المفترضة', v:data.center.expectedParts, ic:'blue', i:'fas fa-list-ol'},
+                      {l:'الأجزاء المعروضة', v:data.center.displayedParts, ic:'blue', i:'fas fa-book-open'},
+                      {l:'الأجزاء المجتازة', v:data.center.passedParts, ic:'green', i:'fas fa-check-circle', green:true},
+                      {l:'أجزاء الرسوب', v:data.center.failedParts, ic:'purple', i:'fas fa-times-circle', red:true},
+                      {l:'الأجزاء المتبقية', v:data.center.remainingParts, ic:'gold', i:'fas fa-hourglass-half', amber:true},
+                    ].map((c,i) => (
+                      <div key={i} className="stat-card">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="text-sm text-gray-500 mb-2">{c.l}</p>
+                            <p className={`text-2xl font-bold ${c.green?'text-emerald-700':c.red?'text-red-600':c.amber?'text-amber-700':'text-[#014979]'}`}>{fmtN(c.v)}</p>
+                          </div>
+                          <div className={`icon-circle ${c.ic}`}><i className={c.i}></i></div>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="stat-card green-accent">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <p className="text-sm text-gray-500 mb-2">نسبة العرض العامة</p>
+                          <p className="text-3xl font-bold text-[#014979]">{fmt(data.center.coveragePercent)}%</p>
+                          <div className="progress-bar mt-2"><div className={`progress-fill ${progCls(data.center.coveragePercent)}`} style={{width:`${Math.min(data.center.coveragePercent,100)}%`}}></div></div>
+                        </div>
+                        <div className="icon-circle green"><i className="fas fa-chart-line"></i></div>
+                      </div>
+                    </div>
+                    <div className="stat-card purple-accent">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <p className="text-sm text-gray-500 mb-2">النسبة العامة للاجتياز</p>
+                          <p className="text-3xl font-bold text-[#014979]">{fmt(data.center.globalPercent)}%</p>
+                          <div className="progress-bar mt-2"><div className={`progress-fill ${progCls(data.center.globalPercent)}`} style={{width:`${Math.min(data.center.globalPercent,100)}%`}}></div></div>
+                        </div>
+                        <div className="icon-circle purple"><i className="fas fa-trophy"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* جدول الحلقات */}
+                <section className="space-y-4 slide-up">
+                  <div className="section-title">
+                    <span className="icon-wrapper blue-bg"><i className="fas fa-table-list"></i></span>
+                    تقرير المجمع حسب الحلقات
+                  </div>
+                  <div className="card-modern overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="table-modern">
+                        <thead>
+                          <tr>
+                            {['#','اسم الحلقة','حاضر','متأخر','معتذر','غائب','المفترض','المعروضة','المجتازة','نسبة العرض','المتبقية','الرسوب','نسبة الرسوب','النسبة العامة','الترتيب'].map((h,i)=><th key={i}>{h}</th>)}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {halaqas.length === 0 && <tr><td colSpan="15" className="text-center py-8 text-gray-400">لا توجد بيانات</td></tr>}
+                          {halaqas.map((h,i) => (
+                            <tr key={h.name} className="cursor-pointer" onClick={()=>setSel(h.name)}>
+                              <td className="text-gray-400">{i+1}</td>
+                              <td className="font-bold text-gray-800">
+                                <div className="flex items-center gap-2">
+                                  {h.name}
+                                  {sel===h.name && <span className="badge-modern primary"><i className="fas fa-eye text-[10px]"></i>مُختارة</span>}
+                                </div>
+                              </td>
+                              <td><span className="badge-modern success">{fmtN(h.present)}</span></td>
+                              <td><span className="badge-modern warning">{fmtN(h.late)}</span></td>
+                              <td><span className="badge-modern info">{fmtN(h.excused)}</span></td>
+                              <td><span className="badge-modern danger">{fmtN(h.absent)}</span></td>
+                              <td>{fmtN(h.expectedParts)}</td>
+                              <td>{fmtN(h.displayedParts)}</td>
+                              <td className="text-emerald-600 font-medium">{fmtN(h.passedParts)}</td>
+                              <td>{fmt(h.coveragePercent)}%</td>
+                              <td className="text-amber-600">{fmtN(h.remainingParts)}</td>
+                              <td className="text-red-500">{fmtN(h.failedParts)}</td>
+                              <td className="text-red-500">{fmt(h.failPercent)}%</td>
+                              <td className="font-bold text-[#014979]">{fmt(h.globalPercent)}%</td>
+                              <td><span className={`rank-badge ${rankCls(h.rank)}`}>{h.rank}</span></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </section>
+
+                {/* تقرير الحلقة التفصيلي */}
+                <section className="space-y-4 slide-up">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div className="section-title mb-0">
+                      <span className="icon-wrapper green-bg"><i className="fas fa-user-graduate"></i></span>
+                      تقرير الحلقة التفصيلي
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm text-gray-500 font-medium">اختر الحلقة:</label>
+                      <select className="select-modern" value={sel} onChange={e=>setSel(e.target.value)}>
+                        {halaqas.map(h=><option key={h.name} value={h.name}>{h.name}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="card-modern overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="table-modern">
+                        <thead>
+                          <tr>
+                            {['#','اسم الطالب','الحضور','المفترض','المعروضة','المجتازة','نسبة العرض','نسبة الاجتياز','الرسوب','نسبة الرسوب','نسبة الطالب','الترتيب'].map((h,i)=><th key={i}>{h}</th>)}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {students.length===0 && <tr><td colSpan="12" className="text-center py-8 text-gray-400">لا توجد بيانات</td></tr>}
+                          {students.map((st,i)=>{
+                            const sLabel = st.status==='present'?'حاضر':st.status==='late'?'متأخر':st.status==='excused'?'معتذر':st.status==='absent'?'غائب':'—';
+                            const sCls = st.status==='present'?'success':st.status==='late'?'warning':st.status==='excused'?'info':st.status==='absent'?'danger':'info';
+                            return (
+                              <tr key={st.id||i}>
+                                <td className="text-gray-400">{i+1}</td>
+                                <td className="font-bold text-gray-800">{st.name}</td>
+                                <td><span className={`badge-modern ${sCls}`}>{sLabel}</span></td>
+                                <td>{fmtN(st.expectedParts||0)}</td>
+                                <td>{fmtN(st.displayedParts||0)}</td>
+                                <td className="text-emerald-600 font-medium">{fmtN(st.passedParts||0)}</td>
+                                <td>{fmt(st.coveragePercent||0)}%</td>
+                                <td className="text-blue-600">{fmt(st.passFromExpectedPercent||0)}%</td>
+                                <td className="text-red-500">{fmtN(st.failedParts||0)}</td>
+                                <td className="text-red-500">{fmt(st.failPercent||0)}%</td>
+                                <td className="font-bold text-emerald-600">{fmt(st.studentPercent||0)}%</td>
+                                <td><span className={`rank-badge ${rankCls(st.rank)}`}>{st.rank}</span></td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </section>
+              </>
+            )}
+
+            {!loading && !data && (
+              <div className="flex flex-col items-center justify-center py-20 gap-4 text-gray-500 fade-in">
+                <i className="fas fa-database text-5xl text-gray-300"></i>
+                <p className="text-lg font-medium">لا توجد بيانات</p>
+                <button onClick={load} className="btn-primary mt-2"><i className="fas fa-rotate"></i> إعادة المحاولة</button>
+              </div>
+            )}
+          </div>
+
+          <footer className="bg-white border-t border-gray-100 py-4 mt-8 text-center text-sm text-gray-400">
+            <i className="fas fa-code ml-1"></i> تقرير برنامج السرد القرآني
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
