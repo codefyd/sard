@@ -637,6 +637,9 @@
     <button class="nav-link-btn" onclick="showView('attendance')" id="nb-attendance">
       <i class="fas fa-clipboard-check"></i> التحضير
     </button>
+    <button class="nav-link-btn" onclick="window.open('c/1.html','_blank')" id="nb-reports" style="display:none;">
+      <i class="fas fa-chart-bar"></i> التقارير
+    </button>
     <button class="nav-link-btn" onclick="showView('settings')" id="nb-settings">
       <i class="fas fa-cog"></i> الإعدادات
     </button>
@@ -656,6 +659,9 @@
   </button>
   <button class="mob-btn" onclick="showView('attendance')" id="mb-attendance">
     <i class="fas fa-clipboard-check"></i><span>التحضير</span>
+  </button>
+  <button class="mob-btn" onclick="window.open('c/1.html','_blank')" id="mb-reports" style="display:none;">
+    <i class="fas fa-chart-bar"></i><span>التقارير</span>
   </button>
   <button class="mob-btn" onclick="showView('settings')" id="mb-settings">
     <i class="fas fa-cog"></i><span>الإعدادات</span>
@@ -881,6 +887,18 @@
           </div>
           <input type="text" id="s-activeTrack" class="form-control" style="width:160px;" placeholder="اختياري"/>
         </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">إظهار زر التقارير</div>
+            <div class="setting-desc">يُظهر زر التقارير في شريط التنقل</div>
+          </div>
+          <label class="toggle-wrap">
+            <input type="checkbox" id="s-showReports" />
+            <div class="toggle-track"></div>
+            <div class="toggle-knob"></div>
+          </label>
+        </div>
       </div>
 
       <div class="card-sard animate-in">
@@ -918,6 +936,22 @@
           <code>{النسبة}</code>
         </p>
         <textarea id="s-whatsapp" class="form-control" rows="4" placeholder="أدخل نص الرسالة..."></textarea>
+      </div>
+
+      <div class="card-sard animate-in">
+        <div class="card-title"><i class="fas fa-chart-bar"></i> التقارير</div>
+        <p class="text-muted" style="font-size:.85rem;margin-bottom:14px;">فتح صفحات التقارير في تبويب جديد</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="c/1.html" target="_blank" class="btn-primary-sard" style="justify-content:flex-start;text-decoration:none;">
+            <i class="fas fa-mosque"></i> تقرير المجمع والحلق
+          </a>
+          <a href="c/2.html" target="_blank" class="btn-outline-sard" style="text-decoration:none;display:inline-flex;align-items:center;gap:7px;">
+            <i class="fas fa-list-alt"></i> تقرير الحلق التفصيلي
+          </a>
+          <a href="c/3.html" target="_blank" class="btn-outline-sard" style="text-decoration:none;display:inline-flex;align-items:center;gap:7px;">
+            <i class="fas fa-search"></i> استعلام نتائج الطلاب
+          </a>
+        </div>
       </div>
 
       <div class="card-sard animate-in">
@@ -1086,6 +1120,7 @@ function loadData() {
       renderHalaqas();
       loadAttendanceHalaqas();
       loadSettingsForm();
+      applyReportsButton();
       hideSpinner();
     })
     .withFailureHandler(err => {
@@ -1811,6 +1846,15 @@ function doSaveRecord() {
   });
 }
 
+// إظهار/إخفاء زر التقارير في شريط التنقل
+function applyReportsButton() {
+  const show = !!STATE.settings.showReportsButton;
+  ['nb-reports', 'mb-reports'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = show ? '' : 'none';
+  });
+}
+
 // =============================================
 // ATTENDANCE
 // =============================================
@@ -2011,6 +2055,7 @@ function loadSettingsForm() {
     document.getElementById('s-hideHalaqas').checked = !!s.hideHalaqasAndUseTracksOnly;
     document.getElementById('s-requireFail').checked = !!s.requireFailReason;
     document.getElementById('s-activeTrack').value = s.activeTrackForSelection || '';
+    document.getElementById('s-showReports').checked = !!s.showReportsButton;
     document.getElementById('s-lockCode').value = '';
     document.getElementById('s-editCode').value = '';
     document.getElementById('s-whatsapp').value = s.whatsappTemplate || '';
@@ -2044,6 +2089,7 @@ function doSaveSettings() {
     hideHalaqasAndUseTracksOnly: document.getElementById('s-hideHalaqas').checked,
     requireFailReason: document.getElementById('s-requireFail').checked,
     activeTrackForSelection: document.getElementById('s-activeTrack').value.trim(),
+    showReportsButton: document.getElementById('s-showReports').checked,
     editSectionsCode: document.getElementById('s-editCode').value.trim(),
     whatsappTemplate: document.getElementById('s-whatsapp').value.trim()
   };
