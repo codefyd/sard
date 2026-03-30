@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8"/>
@@ -454,35 +454,17 @@
     .att-status-btn.s-excused { background:#dbeafe; border-color:#1d4ed8; color:#1e40af; }
     .att-status-btn.s-absent  { background:#fee2e2; border-color:#dc2626; color:#991b1b; }
 
-    /* ====== [تعديل 2] جدول سجل الطالب - أصغر ودرجة كحلية ====== */
-    .history-table {
-      width:100%;
-      border-collapse:collapse;
-      font-size:.75rem;  /* كان .82rem → صغّرناه */
-      margin-top:8px;
-    }
-
-    .history-table th {
-      background:var(--primary-lt);
-      color:var(--primary);
-      font-weight:700;
-      padding:5px 7px;  /* كان 7px 10px → أصغر */
-      text-align:center;
-      border:1px solid var(--border);
-    }
-
-    .history-table td {
-      padding:4px 7px;  /* كان 6px 10px → أصغر */
-      border:1px solid var(--border);
-      text-align:center;
-      background:#fff;
-    }
-
-    .history-table tr.pass-row td { background:#f0faf5; }
-    .history-table tr.fail-row td { background:#fef2f2; }
-
-    /* لون الدرجة كحلي غامق */
-    .history-score { color:var(--primary-dk); font-weight:700; }
+    /* ====== جدول سجل الطالب - مصفوفة ====== */
+    .matrix-wrap { overflow-x:auto; }
+    .matrix-table { border-collapse:collapse; font-size:.72rem; white-space:nowrap; }
+    .matrix-table th { background:var(--primary); color:#fff; font-weight:700; padding:5px 9px; text-align:center; border:1px solid rgba(255,255,255,.15); }
+    .matrix-table th.th-label { background:var(--primary-dk); text-align:right; min-width:72px; }
+    .matrix-table td { padding:4px 7px; border:1px solid var(--border); text-align:center; background:#fff; vertical-align:middle; }
+    .matrix-table td.td-label { background:var(--primary-lt); color:var(--primary); font-weight:700; text-align:right; }
+    .mc-pass { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:5px; background:#d1fae5; color:#065f46; font-weight:800; font-size:.78rem; }
+    .mc-fail { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:5px; background:#fee2e2; color:#991b1b; font-weight:800; font-size:.78rem; }
+    .mc-score { font-size:.62rem; color:var(--primary-dk); font-weight:700; margin-top:1px; }
+    .mc-empty { color:#d1d5db; font-size:.85rem; }
 
     /* ====== Section inline counters on mobile ====== */
     .counters-row {
@@ -1141,23 +1123,42 @@ function doLogout() {
   });
 }
 
-function showView(id) {
+function _doShowView(id) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   const target = document.getElementById('view-' + id);
   if (target) target.classList.add('active');
-
   document.querySelectorAll('.nav-link-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.mob-btn').forEach(b => b.classList.remove('active'));
-
   const nb = document.getElementById('nb-' + id);
   const mb = document.getElementById('mb-' + id);
   if (nb) nb.classList.add('active');
   if (mb) mb.classList.add('active');
-
-  // إذا فتح صفحة التحضير تحقق من القفل
   if (id === 'attendance') checkAttendanceLock();
-
   window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function hasUnsavedWork() {
+  if (!STATE.evalRecord) return false;
+  return STATE.evalSections.some(s => s._editing && (s.partNumber || s.hizb || s.mistakes > 0 || s.warnings > 0));
+}
+
+function showView(id) {
+  const currentActive = document.querySelector('.view.active');
+  const leavingEval   = currentActive && currentActive.id === 'view-evaluation';
+  if (leavingEval && id !== 'evaluation' && hasUnsavedWork()) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'مغادرة بدون حفظ',
+      text: 'لديك بيانات غير محفوظة. هل تريد المغادرة؟',
+      showCancelButton: true,
+      confirmButtonText: 'مغادرة',
+      cancelButtonText: 'تراجع',
+      confirmButtonColor: '#c0392b',
+      cancelButtonColor: '#014979'
+    }).then(r => { if (r.isConfirmed) _doShowView(id); });
+    return;
+  }
+  _doShowView(id);
 }
 
 // =============================================
@@ -1308,64 +1309,76 @@ function startEvaluation() {
 
 // ===== [تعديل 2] جدول تاريخ الطالب - أصغر + درجة كحلية =====
 function renderStudentHistory(student, rec, eff) {
-  const card = document.getElementById('studentHistoryCard');
+  const card    = document.getElementById('studentHistoryCard');
   const content = document.getElementById('studentHistoryContent');
-
   const sections = rec && Array.isArray(rec.sections) ? rec.sections.filter(s => s && s.partNumber) : [];
 
-  if (!sections.length) {
-    card.style.display = 'none';
-    return;
-  }
+  if (!sections.length) { card.style.display = 'none'; return; }
 
-  const totalParts = student.partsCount || 0;
-  const displayedCount = sections.length;
-  const passedCount = sections.filter(s => s.isPassed).length;
-  const failedCount = displayedCount - passedCount;
-  const remaining = Math.max(0, totalParts - displayedCount / eff.partsDivisions);
-  const percent = displayedCount > 0 ? Math.round(passedCount / displayedCount * 100) : 0;
+  const div          = eff.partsDivisions;
+  const label        = divLabel(div);
+  const totalParts   = student.partsCount || 0;
+  const displayed    = sections.length;
+  const passedCount  = sections.filter(s => s.isPassed).length;
+  const failedCount  = displayed - passedCount;
+  const remaining    = Math.max(0, totalParts - displayed / div);
+  const percent      = displayed ? Math.round(passedCount / displayed * 100) : 0;
 
-  // صفوف الجدول — الدرجة بكلاس history-score (كحلي غامق)
-  let rows = '';
-  sections.forEach((s, i) => {
-    const isPassed = !!s.isPassed;
-    rows += `
-      <tr class="${isPassed ? 'pass-row' : 'fail-row'}">
-        <td>${i + 1}</td>
-        <td>${escapeHtml(String(s.partNumber || ''))}</td>
-        <td>${escapeHtml(String(s.hizb || ''))}</td>
-        <td><span class="history-score">${escapeHtml(String(s.score ?? 0))}</span></td>
-        <td>${isPassed ? '<span style="color:#1a7a4a;font-weight:700;">✓</span>' : '<span style="color:#c0392b;font-weight:700;">✗</span>'}</td>
-        <td style="font-size:.75rem;">${escapeHtml(s.teacherName || '')}</td>
-      </tr>
-    `;
+  // بناء مصفوفة: part → { hizb → {pass, score} }
+  const matrix = {};
+  sections.forEach(s => {
+    const p = String(s.partNumber); const h = String(s.hizb);
+    if (!matrix[p]) matrix[p] = {};
+    matrix[p][h] = { pass: !!s.isPassed, score: s.score ?? 0 };
   });
 
+  const usedParts = Object.keys(matrix).sort((a,b) => Number(a)-Number(b));
+  const hizbNums  = div > 1 ? Array.from({length:div}, (_,i) => i+1) : [1];
+
+  const headCells = usedParts.map(p => `<th>${escapeHtml(p)}</th>`).join('');
+
+  let bodyRows = '';
+  if (div === 1) {
+    const cells = usedParts.map(p => {
+      const cell = matrix[p] && matrix[p]['1'];
+      if (!cell) return `<td><span class="mc-empty">—</span></td>`;
+      return `<td><span class="${cell.pass?'mc-pass':'mc-fail'}">${cell.pass?'✔':'✖'}</span><div class="mc-score">${cell.score}</div></td>`;
+    }).join('');
+    bodyRows = `<tr><td class="td-label">النتيجة</td>${cells}</tr>`;
+  } else {
+    hizbNums.forEach(h => {
+      const cells = usedParts.map(p => {
+        const cell = matrix[p] && matrix[p][String(h)];
+        if (!cell) return `<td><span class="mc-empty">—</span></td>`;
+        return `<td><span class="${cell.pass?'mc-pass':'mc-fail'}">${cell.pass?'✔':'✖'}</span><div class="mc-score">${cell.score}</div></td>`;
+      }).join('');
+      bodyRows += `<tr><td class="td-label">${escapeHtml(label)} ${h}</td>${cells}</tr>`;
+    });
+  }
+
+  const barColor = percent >= 80 ? '#1a7a4a' : percent >= 50 ? '#d97706' : '#c0392b';
+
   content.innerHTML = `
-    <div class="d-flex gap-2 flex-wrap" style="margin-bottom:10px;">
-      <span class="badge-sard badge-prim">المحفوظة: ${totalParts}</span>
-      <span class="badge-sard badge-prim">المعروضة: ${displayedCount}</span>
-      <span class="badge-sard badge-pass">المجتازة: ${passedCount}</span>
-      <span class="badge-sard badge-fail">الرسوب: ${failedCount}</span>
-      <span class="badge-sard badge-gold">المتبقية: ${remaining}</span>
-      <span class="badge-sard" style="background:#f1f5f9;color:#475569;">النسبة: ${percent}%</span>
+    <div class="d-flex gap-2 flex-wrap" style="margin-bottom:8px;">
+      <span class="badge-sard badge-prim">محفوظة: ${totalParts}</span>
+      <span class="badge-sard badge-prim">معروضة: ${displayed}</span>
+      <span class="badge-sard badge-pass">✔ ${passedCount}</span>
+      <span class="badge-sard badge-fail">✖ ${failedCount}</span>
+      <span class="badge-sard badge-gold">متبقية: ${remaining}</span>
     </div>
-    <div style="overflow-x:auto;">
-      <table class="history-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>الجزء</th>
-            <th>الحزب/الربع</th>
-            <th>الدرجة</th>
-            <th>النتيجة</th>
-            <th>المسمّع</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="font-size:.75rem;font-weight:700;color:${barColor};">${percent}%</span>
+      <div style="flex:1;height:6px;border-radius:3px;background:#e2e8f0;overflow:hidden;">
+        <div style="width:${percent}%;height:100%;background:${barColor};border-radius:3px;"></div>
+      </div>
+    </div>
+    <div class="matrix-wrap">
+      <table class="matrix-table">
+        <thead><tr><th class="th-label">الجزء ←</th>${headCells}</tr></thead>
+        <tbody>${bodyRows}</tbody>
       </table>
     </div>
-  `;
+    <p style="font-size:.68rem;color:var(--text-muted);margin-top:4px;text-align:center;">✔ مجتاز · ✖ راسب · — لم يُسمَّع</p>`;
   card.style.display = 'block';
 }
 
@@ -1568,10 +1581,7 @@ function setPartNumber(idx, val) {
   if (!val || isNaN(n) || n < 1 || n > 30) return;
 
   STATE.evalSections[idx].partNumber = String(n);
-
-  if (!STATE.evalSections[idx].hizb) {
-    autoSuggestHizb(idx);
-  }
+  // لا اقتراح تلقائي للحزب — يختار المستخدم بنفسه
 
   refreshHizbButtons(idx);
   recalcSection(idx);
@@ -1600,10 +1610,10 @@ function refreshHizbButtons(idx) {
     const selectedKey = String(sec.partNumber) + '_' + String(sec.hizb);
     if (usedCombos[selectedKey]) {
       STATE.evalSections[idx].hizb = '';
-      autoSuggestHizb(idx);
+      // لا اقتراح تلقائي — يختار المستخدم
       for (let o = 1; o <= div; o++) {
         const btn = document.getElementById('hizb-btn-' + idx + '-' + o);
-        if (btn) btn.className = 'sel-btn' + (String(STATE.evalSections[idx].hizb) === String(o) ? ' active' : '');
+        if (btn) btn.className = 'sel-btn';
       }
     }
   }
@@ -1730,48 +1740,75 @@ function buildWhatsappMessage(student, rec, eff) {
 
 // ===== [تعديل 1] حفظ النتيجة - يبقى في صفحة الطالب =====
 function doSaveRecord() {
-  const student = STATE.evalRecord.student;
+  const student  = STATE.evalRecord.student;
+  const eff      = STATE.evalRecord.eff;
   const sections = STATE.evalSections.filter(s => s.partNumber && s.hizb);
 
-  if (!sections.length) { showToast('لم تُدخل أي مقطع', 'warning'); return; }
+  // 1) لا مدخلات أصلاً
+  if (!sections.length) {
+    Swal.fire({ icon:'warning', title:'لا توجد مدخلات', text:'لم تُدخل رقم جزء أو حزب في أي مقطع.', confirmButtonColor:'#014979', confirmButtonText:'حسناً' });
+    return;
+  }
 
-  const today = new Date().toISOString().split('T')[0];
-  showSpinner();
-  google.script.run
-    .withSuccessHandler(() => {
-      hideSpinner();
-      Swal.fire({
-        icon:'success',
-        title:'تم الحفظ!',
-        text:'تم حفظ نتيجة ' + (student.name || '') + ' بنجاح',
-        confirmButtonColor:'#014979',
-        confirmButtonText:'ممتاز'
-      }).then(() => {
-        // يبقى في صفحة الطالب — يُعيد تحميل البيانات ثم يُعيد رسم الصفحة
-        google.script.run
-          .withSuccessHandler(freshData => {
-            STATE.settings     = freshData.settings || STATE.settings;
-            STATE.trackConfigs = freshData.trackConfigs || STATE.trackConfigs;
-            STATE.halaqas      = freshData.halaqas || STATE.halaqas;
-            STATE.students     = freshData.students || STATE.students;
-            STATE.records      = freshData.records || STATE.records;
-            STATE.complex      = freshData.complex || STATE.complex;
-            startEvaluation();
-          })
-          .withFailureHandler(() => {})
-          .getData();
-      });
-    })
-    .withFailureHandler(err => {
-      hideSpinner();
-      showToast('خطأ في الحفظ: ' + (err.message || err), 'error');
-    })
-    .saveRecord({
-      studentId: student.id,
-      teacherName: STATE.teacher,
-      date: today,
-      sections: STATE.evalSections
-    });
+  // 2) مقطع ناقص (جزء بدون حزب أو العكس)
+  const incomplete = STATE.evalSections.filter(s => s._editing && (s.partNumber || s.hizb) && !(s.partNumber && s.hizb));
+  if (incomplete.length) {
+    Swal.fire({ icon:'warning', title:'مقاطع غير مكتملة', text:'يوجد مقطع تم إدخال الجزء فقط أو الحزب فقط. أكمله أو اتركه فارغاً.', confirmButtonColor:'#014979', confirmButtonText:'حسناً' });
+    return;
+  }
+
+  // 3) إلزام وجه الرسوب
+  if (eff.requireFailReason) {
+    const failedNoReason = sections.filter(s => !s.isPassed && !String(s.failFace || '').trim());
+    if (failedNoReason.length) {
+      Swal.fire({ icon:'warning', title:'وجه الرسوب مطلوب', text:`يوجد ${failedNoReason.length} مقطع راسب بدون وجه رسوب.`, confirmButtonColor:'#014979', confirmButtonText:'حسناً' });
+      return;
+    }
+  }
+
+  // 4) تأكيد الحفظ
+  const passedCount = sections.filter(s => s.isPassed).length;
+  const failedCount = sections.length - passedCount;
+  Swal.fire({
+    icon: 'question',
+    title: 'تأكيد حفظ النتيجة',
+    html: `<div style="font-family:Tajawal,sans-serif;line-height:2.2;direction:rtl;">
+      <b>${escapeHtml(student.name || '')}</b><br>
+      <span style="color:#1a7a4a;">✔ مجتاز: ${passedCount}</span>&nbsp;&nbsp;
+      <span style="color:#c0392b;">✖ راسب: ${failedCount}</span>
+    </div>`,
+    showCancelButton: true,
+    confirmButtonText: '<i class="fas fa-save"></i> حفظ',
+    cancelButtonText: 'إلغاء',
+    confirmButtonColor: '#014979',
+    cancelButtonColor: '#64748b'
+  }).then(r => {
+    if (!r.isConfirmed) return;
+    const today = new Date().toISOString().split('T')[0];
+    showSpinner();
+    google.script.run
+      .withSuccessHandler(() => {
+        hideSpinner();
+        Swal.fire({ icon:'success', title:'تم الحفظ!', text:'تم حفظ نتيجة ' + (student.name || '') + ' بنجاح', confirmButtonColor:'#014979', confirmButtonText:'ممتاز' })
+          .then(() => {
+            // يبقى في صفحة الطالب — يُعيد تحميل البيانات ويُعيد رسم نفس الطالب
+            google.script.run
+              .withSuccessHandler(freshData => {
+                STATE.settings     = freshData.settings || STATE.settings;
+                STATE.trackConfigs = freshData.trackConfigs || STATE.trackConfigs;
+                STATE.halaqas      = freshData.halaqas || STATE.halaqas;
+                STATE.students     = freshData.students || STATE.students;
+                STATE.records      = freshData.records || STATE.records;
+                STATE.complex      = freshData.complex || STATE.complex;
+                startEvaluation();
+              })
+              .withFailureHandler(() => {})
+              .getData();
+          });
+      })
+      .withFailureHandler(err => { hideSpinner(); showToast('خطأ في الحفظ: ' + (err.message || err), 'error'); })
+      .saveRecord({ studentId: student.id, teacherName: STATE.teacher, date: today, sections: STATE.evalSections });
+  });
 }
 
 // =============================================
