@@ -1592,9 +1592,9 @@ function renderSections() {
           </div>
         </div>
 
-        ${/* [تعديل 3] وجه الرسوب: يظهر فقط إذا كان requireFailReason مفعّلاً، ويختفي تماماً عند إلغائه */
-          eff.requireFailReason && hasData ? `
-  <div id="fail-wrap-${idx}" style="margin-bottom:6px;">
+        ${/* وجه الرسوب: يُنشأ دائماً عند تفعيل الإلزام إذا وُجدت بيانات المقطع، ثم recalcSection يتحكم في ظهوره عند الرسوب فقط */
+  eff.requireFailReason && hasData ? `
+  <div id="fail-wrap-${idx}" style="margin-bottom:6px;display:${!passed ? 'block' : 'none'};">
     <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
       <i class="fas fa-comment-alt" style="color:var(--danger);"></i> رقم وجه الرسوب
       <span style="color:var(--danger);font-weight:700;">*</span>
@@ -1707,9 +1707,9 @@ function recalcSection(idx) {
 
   // [تعديل 3] وجه الرسوب: إخفاء/إظهار فقط إذا كان requireFailReason مفعّلاً
   const failWrap = document.getElementById('fail-wrap-' + idx);
- if (failWrap) {
-  failWrap.style.display = (eff.requireFailReason && sec.partNumber && sec.hizb) ? 'block' : 'none';
-}
+  if (failWrap) {
+    failWrap.style.display = (!passed && eff.requireFailReason) ? 'block' : 'none';
+  }
 
   updateKPI();
 }
