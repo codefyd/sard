@@ -1485,7 +1485,16 @@ function renderSections() {
   const divOptions = div > 1 ? Array.from({ length:div }, (_, i) => i + 1) : [1];
 
   STATE.evalSections.forEach((sec, idx) => {
-    const isSaved = sec.wasSavedRead && !sec._editing;
+    const mustForceEditForFailReason =
+  !!sec.wasSavedRead &&
+  !sec._editing &&
+  !!eff.requireFailReason &&
+  !!sec.partNumber &&
+  !!sec.hizb &&
+  sec.isPassed === false &&
+  !String(sec.failFace || '').trim();
+
+const isSaved = sec.wasSavedRead && !sec._editing && !mustForceEditForFailReason;
     const isPassed = !!sec.isPassed;
     const hasData = !!(sec.partNumber && sec.hizb);
 
