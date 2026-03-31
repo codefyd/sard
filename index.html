@@ -1950,7 +1950,9 @@ function renderAttStudents() {
     const row = document.createElement('div');
     row.className = 'att-row';
 
-    if (!STATE.attStatuses[s.id]) STATE.attStatuses[s.id] = 'present';
+    if (!STATE.attStatuses[s.id]) {
+      STATE.attStatuses[s.id] = s.attendanceStatus || 'present';
+    }
 
     const btns = statuses.map(st => `
       <button class="att-status-btn ${STATE.attStatuses[s.id] === st.id ? st.cls : ''}"
