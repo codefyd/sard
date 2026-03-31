@@ -1707,28 +1707,21 @@ function recalcSection(idx) {
   const card = document.getElementById('sec-card-' + idx);
   if (card) card.className = 'section-card editing';
 
-  // [تعديل] التحكم في إظهار/إخفاء حقل وجه الرسوب بناءً على النتيجة والإعدادات
+  // [تعديل] التحكم الاحترافي في إظهار/إخفاء حقل وجه الرسوب
   const failWrap = document.getElementById('fail-wrap-' + idx);
+  
   if (failWrap) {
-    // إذا كان الإعداد مفعلاً والدرجة راسب -> نظهر الحقل، وإذا كان الإعداد غير مفعّل -> نضمن إخفاءه
-    if (eff.requireFailReason && !passed) {
-      failWrap.style.display = 'block';
-      // نتحقق أيضاً مما إذا كان الحقل يحتاج إلى إعادة إنشاء إذا كان مخفياً من قبل
-      if (!document.getElementById('fail-' + idx)) {
-         // إذا كان عنصر الإدخال غير موجود نضيفه
-         failWrap.innerHTML = `
-            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
-              <i class="fas fa-comment-alt" style="color:var(--danger);"></i> وجه الرسوب
-              <span style="color:var(--danger);font-weight:700;">*</span>
-            </label>
-            <input type="number" class="native-input" id="fail-${idx}" value="${escapeAttr(sec.failFace || '')}" placeholder="رقم وجه الرسوب..." min="1" onchange="setFailFace(${idx}, this.value)"/>
-         `;
-      }
-    } else {
-      failWrap.style.display = 'none';
-      // إذا كان الحقل غير مطلوب (إما نجاح أو الإعداد معطل) نمسح القيمة
-      if (!eff.requireFailReason) sec.failFace = '';
-      else if (passed) sec.failFace = '';
+    // 1. تحديد هل يجب أن يظهر الحقل؟ (يجب أن يكون الإعداد مفعلاً + الطالب راسب حالياً)
+    const shouldShow = eff.requireFailReason && !passed;
+
+    // 2. تطبيق الحالة البصرية
+    failWrap.style.display = shouldShow ? 'block' : 'none';
+
+    // 3. إدارة البيانات: إذا أصبح الطالب ناجحاً أو تم تعطيل الإعداد، نمسح القيمة المسجلة
+    if (!shouldShow) {
+      sec.failFace = '';
+      const failInput = document.getElementById('fail-' + idx);
+      if (failInput) failInput.value = ''; // مسح القيمة من الخانة أمام المسمّع أيضاً
     }
   }
 
