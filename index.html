@@ -1480,43 +1480,21 @@ function autoSuggestHizb(idx) {
 function renderSections() {
   const container = document.getElementById('sectionsContainer');
   container.innerHTML = '';
-
   const eff = STATE.evalRecord.eff;
   const div = eff.partsDivisions;
-  const divOptions = div > 1 ? Array.from({ length: div }, (_, i) => i + 1) : [1];
+  const divOptions = div > 1 ? Array.from({ length:div }, (_, i) => i + 1) : [1];
 
   STATE.evalSections.forEach((sec, idx) => {
-    const hasData = !!(sec.partNumber && sec.hizb);
-
-    // إذا كان المقطع محفوظًا سابقًا، وراسبًا، وإلزام وجه الرسوب مفعل، ولا يوجد رقم وجه رسوب
-    // افتحه تلقائيًا في وضع التعديل حتى يظهر الحقل
-    if (
-      sec.wasSavedRead &&
-      !sec._editing &&
-      !!eff.requireFailReason &&
-      !!sec.partNumber &&
-      !!sec.hizb &&
-      sec.isPassed === false &&
-      !String(sec.failFace || '').trim()
-    ) {
-      sec._editing = true;
-    }
-
     const isSaved = sec.wasSavedRead && !sec._editing;
     const isPassed = !!sec.isPassed;
+    const hasData = !!(sec.partNumber && sec.hizb);
 
     const card = document.createElement('div');
     card.id = 'sec-card-' + idx;
-    card.className =
-      'section-card' +
-      (isSaved
-        ? (isPassed ? ' passed' : ' failed')
-        : (sec._editing ? ' editing' : ''));
+    card.className = 'section-card' + (isSaved ? (isPassed ? ' passed' : ' failed') : (sec._editing ? ' editing' : ''));
 
-    // ===== وضع العرض فقط للمقطع المحفوظ =====
     if (isSaved && !sec._editing) {
       const editAllowed = !eff.editSectionsCode || !!localStorage.getItem('sard_edit_unlocked');
-
       card.innerHTML = `
         <div class="d-flex justify-between align-center" style="margin-bottom:8px;">
           <div class="d-flex align-center gap-2">
@@ -1525,145 +1503,107 @@ function renderSections() {
               ? '<span class="badge-sard badge-pass"><i class="fas fa-check-circle"></i> ناجح</span>'
               : '<span class="badge-sard badge-fail"><i class="fas fa-times-circle"></i> راسب</span>'}
           </div>
-
           <div class="d-flex align-center gap-2">
             <div class="score-circle ${isPassed ? 'score-pass' : 'score-fail'}" style="width:48px;height:48px;font-size:1rem;">
               ${escapeHtml(String(sec.score ?? 0))}
             </div>
-
-            ${editAllowed ? `
-              <button class="btn-outline-sard" style="padding:5px 10px;font-size:.8rem;" onclick="editSection(${idx})">
-                <i class="fas fa-edit"></i>
-              </button>
-            ` : ''}
+            <button class="btn-outline-sard" style="padding:5px 10px;font-size:.8rem;" onclick="editSection(${idx})">
+              <i class="fas fa-edit"></i>
+            </button>
           </div>
         </div>
-
         <div class="d-flex align-center gap-2 flex-wrap">
-          <span class="badge-sard badge-gold">
-            <i class="fas fa-book"></i>
-            جزء ${escapeHtml(String(sec.partNumber || ''))}
-            ${div > 1 ? `· ${escapeHtml(divLabel(div))} ${escapeHtml(String(sec.hizb || ''))}` : ''}
-          </span>
-
+          <span class="badge-sard badge-gold"><i class="fas fa-book"></i> جزء ${escapeHtml(String(sec.partNumber))} · ${escapeHtml(divLabel(div))} ${escapeHtml(String(sec.hizb))}</span>
           ${sec.mistakes ? `<span class="badge-sard badge-fail">أخطاء: ${escapeHtml(String(sec.mistakes))}</span>` : ''}
           ${sec.warnings ? `<span class="badge-sard" style="background:#fef3c7;color:#92400e;">تنبيهات: ${escapeHtml(String(sec.warnings))}</span>` : ''}
-          ${sec.failFace ? `<span class="badge-sard badge-fail"><i class="fas fa-comment"></i> وجه ${escapeHtml(String(sec.failFace))}</span>` : ''}
-          ${sec.teacherName ? `<span class="text-muted" style="font-size:.78rem;"><i class="fas fa-user-tie"></i> ${escapeHtml(String(sec.teacherName))}</span>` : ''}
+          ${sec.failFace ? `<span class="badge-sard badge-fail"><i class="fas fa-comment"></i> وجه ${escapeHtml(sec.failFace)}</span>` : ''}
+          ${sec.teacherName ? `<span class="text-muted" style="font-size:.78rem;"><i class="fas fa-user-tie"></i> ${escapeHtml(sec.teacherName)}</span>` : ''}
         </div>
       `;
     } else {
-      // ===== وضع التعديل / الإدخال =====
       const score = hasData ? calcScore(sec, eff) : 0;
       const passed = hasData ? score >= eff.passingScorePerSection : false;
       const maxScore = 20 / div;
       const usedCombos = getUsedCombos(idx);
-
-      const partOptions = Array.from({ length: 30 }, (_, i) => i + 1)
-        .map(num => `
-          <option value="${num}" ${String(sec.partNumber || '') === String(num) ? 'selected' : ''}>
-            ${num}
-          </option>
-        `)
-        .join('');
-
-      const hizbButtons = divOptions.map(h => {
-        const comboKey = String(sec.partNumber || '') + '_' + String(h);
-        const disabled = sec.partNumber && usedCombos[comboKey] && String(sec.hizb || '') !== String(h);
-
-        return `
-          <button
-            type="button"
-            class="sel-btn ${String(sec.hizb || '') === String(h) ? 'active' : ''}"
-            ${disabled ? 'disabled style="opacity:.45;cursor:not-allowed;"' : ''}
-            onclick="${disabled ? '' : `setHizb(${idx}, ${h}, this)`}">
-            ${h}
-          </button>
-        `;
-      }).join('');
+      // [تعديل] تحديد ما إذا كان يجب إظهار حقل الرسوب (فقط إذا كان الشرط مفعلاً والدرجة راسب)
+      const shouldShowFailField = eff.requireFailReason && hasData && !passed;
 
       card.innerHTML = `
-        <div class="d-flex justify-between align-center" style="margin-bottom:10px;">
-          <div class="d-flex align-center gap-2">
-            <span class="badge-sard badge-prim" style="font-size:.75rem;">مقطع ${idx + 1}</span>
-            ${hasData
-              ? (passed
-                  ? '<span class="badge-sard badge-pass"><i class="fas fa-check-circle"></i> ناجح</span>'
-                  : '<span class="badge-sard badge-fail"><i class="fas fa-times-circle"></i> راسب</span>')
-              : '<span class="badge-sard badge-prim"><i class="fas fa-pen"></i> إدخال</span>'}
-          </div>
-
-          <div class="score-circle ${passed ? 'score-pass' : 'score-fail'}" id="score-circle-${idx}">
-            ${escapeHtml(String(score))}
-            <span style="font-size:.65rem;">/${escapeHtml(String(maxScore))}</span>
-          </div>
+        <div class="d-flex justify-between align-center" style="margin-bottom:12px;">
+          <span class="badge-sard badge-prim">مقطع ${idx + 1}</span>
+          ${hasData
+            ? `<div class="score-circle ${passed ? 'score-pass' : 'score-fail'}" id="score-circle-${idx}">
+                ${escapeHtml(String(score))} <span style="font-size:.65rem;">/${escapeHtml(String(maxScore))}</span>
+               </div>`
+            : `<div class="score-circle" style="border-color:var(--border);color:var(--text-muted);" id="score-circle-${idx}">—</div>`}
         </div>
 
         <div class="grid-2" style="margin-bottom:10px;">
           <div>
             <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">رقم الجزء</label>
-            <select class="form-select" onchange="setPartNumber(${idx}, this.value)">
-              <option value="">اختر الجزء</option>
-              ${partOptions}
-            </select>
+            <input type="number" class="native-input" id="partInput-${idx}"
+              value="${escapeAttr(String(sec.partNumber || ''))}"
+              min="1" max="30" placeholder="1-30"
+              onchange="setPartNumber(${idx}, this.value)"
+              oninput="setPartNumber(${idx}, this.value)"
+            />
           </div>
-
           <div>
-            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
-              ${escapeHtml(divLabel(div))}
-            </label>
+            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">${escapeHtml(divLabel(div))}</label>
             <div class="d-flex gap-2 flex-wrap">
-              ${hizbButtons}
+              ${divOptions.map(o => {
+                const comboKey = String(sec.partNumber || '') + '_' + String(o);
+                const isUsed = sec.partNumber && usedCombos[comboKey];
+                const isActive = String(sec.hizb) === String(o);
+                return `
+                  <button class="sel-btn ${isActive ? 'active' : ''} ${isUsed ? 'used-combo' : ''}"
+                    id="hizb-btn-${idx}-${o}"
+                    onclick="setHizb(${idx},${o},this)"
+                    style="padding:6px 14px;flex:1;text-align:center;${isUsed ? 'opacity:.4;cursor:not-allowed;' : ''}"
+                    ${isUsed ? 'disabled' : ''}>
+                    ${o}
+                  </button>
+                `;
+              }).join('')}
             </div>
           </div>
         </div>
 
         <div class="counters-row">
           <div>
-            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">الأخطاء</label>
+            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
+              <i class="fas fa-times-circle" style="color:var(--danger);"></i> أخطاء
+              <small style="font-size:.72rem;">(−${escapeHtml(String(eff.mistakeDeduction))})</small>
+            </label>
             <div class="counter-wrap">
-              <button type="button" class="counter-btn" onclick="changeCount(${idx}, 'mistakes', -1)">-</button>
-              <div class="counter-val" id="mis-${idx}">${escapeHtml(String(sec.mistakes || 0))}</div>
-              <button type="button" class="counter-btn" onclick="changeCount(${idx}, 'mistakes', 1)">+</button>
+              <button class="counter-btn" onclick="changeCount(${idx},'mistakes',-1)">−</button>
+              <span class="counter-val" id="mis-${idx}">${escapeHtml(String(sec.mistakes || 0))}</span>
+              <button class="counter-btn" onclick="changeCount(${idx},'mistakes',1)">+</button>
             </div>
           </div>
-
           <div>
-            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">التنبيهات</label>
+            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
+              <i class="fas fa-exclamation-triangle" style="color:var(--warning);"></i> تنبيهات
+              <small style="font-size:.72rem;">(−${escapeHtml(String(eff.warningDeduction))})</small>
+            </label>
             <div class="counter-wrap">
-              <button type="button" class="counter-btn" onclick="changeCount(${idx}, 'warnings', -1)">-</button>
-              <div class="counter-val" id="war-${idx}">${escapeHtml(String(sec.warnings || 0))}</div>
-              <button type="button" class="counter-btn" onclick="changeCount(${idx}, 'warnings', 1)">+</button>
+              <button class="counter-btn" onclick="changeCount(${idx},'warnings',-1)">−</button>
+              <span class="counter-val" id="war-${idx}">${escapeHtml(String(sec.warnings || 0))}</span>
+              <button class="counter-btn" onclick="changeCount(${idx},'warnings',1)">+</button>
             </div>
           </div>
         </div>
 
-        ${eff.requireFailReason ? `
-          <div id="fail-wrap-${idx}" style="margin-top:10px;display:${(!passed && hasData) ? 'block' : 'none'};">
+        <!-- [تعديل] حقل وجه الرسوب: يظهر فقط إذا كان الإعداد مفعلاً والدرجة راسب -->
+        ${shouldShowFailField ? `
+          <div id="fail-wrap-${idx}" style="margin-bottom:6px;">
             <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
-              <i class="fas fa-comment-alt" style="color:var(--danger);"></i>
-              رقم وجه الرسوب
+              <i class="fas fa-comment-alt" style="color:var(--danger);"></i> وجه الرسوب
               <span style="color:var(--danger);font-weight:700;">*</span>
             </label>
-            <input
-              type="number"
-              class="native-input"
-              id="fail-${idx}"
-              value="${escapeAttr(sec.failFace || '')}"
-              placeholder="رقم وجه الرسوب..."
-              min="1"
-              onchange="setFailFace(${idx}, this.value)"
-            />
+            <input type="number" class="native-input" id="fail-${idx}" value="${escapeAttr(sec.failFace || '')}" placeholder="رقم وجه الرسوب..." min="1" onchange="setFailFace(${idx}, this.value)"/>
           </div>
-        ` : ''}
-
-        ${sec.wasSavedRead ? `
-          <div class="mt-3">
-            <button type="button" class="btn-outline-sard" onclick="cancelEditSection(${idx})">
-              <i class="fas fa-times"></i> إلغاء التعديل
-            </button>
-          </div>
-        ` : ''}
+        ` : (hasData ? `<input type="hidden" id="fail-wrap-${idx}" />` : '')}
       `;
     }
 
@@ -1767,21 +1707,29 @@ function recalcSection(idx) {
   const card = document.getElementById('sec-card-' + idx);
   if (card) card.className = 'section-card editing';
 
+  // [تعديل] التحكم في إظهار/إخفاء حقل وجه الرسوب بناءً على النتيجة والإعدادات
   const failWrap = document.getElementById('fail-wrap-' + idx);
   if (failWrap) {
-    failWrap.style.display = (!passed && eff.requireFailReason) ? 'block' : 'none';
-  }
-
-  updateKPI();
-}
-
-  const card = document.getElementById('sec-card-' + idx);
-  if (card) card.className = 'section-card editing';
-
-  // [تعديل 3] وجه الرسوب: إخفاء/إظهار فقط إذا كان requireFailReason مفعّلاً
-  const failWrap = document.getElementById('fail-wrap-' + idx);
-  if (failWrap) {
-    failWrap.style.display = (!passed && eff.requireFailReason) ? 'block' : 'none';
+    // إذا كان الإعداد مفعلاً والدرجة راسب -> نظهر الحقل، وإذا كان الإعداد غير مفعّل -> نضمن إخفاءه
+    if (eff.requireFailReason && !passed) {
+      failWrap.style.display = 'block';
+      // نتحقق أيضاً مما إذا كان الحقل يحتاج إلى إعادة إنشاء إذا كان مخفياً من قبل
+      if (!document.getElementById('fail-' + idx)) {
+         // إذا كان عنصر الإدخال غير موجود نضيفه
+         failWrap.innerHTML = `
+            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
+              <i class="fas fa-comment-alt" style="color:var(--danger);"></i> وجه الرسوب
+              <span style="color:var(--danger);font-weight:700;">*</span>
+            </label>
+            <input type="number" class="native-input" id="fail-${idx}" value="${escapeAttr(sec.failFace || '')}" placeholder="رقم وجه الرسوب..." min="1" onchange="setFailFace(${idx}, this.value)"/>
+         `;
+      }
+    } else {
+      failWrap.style.display = 'none';
+      // إذا كان الحقل غير مطلوب (إما نجاح أو الإعداد معطل) نمسح القيمة
+      if (!eff.requireFailReason) sec.failFace = '';
+      else if (passed) sec.failFace = '';
+    }
   }
 
   updateKPI();
