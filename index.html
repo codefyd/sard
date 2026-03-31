@@ -1485,16 +1485,7 @@ function renderSections() {
   const divOptions = div > 1 ? Array.from({ length:div }, (_, i) => i + 1) : [1];
 
   STATE.evalSections.forEach((sec, idx) => {
-    const mustForceEditForFailReason =
-  !!sec.wasSavedRead &&
-  !sec._editing &&
-  !!eff.requireFailReason &&
-  !!sec.partNumber &&
-  !!sec.hizb &&
-  sec.isPassed === false &&
-  !String(sec.failFace || '').trim();
-
-const isSaved = sec.wasSavedRead && !sec._editing && !mustForceEditForFailReason;
+    const isSaved = sec.wasSavedRead && !sec._editing;
     const isPassed = !!sec.isPassed;
     const hasData = !!(sec.partNumber && sec.hizb);
 
@@ -1601,14 +1592,17 @@ const isSaved = sec.wasSavedRead && !sec._editing && !mustForceEditForFailReason
           </div>
         </div>
 
-        ${/* وجه الرسوب: يُنشأ دائماً عند تفعيل الإلزام إذا وُجدت بيانات المقطع، ثم recalcSection يتحكم في ظهوره عند الرسوب فقط */
-  eff.requireFailReason && hasData ? `
-  <div id="fail-wrap-${idx}" style="margin-bottom:6px;display:${!passed ? 'block' : 'none'};">
+        ${/* [تعديل 3] وجه الرسوب: يظهر فقط إذا كان requireFailReason مفعّلاً، ويختفي تماماً عند إلغائه */
+          ${eff.requireFailReason ? `
+  <div id="fail-wrap-${idx}" style="margin-bottom:6px; display: ${(!passed && hasData) ? 'block' : 'none'};">
     <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
-      <i class="fas fa-comment-alt" style="color:var(--danger);"></i> رقم وجه الرسوب
+      <i class="fas fa-comment-alt" style="color:var(--danger);"></i> وجه الرسوب
       <span style="color:var(--danger);font-weight:700;">*</span>
     </label>
-    <input type="number" class="native-input" id="fail-${idx}" value="${escapeAttr(sec.failFace || '')}" placeholder="رقم وجه الرسوب..." min="1" onchange="setFailFace(${idx}, this.value)"/>
+    <input type="number" class="native-input" id="fail-${idx}" 
+      value="${escapeAttr(sec.failFace || '')}" 
+      placeholder="رقم وجه الرسوب..." min="1" 
+      onchange="setFailFace(${idx}, this.value)"/>
   </div>
         ` : ''}
       `;
@@ -1716,9 +1710,10 @@ function recalcSection(idx) {
 
   // [تعديل 3] وجه الرسوب: إخفاء/إظهار فقط إذا كان requireFailReason مفعّلاً
   const failWrap = document.getElementById('fail-wrap-' + idx);
-  if (failWrap) {
-    failWrap.style.display = (!passed && eff.requireFailReason) ? 'block' : 'none';
-  }
+if (failWrap) {
+  // سيظهر الحقل فوراً بمجرد أن تصبح حالة النجاح (passed) خاطئة
+  failWrap.style.display = (!passed) ? 'block' : 'none';
+}
 
   updateKPI();
 }
