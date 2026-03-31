@@ -1593,14 +1593,14 @@ function renderSections() {
         </div>
 
         ${/* [تعديل 3] وجه الرسوب: يظهر فقط إذا كان requireFailReason مفعّلاً، ويختفي تماماً عند إلغائه */
-          eff.requireFailReason && !passed && hasData ? `
-          <div id="fail-wrap-${idx}" style="margin-bottom:6px;">
-            <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
-              <i class="fas fa-comment-alt" style="color:var(--danger);"></i> وجه الرسوب
-              <span style="color:var(--danger);font-weight:700;">*</span>
-            </label>
-            <input type="number" class="native-input" id="fail-${idx}" value="${escapeAttr(sec.failFace || '')}" placeholder="رقم وجه الرسوب..." min="1" onchange="setFailFace(${idx}, this.value)"/>
-          </div>
+          eff.requireFailReason && hasData ? `
+  <div id="fail-wrap-${idx}" style="margin-bottom:6px;">
+    <label class="text-muted" style="font-size:.8rem;display:block;margin-bottom:4px;">
+      <i class="fas fa-comment-alt" style="color:var(--danger);"></i> رقم وجه الرسوب
+      <span style="color:var(--danger);font-weight:700;">*</span>
+    </label>
+    <input type="number" class="native-input" id="fail-${idx}" value="${escapeAttr(sec.failFace || '')}" placeholder="رقم وجه الرسوب..." min="1" onchange="setFailFace(${idx}, this.value)"/>
+  </div>
         ` : ''}
       `;
     }
@@ -1707,9 +1707,9 @@ function recalcSection(idx) {
 
   // [تعديل 3] وجه الرسوب: إخفاء/إظهار فقط إذا كان requireFailReason مفعّلاً
   const failWrap = document.getElementById('fail-wrap-' + idx);
-  if (failWrap) {
-    failWrap.style.display = (!passed && eff.requireFailReason) ? 'block' : 'none';
-  }
+ if (failWrap) {
+  failWrap.style.display = (eff.requireFailReason && sec.partNumber && sec.hizb) ? 'block' : 'none';
+}
 
   updateKPI();
 }
